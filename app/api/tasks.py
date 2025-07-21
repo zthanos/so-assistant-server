@@ -13,7 +13,7 @@ def get_db():
 
 @router.post("/create", response_model=schemas.TaskResponse)
 def create_task(
-    project_id: int = Path(..., description="ID του project"),
+    project_id: str = Path(..., description="ID του project"),
     task: schemas.TaskCreate = Body(...),
     db: Session = Depends(get_db)
 ):

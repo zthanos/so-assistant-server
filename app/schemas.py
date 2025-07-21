@@ -13,10 +13,7 @@ class RequirementStatus(str, enum.Enum):
     approved = "Approved"
     implemented = "Implemented"
 
-class DiagramType(str, enum.Enum):
-    flowchart = "Flowchart"
-    sequence = "Sequence"
-    gantt = "Gantt"
+
 
 class TaskStatus(str, enum.Enum):
     todo = "To Do"
@@ -29,10 +26,10 @@ class ProjectBase(BaseModel):
     description: Optional[str] = None
 
 class ProjectCreate(ProjectBase):
-    pass
+    id: str  # Τώρα το id πρέπει να δίνεται από τον client
 
 class ProjectResponse(ProjectBase):
-    id: int
+    id: str
     created_at: datetime
     updated_at: datetime
     class Config:
@@ -56,7 +53,7 @@ class RequirementResponse(RequirementBase):
 class DiagramBase(BaseModel):
     title: str
     mermaid_code: str
-    type: DiagramType
+    type: str
 
 class DiagramCreate(DiagramBase):
     pass

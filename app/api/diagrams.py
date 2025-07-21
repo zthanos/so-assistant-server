@@ -15,7 +15,7 @@ def get_db():
 
 @router.post("/add", response_model=schemas.DiagramResponse)
 def add_diagram(
-    project_id: int,
+    project_id: str,
     diagram: schemas.DiagramCreate,
     db: Session = Depends(get_db)
 ):
@@ -35,6 +35,25 @@ def add_diagram(
     db.refresh(db_diagram)
     return db_diagram
 
+@router.put("/update/{diagram_id}", response_model=schemas.DiagramResponse)
+def update_diagram(
+    diagram_id: int,
+    diagram: schemas.DiagramCreate,
+    db: Session = Depends(get_db)
+):
+    db_diagram = db.query(models.Diagram).filter(models.Diagram.id == diagram_id).first()
+    if not db_diagram:
+        raise HTTPException(status_code=404, detail="Diagram not found")
+    
+    db_diagram.title = diagram.title
+    db_diagram.mermaid_code = diagram.mermaid_code
+    db_diagram.type = diagram.type  # Πλέον str, όχι Enum
+
+    db.commit()
+    db.refresh(db_diagram)
+    return db_diagram
+
+
 @router.get("/list", response_model=list[schemas.DiagramResponse])
 def list_diagrams(
     project_id: int,
@@ -45,7 +64,7 @@ def list_diagrams(
 
 @router.get("/{diagram_id}", response_model=schemas.DiagramResponse)
 def get_diagram(
-    project_id: int,
+    project_id: str,
     diagram_id: int,
     db: Session = Depends(get_db)
 ):

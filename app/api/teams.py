@@ -13,7 +13,7 @@ def get_db():
 
 @router.post("/assign", response_model=schemas.TeamResponse)
 def assign_team(
-    project_id: int = Path(..., description="ID του project"),
+    project_id: str = Path(..., description="ID του project"),
     team: schemas.TeamCreate = Body(...),
     db: Session = Depends(get_db)
 ):

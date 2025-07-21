@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.database import init_db
 from app.api import projects, requirements, diagrams, teams, tasks
+from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -17,6 +18,15 @@ app = FastAPI(
     description="API to help architects create Solution Outlines.",
     version="0.1.0",
     lifespan=lifespan
+)
+
+# Επέτρεψε όλα τα origins (για development)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ή βάλε λίστα με συγκεκριμένα origins π.χ. ["http://localhost:3000"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Ένα απλό, αρχικό endpoint για έλεγχο

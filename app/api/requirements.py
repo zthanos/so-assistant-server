@@ -13,7 +13,7 @@ def get_db():
 
 @router.post("/add", response_model=schemas.RequirementResponse)
 def add_requirement(
-    project_id: int = Path(..., description="ID του project"),
+    project_id: str = Path(..., description="ID του project"),
     req: schemas.RequirementCreate = Body(...),
     db: Session = Depends(get_db)
 ):
