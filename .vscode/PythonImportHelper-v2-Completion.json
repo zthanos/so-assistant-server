@@ -1,0 +1,2097 @@
+[
+    {
+        "label": "runpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "runpy",
+        "description": "runpy",
+        "detail": "runpy",
+        "documentation": {}
+    },
+    {
+        "label": "annotations",
+        "importPath": "__future__",
+        "description": "__future__",
+        "isExtraImport": true,
+        "detail": "__future__",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "site",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "site",
+        "description": "site",
+        "detail": "site",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "fitz",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "fitz",
+        "description": "fitz",
+        "detail": "fitz",
+        "documentation": {}
+    },
+    {
+        "label": "call_ollama",
+        "importPath": "app.ollama_client",
+        "description": "app.ollama_client",
+        "isExtraImport": true,
+        "detail": "app.ollama_client",
+        "documentation": {}
+    },
+    {
+        "label": "call_ollama",
+        "importPath": "app.ollama_client",
+        "description": "app.ollama_client",
+        "isExtraImport": true,
+        "detail": "app.ollama_client",
+        "documentation": {}
+    },
+    {
+        "label": "get_logger",
+        "importPath": "app.logger",
+        "description": "app.logger",
+        "isExtraImport": true,
+        "detail": "app.logger",
+        "documentation": {}
+    },
+    {
+        "label": "get_logger",
+        "importPath": "app.logger",
+        "description": "app.logger",
+        "isExtraImport": true,
+        "detail": "app.logger",
+        "documentation": {}
+    },
+    {
+        "label": "get_logger",
+        "importPath": "app.logger",
+        "description": "app.logger",
+        "isExtraImport": true,
+        "detail": "app.logger",
+        "documentation": {}
+    },
+    {
+        "label": "get_logger",
+        "importPath": "app.logger",
+        "description": "app.logger",
+        "isExtraImport": true,
+        "detail": "app.logger",
+        "documentation": {}
+    },
+    {
+        "label": "get_logger",
+        "importPath": "app.logger",
+        "description": "app.logger",
+        "isExtraImport": true,
+        "detail": "app.logger",
+        "documentation": {}
+    },
+    {
+        "label": "get_logger",
+        "importPath": "app.logger",
+        "description": "app.logger",
+        "isExtraImport": true,
+        "detail": "app.logger",
+        "documentation": {}
+    },
+    {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "sessionmaker",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "Mapped",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "mapped_column",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "relationship",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "declarative_base",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "joinedload",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "Session",
+        "importPath": "sqlalchemy.orm",
+        "description": "sqlalchemy.orm",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.orm",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "schemas",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "schemas",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "database",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "schemas",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "schemas",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "database",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "schemas",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "database",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "schemas",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "database",
+        "importPath": "app",
+        "description": "app",
+        "isExtraImport": true,
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "APIRouter",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "UploadFile",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "File",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "APIRouter",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "status",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "APIRouter",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "APIRouter",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "UploadFile",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "File",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Body",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "APIRouter",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Body",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "APIRouter",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Body",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "extract_json_array_or_object_from_text",
+        "importPath": "app.utils.llm_response_utils",
+        "description": "app.utils.llm_response_utils",
+        "isExtraImport": true,
+        "detail": "app.utils.llm_response_utils",
+        "documentation": {}
+    },
+    {
+        "label": "asynccontextmanager",
+        "importPath": "contextlib",
+        "description": "contextlib",
+        "isExtraImport": true,
+        "detail": "contextlib",
+        "documentation": {}
+    },
+    {
+        "label": "init_db",
+        "importPath": "app.database",
+        "description": "app.database",
+        "isExtraImport": true,
+        "detail": "app.database",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "importPath": "app.database",
+        "description": "app.database",
+        "isExtraImport": true,
+        "detail": "app.database",
+        "documentation": {}
+    },
+    {
+        "label": "projects",
+        "importPath": "api",
+        "description": "api",
+        "isExtraImport": true,
+        "detail": "api",
+        "documentation": {}
+    },
+    {
+        "label": "requirements",
+        "importPath": "api",
+        "description": "api",
+        "isExtraImport": true,
+        "detail": "api",
+        "documentation": {}
+    },
+    {
+        "label": "diagrams",
+        "importPath": "api",
+        "description": "api",
+        "isExtraImport": true,
+        "detail": "api",
+        "documentation": {}
+    },
+    {
+        "label": "teams",
+        "importPath": "api",
+        "description": "api",
+        "isExtraImport": true,
+        "detail": "api",
+        "documentation": {}
+    },
+    {
+        "label": "tasks",
+        "importPath": "api",
+        "description": "api",
+        "isExtraImport": true,
+        "detail": "api",
+        "documentation": {}
+    },
+    {
+        "label": "assistant",
+        "importPath": "api",
+        "description": "api",
+        "isExtraImport": true,
+        "detail": "api",
+        "documentation": {}
+    },
+    {
+        "label": "CORSMiddleware",
+        "importPath": "fastapi.middleware.cors",
+        "description": "fastapi.middleware.cors",
+        "isExtraImport": true,
+        "detail": "fastapi.middleware.cors",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "create_engine",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Column",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Integer",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "String",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Text",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "DateTime",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "ForeignKey",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "Enum",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
+        "label": "enum",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "enum",
+        "description": "enum",
+        "detail": "enum",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "datetime",
+        "description": "datetime",
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "Field",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "httpx",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "httpx",
+        "description": "httpx",
+        "detail": "httpx",
+        "documentation": {}
+    },
+    {
+        "label": "check_prompt_fits",
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "isExtraImport": true,
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "log_prompt_run",
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "isExtraImport": true,
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "OLLAMA_HOST",
+        "importPath": "app.config.config",
+        "description": "app.config.config",
+        "isExtraImport": true,
+        "detail": "app.config.config",
+        "documentation": {}
+    },
+    {
+        "label": "LLM_MODEL",
+        "importPath": "app.config.config",
+        "description": "app.config.config",
+        "isExtraImport": true,
+        "detail": "app.config.config",
+        "documentation": {}
+    },
+    {
+        "label": "CALC_MODEL",
+        "importPath": "app.config.config",
+        "description": "app.config.config",
+        "isExtraImport": true,
+        "detail": "app.config.config",
+        "documentation": {}
+    },
+    {
+        "label": "MODEL_CONTEXT_LIMIT",
+        "importPath": "app.config.config",
+        "description": "app.config.config",
+        "isExtraImport": true,
+        "detail": "app.config.config",
+        "documentation": {}
+    },
+    {
+        "label": "csv",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "csv",
+        "description": "csv",
+        "detail": "csv",
+        "documentation": {}
+    },
+    {
+        "label": "tiktoken",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tiktoken",
+        "description": "tiktoken",
+        "detail": "tiktoken",
+        "documentation": {}
+    },
+    {
+        "label": "getmembers",
+        "importPath": "inspect",
+        "description": "inspect",
+        "isExtraImport": true,
+        "detail": "inspect",
+        "documentation": {}
+    },
+    {
+        "label": "getmembers",
+        "importPath": "inspect",
+        "description": "inspect",
+        "isExtraImport": true,
+        "detail": "inspect",
+        "documentation": {}
+    },
+    {
+        "label": "generate_c4_diagram",
+        "importPath": "app.diagrams.generate_diagrams",
+        "description": "app.diagrams.generate_diagrams",
+        "isExtraImport": true,
+        "detail": "app.diagrams.generate_diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "generate_c4_diagram",
+        "importPath": "app.diagrams.generate_diagrams",
+        "description": "app.diagrams.generate_diagrams",
+        "isExtraImport": true,
+        "detail": "app.diagrams.generate_diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "JSONResponse",
+        "importPath": "fastapi.responses",
+        "description": "fastapi.responses",
+        "isExtraImport": true,
+        "detail": "fastapi.responses",
+        "documentation": {}
+    },
+    {
+        "label": "SQLAlchemyError",
+        "importPath": "sqlalchemy.exc",
+        "description": "sqlalchemy.exc",
+        "isExtraImport": true,
+        "detail": "sqlalchemy.exc",
+        "documentation": {}
+    },
+    {
+        "label": "insert_diagram",
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "isExtraImport": true,
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "update_diagram",
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "isExtraImport": true,
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "list_diagrams",
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "isExtraImport": true,
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "get_diagram",
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "isExtraImport": true,
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "delete_diagram",
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "isExtraImport": true,
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "upsert_diagram",
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "isExtraImport": true,
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "analyze_requirements",
+        "importPath": "app.requirements.analyze_requirements",
+        "description": "app.requirements.analyze_requirements",
+        "isExtraImport": true,
+        "detail": "app.requirements.analyze_requirements",
+        "documentation": {}
+    },
+    {
+        "label": "tempfile",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "tempfile",
+        "description": "tempfile",
+        "detail": "tempfile",
+        "documentation": {}
+    },
+    {
+        "label": "process_pdf",
+        "importPath": "app.utils.pdf_processor",
+        "description": "app.utils.pdf_processor",
+        "isExtraImport": true,
+        "detail": "app.utils.pdf_processor",
+        "documentation": {}
+    },
+    {
+        "label": "bin_dir",
+        "kind": 5,
+        "importPath": ".venv.Scripts.activate_this",
+        "description": ".venv.Scripts.activate_this",
+        "peekOfCode": "bin_dir = os.path.dirname(abs_file)\nbase = bin_dir[: -len(\"Scripts\") - 1]  # strip away the bin part from the __file__, plus the path separator\n# prepend bin to PATH (this file is inside the bin directory)\nos.environ[\"PATH\"] = os.pathsep.join([bin_dir, *os.environ.get(\"PATH\", \"\").split(os.pathsep)])\nos.environ[\"VIRTUAL_ENV\"] = base  # virtual env is right above bin directory\nos.environ[\"VIRTUAL_ENV_PROMPT\"] = \"so_assistant_server\" or os.path.basename(base)  # noqa: SIM222\n# add the virtual environments libraries to the host python import mechanism\nprev_length = len(sys.path)\nfor lib in \"..\\\\Lib\\\\site-packages\".split(os.pathsep):\n    path = os.path.realpath(os.path.join(bin_dir, lib))",
+        "detail": ".venv.Scripts.activate_this",
+        "documentation": {}
+    },
+    {
+        "label": "base",
+        "kind": 5,
+        "importPath": ".venv.Scripts.activate_this",
+        "description": ".venv.Scripts.activate_this",
+        "peekOfCode": "base = bin_dir[: -len(\"Scripts\") - 1]  # strip away the bin part from the __file__, plus the path separator\n# prepend bin to PATH (this file is inside the bin directory)\nos.environ[\"PATH\"] = os.pathsep.join([bin_dir, *os.environ.get(\"PATH\", \"\").split(os.pathsep)])\nos.environ[\"VIRTUAL_ENV\"] = base  # virtual env is right above bin directory\nos.environ[\"VIRTUAL_ENV_PROMPT\"] = \"so_assistant_server\" or os.path.basename(base)  # noqa: SIM222\n# add the virtual environments libraries to the host python import mechanism\nprev_length = len(sys.path)\nfor lib in \"..\\\\Lib\\\\site-packages\".split(os.pathsep):\n    path = os.path.realpath(os.path.join(bin_dir, lib))\n    site.addsitedir(path)",
+        "detail": ".venv.Scripts.activate_this",
+        "documentation": {}
+    },
+    {
+        "label": "os.environ[\"PATH\"]",
+        "kind": 5,
+        "importPath": ".venv.Scripts.activate_this",
+        "description": ".venv.Scripts.activate_this",
+        "peekOfCode": "os.environ[\"PATH\"] = os.pathsep.join([bin_dir, *os.environ.get(\"PATH\", \"\").split(os.pathsep)])\nos.environ[\"VIRTUAL_ENV\"] = base  # virtual env is right above bin directory\nos.environ[\"VIRTUAL_ENV_PROMPT\"] = \"so_assistant_server\" or os.path.basename(base)  # noqa: SIM222\n# add the virtual environments libraries to the host python import mechanism\nprev_length = len(sys.path)\nfor lib in \"..\\\\Lib\\\\site-packages\".split(os.pathsep):\n    path = os.path.realpath(os.path.join(bin_dir, lib))\n    site.addsitedir(path)\nsys.path[:] = sys.path[prev_length:] + sys.path[0:prev_length]\nsys.real_prefix = sys.prefix",
+        "detail": ".venv.Scripts.activate_this",
+        "documentation": {}
+    },
+    {
+        "label": "os.environ[\"VIRTUAL_ENV\"]",
+        "kind": 5,
+        "importPath": ".venv.Scripts.activate_this",
+        "description": ".venv.Scripts.activate_this",
+        "peekOfCode": "os.environ[\"VIRTUAL_ENV\"] = base  # virtual env is right above bin directory\nos.environ[\"VIRTUAL_ENV_PROMPT\"] = \"so_assistant_server\" or os.path.basename(base)  # noqa: SIM222\n# add the virtual environments libraries to the host python import mechanism\nprev_length = len(sys.path)\nfor lib in \"..\\\\Lib\\\\site-packages\".split(os.pathsep):\n    path = os.path.realpath(os.path.join(bin_dir, lib))\n    site.addsitedir(path)\nsys.path[:] = sys.path[prev_length:] + sys.path[0:prev_length]\nsys.real_prefix = sys.prefix\nsys.prefix = base",
+        "detail": ".venv.Scripts.activate_this",
+        "documentation": {}
+    },
+    {
+        "label": "os.environ[\"VIRTUAL_ENV_PROMPT\"]",
+        "kind": 5,
+        "importPath": ".venv.Scripts.activate_this",
+        "description": ".venv.Scripts.activate_this",
+        "peekOfCode": "os.environ[\"VIRTUAL_ENV_PROMPT\"] = \"so_assistant_server\" or os.path.basename(base)  # noqa: SIM222\n# add the virtual environments libraries to the host python import mechanism\nprev_length = len(sys.path)\nfor lib in \"..\\\\Lib\\\\site-packages\".split(os.pathsep):\n    path = os.path.realpath(os.path.join(bin_dir, lib))\n    site.addsitedir(path)\nsys.path[:] = sys.path[prev_length:] + sys.path[0:prev_length]\nsys.real_prefix = sys.prefix\nsys.prefix = base",
+        "detail": ".venv.Scripts.activate_this",
+        "documentation": {}
+    },
+    {
+        "label": "prev_length",
+        "kind": 5,
+        "importPath": ".venv.Scripts.activate_this",
+        "description": ".venv.Scripts.activate_this",
+        "peekOfCode": "prev_length = len(sys.path)\nfor lib in \"..\\\\Lib\\\\site-packages\".split(os.pathsep):\n    path = os.path.realpath(os.path.join(bin_dir, lib))\n    site.addsitedir(path)\nsys.path[:] = sys.path[prev_length:] + sys.path[0:prev_length]\nsys.real_prefix = sys.prefix\nsys.prefix = base",
+        "detail": ".venv.Scripts.activate_this",
+        "documentation": {}
+    },
+    {
+        "label": "sys.path[:]",
+        "kind": 5,
+        "importPath": ".venv.Scripts.activate_this",
+        "description": ".venv.Scripts.activate_this",
+        "peekOfCode": "sys.path[:] = sys.path[prev_length:] + sys.path[0:prev_length]\nsys.real_prefix = sys.prefix\nsys.prefix = base",
+        "detail": ".venv.Scripts.activate_this",
+        "documentation": {}
+    },
+    {
+        "label": "sys.real_prefix",
+        "kind": 5,
+        "importPath": ".venv.Scripts.activate_this",
+        "description": ".venv.Scripts.activate_this",
+        "peekOfCode": "sys.real_prefix = sys.prefix\nsys.prefix = base",
+        "detail": ".venv.Scripts.activate_this",
+        "documentation": {}
+    },
+    {
+        "label": "sys.prefix",
+        "kind": 5,
+        "importPath": ".venv.Scripts.activate_this",
+        "description": ".venv.Scripts.activate_this",
+        "peekOfCode": "sys.prefix = base",
+        "detail": ".venv.Scripts.activate_this",
+        "documentation": {}
+    },
+    {
+        "label": "safe_extract_json",
+        "kind": 2,
+        "importPath": "app.utils.llm_response_utils",
+        "description": "app.utils.llm_response_utils",
+        "peekOfCode": "def safe_extract_json(response_text):\n    try:\n        json_match = re.search(r'(\\{.*\\})', response_text, re.DOTALL)\n        json_content = json_match.group(1) if json_match else response_text\n        return json.loads(json_content)\n    except Exception:\n        return None\ndef extract_json_from_text(text):\n    matches = re.findall(r\"```json\\s*([\\s\\S]*?)\\s*```\", text)\n    if not matches:",
+        "detail": "app.utils.llm_response_utils",
+        "documentation": {}
+    },
+    {
+        "label": "extract_json_from_text",
+        "kind": 2,
+        "importPath": "app.utils.llm_response_utils",
+        "description": "app.utils.llm_response_utils",
+        "peekOfCode": "def extract_json_from_text(text):\n    matches = re.findall(r\"```json\\s*([\\s\\S]*?)\\s*```\", text)\n    if not matches:\n        raise ValueError(\"No valid JSON found in LLM response\")\n    return json.loads(matches[0])        \ndef extract_json_array_or_object_from_text(text):\n    \"\"\"\n    Extracts either a JSON array or object from a code block (```json ... ```) or from the text.\n    Returns the parsed JSON (list or dict).\n    \"\"\"",
+        "detail": "app.utils.llm_response_utils",
+        "documentation": {}
+    },
+    {
+        "label": "extract_json_array_or_object_from_text",
+        "kind": 2,
+        "importPath": "app.utils.llm_response_utils",
+        "description": "app.utils.llm_response_utils",
+        "peekOfCode": "def extract_json_array_or_object_from_text(text):\n    \"\"\"\n    Extracts either a JSON array or object from a code block (```json ... ```) or from the text.\n    Returns the parsed JSON (list or dict).\n    \"\"\"\n    # Try to extract from code block first\n    matches = re.findall(r\"```json\\s*([\\s\\S]*?)\\s*```\", text)\n    if matches:\n        candidate = matches[0].strip()\n        try:",
+        "detail": "app.utils.llm_response_utils",
+        "documentation": {}
+    },
+    {
+        "label": "clean_text",
+        "kind": 2,
+        "importPath": "app.utils.pdf_processor",
+        "description": "app.utils.pdf_processor",
+        "peekOfCode": "def clean_text(text):\n    # Αφαιρούμε control chars, null bytes, περίεργα σύμβολα\n    text = text.replace('\\x00', ' ')\n    text = re.sub(r'[^\\x20-\\x7E\\n\\r]', '', text)\n    text = re.sub(r'\\s+', ' ', text)\n    return text.strip()\ndef split_into_chunks(text, max_length=1000):\n    sentences = re.split(r'(?<=[.!?]) +', text)\n    chunks, current = [], \"\"\n    for sentence in sentences:",
+        "detail": "app.utils.pdf_processor",
+        "documentation": {}
+    },
+    {
+        "label": "split_into_chunks",
+        "kind": 2,
+        "importPath": "app.utils.pdf_processor",
+        "description": "app.utils.pdf_processor",
+        "peekOfCode": "def split_into_chunks(text, max_length=1000):\n    sentences = re.split(r'(?<=[.!?]) +', text)\n    chunks, current = [], \"\"\n    for sentence in sentences:\n        if len(current) + len(sentence) <= max_length:\n            current += \" \" + sentence\n        else:\n            if current:\n                chunks.append(current.strip())\n            current = sentence",
+        "detail": "app.utils.pdf_processor",
+        "documentation": {}
+    },
+    {
+        "label": "process_pdf",
+        "kind": 2,
+        "importPath": "app.utils.pdf_processor",
+        "description": "app.utils.pdf_processor",
+        "peekOfCode": "def process_pdf(pdf_path, max_chunk_length=1000):\n    doc = fitz.open(pdf_path)\n    full_text = \"\"\n    for page in doc:\n        full_text += page.get_text()\n    doc.close()\n    cleaned_text = clean_text(full_text)\n    if not cleaned_text:\n        return []\n    chunks = split_into_chunks(cleaned_text, max_chunk_length)",
+        "detail": "app.utils.pdf_processor",
+        "documentation": {}
+    },
+    {
+        "label": "OLLAMA_HOST",
+        "kind": 5,
+        "importPath": "app.config.config",
+        "description": "app.config.config",
+        "peekOfCode": "OLLAMA_HOST = os.getenv(\"OLLAMA_HOST\", \"http://localhost:11434\")\nLLM_MODEL = \"deepseek-coder-v2:latest\"\nCALC_MODEL = \"deepseek-coder\"\nMODEL_CONTEXT_LIMIT = 160_000  # max token window for deepseek-coder\nLOGGING_LEVEL = \"DEBUG\"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL",
+        "detail": "app.config.config",
+        "documentation": {}
+    },
+    {
+        "label": "LLM_MODEL",
+        "kind": 5,
+        "importPath": "app.config.config",
+        "description": "app.config.config",
+        "peekOfCode": "LLM_MODEL = \"deepseek-coder-v2:latest\"\nCALC_MODEL = \"deepseek-coder\"\nMODEL_CONTEXT_LIMIT = 160_000  # max token window for deepseek-coder\nLOGGING_LEVEL = \"DEBUG\"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL",
+        "detail": "app.config.config",
+        "documentation": {}
+    },
+    {
+        "label": "CALC_MODEL",
+        "kind": 5,
+        "importPath": "app.config.config",
+        "description": "app.config.config",
+        "peekOfCode": "CALC_MODEL = \"deepseek-coder\"\nMODEL_CONTEXT_LIMIT = 160_000  # max token window for deepseek-coder\nLOGGING_LEVEL = \"DEBUG\"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL",
+        "detail": "app.config.config",
+        "documentation": {}
+    },
+    {
+        "label": "MODEL_CONTEXT_LIMIT",
+        "kind": 5,
+        "importPath": "app.config.config",
+        "description": "app.config.config",
+        "peekOfCode": "MODEL_CONTEXT_LIMIT = 160_000  # max token window for deepseek-coder\nLOGGING_LEVEL = \"DEBUG\"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL",
+        "detail": "app.config.config",
+        "documentation": {}
+    },
+    {
+        "label": "LOGGING_LEVEL",
+        "kind": 5,
+        "importPath": "app.config.config",
+        "description": "app.config.config",
+        "peekOfCode": "LOGGING_LEVEL = \"DEBUG\"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL",
+        "detail": "app.config.config",
+        "documentation": {}
+    },
+    {
+        "label": "generate_c4_diagram",
+        "kind": 2,
+        "importPath": "app.diagrams.generate_diagrams",
+        "description": "app.diagrams.generate_diagrams",
+        "peekOfCode": "def generate_c4_diagram(sequence_diagram: str, c4_type: int):\n    if c4_type not in (1, 2, 3):\n        raise ValueError(\"Invalid c4_type. Use 1 (System Context), 2 (Container), or 3 (Component).\")\n    # Επιλογή prompt ανάλογα με το type\n    match c4_type:\n        case 1:\n            c4_level = \"System Context\"\n            instructions = get_instructions(c4_level)\n            prompt_template = get_system_context_prompt(instructions)\n        case 2:",
+        "detail": "app.diagrams.generate_diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "get_instructions",
+        "kind": 2,
+        "importPath": "app.diagrams.generate_diagrams",
+        "description": "app.diagrams.generate_diagrams",
+        "peekOfCode": "def get_instructions(c4_level: str):\n    return f\"\"\"\nYou are an expert software architect specializing in system design and the C4 model.\nYour task is to convert the provided MermaidJS sequence diagram into a **MermaidJS C4 {c4_level} diagram**.\n## MermaidJS C4 Syntax Rules\nYou MUST use the following MermaidJS commands to construct the diagram. Do NOT use any other syntax.\n    \"\"\"\ndef get_container_prompt(instructions:str):\n    return f\"\"\"\n    {instructions}",
+        "detail": "app.diagrams.generate_diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "get_container_prompt",
+        "kind": 2,
+        "importPath": "app.diagrams.generate_diagrams",
+        "description": "app.diagrams.generate_diagrams",
+        "peekOfCode": "def get_container_prompt(instructions:str):\n    return f\"\"\"\n    {instructions}\n    ```Mermaidjs\n    C4Container\n    title Container diagram for Internet Banking System\n    System_Ext(email_system, \"E-Mail System\", \"The internal Microsoft Exchange system\", $tags=\"v1.0\")\n    Person(customer, Customer, \"A customer of the bank, with personal bank accounts\", $tags=\"v1.0\")\n    Container_Boundary(c1, \"Internet Banking\") {{\n        Container(spa, \"Single-Page App\", \"JavaScript, Angular\", \"Provides all the Internet banking functionality to customers via their web browser\")",
+        "detail": "app.diagrams.generate_diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "get_system_context_prompt",
+        "kind": 2,
+        "importPath": "app.diagrams.generate_diagrams",
+        "description": "app.diagrams.generate_diagrams",
+        "peekOfCode": "def get_system_context_prompt(instructions:str):\n    return f\"\"\"\n    {instructions}\n    System Context Diagram sample\n    ```Mermaidjs\n    C4Context\n      title System Context diagram for Internet Banking System\n      Enterprise_Boundary(b0, \"BankBoundary0\") {{\n        Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")\n        Person(customerB, \"Banking Customer B\")",
+        "detail": "app.diagrams.generate_diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "get_component_prompt",
+        "kind": 2,
+        "importPath": "app.diagrams.generate_diagrams",
+        "description": "app.diagrams.generate_diagrams",
+        "peekOfCode": "def get_component_prompt(instructions:str):\n    return f\"\"\"\n    {instructions}\n    C4Component sample\n    ```Mermaidjs\n    C4Component\n    title Component diagram for Internet Banking System - API Application\n    Container(spa, \"Single Page Application\", \"javascript and angular\", \"Provides all the internet banking functionality to customers via their web browser.\")\n    Container(ma, \"Mobile App\", \"Xamarin\", \"Provides a limited subset to the internet banking functionality to customers via their mobile device.\")\n    ContainerDb(db, \"Database\", \"Relational Database Schema\", \"Stores user registration information, hashed authentication credentials, access logs, etc.\")",
+        "detail": "app.diagrams.generate_diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "app.diagrams.generate_diagrams",
+        "description": "app.diagrams.generate_diagrams",
+        "peekOfCode": "logger = get_logger()\ndef generate_c4_diagram(sequence_diagram: str, c4_type: int):\n    if c4_type not in (1, 2, 3):\n        raise ValueError(\"Invalid c4_type. Use 1 (System Context), 2 (Container), or 3 (Component).\")\n    # Επιλογή prompt ανάλογα με το type\n    match c4_type:\n        case 1:\n            c4_level = \"System Context\"\n            instructions = get_instructions(c4_level)\n            prompt_template = get_system_context_prompt(instructions)",
+        "detail": "app.diagrams.generate_diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "kind": 2,
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "peekOfCode": "def get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\ndef insert_diagram(project_id: str, diagram: schemas.DiagramCreate, db: Session):\n    project = db.query(models.Project).filter(models.Project.id == project_id).first()\n    if not project:\n        raise HTTPException(status_code=404, detail=\"Project not found\")",
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "insert_diagram",
+        "kind": 2,
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "peekOfCode": "def insert_diagram(project_id: str, diagram: schemas.DiagramCreate, db: Session):\n    project = db.query(models.Project).filter(models.Project.id == project_id).first()\n    if not project:\n        raise HTTPException(status_code=404, detail=\"Project not found\")\n    db_diagram = models.Diagram(\n        project_id=project_id,\n        title=diagram.title,\n        mermaid_code=diagram.mermaid_code,\n        type=diagram.type\n    )",
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "update_diagram",
+        "kind": 2,
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "peekOfCode": "def update_diagram(diagram_id: int, diagram: schemas.DiagramCreate, db: Session):\n    db_diagram = db.query(models.Diagram).filter(models.Diagram.id == diagram_id).first()\n    if not db_diagram:\n        raise HTTPException(status_code=404, detail=\"Diagram not found\")\n    db_diagram.title = diagram.title\n    db_diagram.mermaid_code = diagram.mermaid_code\n    db_diagram.type = diagram.type\n    db.commit()\n    db.refresh(db_diagram)\n    return db_diagram",
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "list_diagrams",
+        "kind": 2,
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "peekOfCode": "def list_diagrams(project_id: str, db: Session):\n    return db.query(models.Diagram).filter(models.Diagram.project_id == project_id).all()\ndef get_diagram(project_id: str, diagram_id: int, db: Session):\n    diagram = db.query(models.Diagram).filter(\n        models.Diagram.project_id == project_id,\n        models.Diagram.id == diagram_id\n    ).first()\n    if not diagram:\n        raise HTTPException(status_code=404, detail=\"Diagram not found\")\n    return diagram",
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "get_diagram",
+        "kind": 2,
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "peekOfCode": "def get_diagram(project_id: str, diagram_id: int, db: Session):\n    diagram = db.query(models.Diagram).filter(\n        models.Diagram.project_id == project_id,\n        models.Diagram.id == diagram_id\n    ).first()\n    if not diagram:\n        raise HTTPException(status_code=404, detail=\"Diagram not found\")\n    return diagram\ndef delete_diagram(project_id: str, diagram_id: int, db: Session):\n    diagram = db.query(models.Diagram).filter(",
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "delete_diagram",
+        "kind": 2,
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "peekOfCode": "def delete_diagram(project_id: str, diagram_id: int, db: Session):\n    diagram = db.query(models.Diagram).filter(\n        models.Diagram.project_id == project_id,\n        models.Diagram.id == diagram_id\n    ).first()\n    if not diagram:\n        raise HTTPException(status_code=404, detail=\"Diagram not found\")\n    db.delete(diagram)\n    db.commit()\n    return {\"detail\": \"Diagram deleted\"}",
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "upsert_diagram",
+        "kind": 2,
+        "importPath": "app.diagrams.diagrams_repository",
+        "description": "app.diagrams.diagrams_repository",
+        "peekOfCode": "def upsert_diagram(project_id: str, diagram_id: int, diagram: schemas.DiagramCreate, db: Session):\n    \"\"\"\n    Update diagram if diagram_id exists, else insert new diagram for project_id.\n    Returns the upserted diagram object.\n    \"\"\"\n    if diagram_id is not None:\n        db_diagram = db.query(models.Diagram).filter(models.Diagram.id == diagram_id).first()\n        if db_diagram:\n            db_diagram.title = diagram.title\n            db_diagram.mermaid_code = diagram.mermaid_code",
+        "detail": "app.diagrams.diagrams_repository",
+        "documentation": {}
+    },
+    {
+        "label": "analyze_requirements",
+        "kind": 2,
+        "importPath": "app.requirements.analyze_requirements",
+        "description": "app.requirements.analyze_requirements",
+        "peekOfCode": "def analyze_requirements(content: str):\n    prompt = f\"\"\"\nYou are an experienced business analyst.\nAnalyze the following document written in Greek, describing the current (as-is) and desired (to-be) business processes.\nExtract ONLY the requirements related to the \"to-be\" state.\nReturn ONLY a JSON array, where each requirement has:\n- title: short title (keep in Greek)\n- description: short description (1-2 sentences, in Greek)\n- functional: true if functional requirement, false if non-functional\n### Example format:",
+        "detail": "app.requirements.analyze_requirements",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "app.requirements.analyze_requirements",
+        "description": "app.requirements.analyze_requirements",
+        "peekOfCode": "logger = get_logger()\ndef analyze_requirements(content: str):\n    prompt = f\"\"\"\nYou are an experienced business analyst.\nAnalyze the following document written in Greek, describing the current (as-is) and desired (to-be) business processes.\nExtract ONLY the requirements related to the \"to-be\" state.\nReturn ONLY a JSON array, where each requirement has:\n- title: short title (keep in Greek)\n- description: short description (1-2 sentences, in Greek)\n- functional: true if functional requirement, false if non-functional",
+        "detail": "app.requirements.analyze_requirements",
+        "documentation": {}
+    },
+    {
+        "label": "read_root",
+        "kind": 2,
+        "importPath": "app.main",
+        "description": "app.main",
+        "peekOfCode": "def read_root():\n    \"\"\"\n    Root endpoint to check if the API is running.\n    \"\"\"\n    return {\"message\": \"Welcome to the Solution Outline Assistant API!\"}\n# Εγγραφή router\napp.include_router(projects.router)\napp.include_router(requirements.router)\napp.include_router(diagrams.router)\napp.include_router(teams.router)",
+        "detail": "app.main",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "app.main",
+        "description": "app.main",
+        "peekOfCode": "app = FastAPI(\n    title=\"Solution Outline Assistant API\",\n    description=\"API to help architects create Solution Outlines.\",\n    version=\"0.1.0\",\n    lifespan=lifespan\n)\n# Επέτρεψε όλα τα origins (για development)\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\"*\"],  # ή βάλε λίστα με συγκεκριμένα origins π.χ. [\"http://localhost:3000\"]",
+        "detail": "app.main",
+        "documentation": {}
+    },
+    {
+        "label": "init_db",
+        "kind": 2,
+        "importPath": "app.database",
+        "description": "app.database",
+        "peekOfCode": "def init_db():\n    Base.metadata.create_all(bind=engine)\n    logging.info(\"Database tables created.\")\n# FastAPI dependency\nfrom sqlalchemy.orm import Session\nfrom fastapi import Depends\ndef get_db():\n    db = SessionLocal()\n    try:\n        yield db",
+        "detail": "app.database",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "kind": 2,
+        "importPath": "app.database",
+        "description": "app.database",
+        "peekOfCode": "def get_db():\n    db = SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()",
+        "detail": "app.database",
+        "documentation": {}
+    },
+    {
+        "label": "DATABASE_URL",
+        "kind": 5,
+        "importPath": "app.database",
+        "description": "app.database",
+        "peekOfCode": "DATABASE_URL = os.getenv(\"DATABASE_URL\", \"sqlite:///./so_assistant.db\")\nengine = create_engine(\n    DATABASE_URL, connect_args={\"check_same_thread\": False}, echo=True\n)\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\ndef init_db():\n    Base.metadata.create_all(bind=engine)\n    logging.info(\"Database tables created.\")\n# FastAPI dependency\nfrom sqlalchemy.orm import Session",
+        "detail": "app.database",
+        "documentation": {}
+    },
+    {
+        "label": "engine",
+        "kind": 5,
+        "importPath": "app.database",
+        "description": "app.database",
+        "peekOfCode": "engine = create_engine(\n    DATABASE_URL, connect_args={\"check_same_thread\": False}, echo=True\n)\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\ndef init_db():\n    Base.metadata.create_all(bind=engine)\n    logging.info(\"Database tables created.\")\n# FastAPI dependency\nfrom sqlalchemy.orm import Session\nfrom fastapi import Depends",
+        "detail": "app.database",
+        "documentation": {}
+    },
+    {
+        "label": "SessionLocal",
+        "kind": 5,
+        "importPath": "app.database",
+        "description": "app.database",
+        "peekOfCode": "SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\ndef init_db():\n    Base.metadata.create_all(bind=engine)\n    logging.info(\"Database tables created.\")\n# FastAPI dependency\nfrom sqlalchemy.orm import Session\nfrom fastapi import Depends\ndef get_db():\n    db = SessionLocal()\n    try:",
+        "detail": "app.database",
+        "documentation": {}
+    },
+    {
+        "label": "RequirementCategory",
+        "kind": 6,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "class RequirementCategory(enum.Enum):\n    functional = \"Functional\"\n    non_functional = \"Non-Functional\"\nclass RequirementStatus(enum.Enum):\n    pending = \"Pending\"\n    approved = \"Approved\"\n    implemented = \"Implemented\"\nclass DiagramType(enum.Enum):\n    flowchart = \"Flowchart\"\n    sequence = \"Sequence\"",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "RequirementStatus",
+        "kind": 6,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "class RequirementStatus(enum.Enum):\n    pending = \"Pending\"\n    approved = \"Approved\"\n    implemented = \"Implemented\"\nclass DiagramType(enum.Enum):\n    flowchart = \"Flowchart\"\n    sequence = \"Sequence\"\n    gantt = \"Gantt\"\nclass TaskStatus(enum.Enum):\n    todo = \"To Do\"",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "DiagramType",
+        "kind": 6,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "class DiagramType(enum.Enum):\n    flowchart = \"Flowchart\"\n    sequence = \"Sequence\"\n    gantt = \"Gantt\"\nclass TaskStatus(enum.Enum):\n    todo = \"To Do\"\n    in_progress = \"In Progress\"\n    done = \"Done\"\nclass Project(Base):\n    __tablename__ = \"projects\"",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "TaskStatus",
+        "kind": 6,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "class TaskStatus(enum.Enum):\n    todo = \"To Do\"\n    in_progress = \"In Progress\"\n    done = \"Done\"\nclass Project(Base):\n    __tablename__ = \"projects\"\n    id = Column(String(255), primary_key=True, index=True, unique=True)\n    name = Column(String(255), nullable=False)\n    description = Column(Text)\n    created_at = Column(DateTime, default=datetime.utcnow)",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "Project",
+        "kind": 6,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "class Project(Base):\n    __tablename__ = \"projects\"\n    id = Column(String(255), primary_key=True, index=True, unique=True)\n    name = Column(String(255), nullable=False)\n    description = Column(Text)\n    created_at = Column(DateTime, default=datetime.utcnow)\n    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)\n    requirements = relationship(\"Requirement\", back_populates=\"project\", cascade=\"all, delete-orphan\")\n    diagrams = relationship(\"Diagram\", back_populates=\"project\", cascade=\"all, delete-orphan\")\n    teams = relationship(\"Team\", back_populates=\"project\", cascade=\"all, delete-orphan\")",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "Requirement",
+        "kind": 6,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "class Requirement(Base):\n    __tablename__ = \"requirements\"\n    id = Column(Integer, primary_key=True, index=True)\n    project_id = Column(String(255), ForeignKey(\"projects.id\"), nullable=False)\n    description = Column(Text, nullable=False)\n    category = Column(Enum(RequirementCategory), nullable=False)\n    status = Column(Enum(RequirementStatus), default=RequirementStatus.pending)\n    project = relationship(\"Project\", back_populates=\"requirements\")\nclass Diagram(Base):\n    __tablename__ = \"diagrams\"",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "Diagram",
+        "kind": 6,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "class Diagram(Base):\n    __tablename__ = \"diagrams\"\n    # id = Column(Integer, primary_key=True, index=True)\n    # project_id = Column(String(255), ForeignKey(\"projects.id\"), nullable=False)\n    # title = Column(String(255), nullable=False)\n    # mermaid_code = Column(Text, nullable=False)\n    # type = Column(Enum(DiagramType), nullable=False)\n    id: Mapped[int] = mapped_column(primary_key=True, index=True)\n    project_id: Mapped[int] = mapped_column(ForeignKey(\"projects.id\"), nullable=False)\n    title: Mapped[str] = mapped_column(String(255), nullable=False)",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "Team",
+        "kind": 6,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "class Team(Base):\n    __tablename__ = \"teams\"\n    id = Column(Integer, primary_key=True, index=True)\n    project_id = Column(String(255), ForeignKey(\"projects.id\"), nullable=False)\n    name = Column(String(255), nullable=False)\n    members = Column(Text)  # comma-separated names\n    project = relationship(\"Project\", back_populates=\"teams\")\n    tasks = relationship(\"Task\", back_populates=\"assigned_team\")\nclass Task(Base):\n    __tablename__ = \"tasks\"",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "Task",
+        "kind": 6,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "class Task(Base):\n    __tablename__ = \"tasks\"\n    id = Column(Integer, primary_key=True, index=True)\n    project_id = Column(String(255), ForeignKey(\"projects.id\"), nullable=False)\n    description = Column(Text, nullable=False)\n    assigned_to_team_id = Column(Integer, ForeignKey(\"teams.id\"))\n    status = Column(Enum(TaskStatus), default=TaskStatus.todo)\n    project = relationship(\"Project\", back_populates=\"tasks\")\n    assigned_team = relationship(\"Team\", back_populates=\"tasks\")",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "Base",
+        "kind": 5,
+        "importPath": "app.models",
+        "description": "app.models",
+        "peekOfCode": "Base = declarative_base()\nclass RequirementCategory(enum.Enum):\n    functional = \"Functional\"\n    non_functional = \"Non-Functional\"\nclass RequirementStatus(enum.Enum):\n    pending = \"Pending\"\n    approved = \"Approved\"\n    implemented = \"Implemented\"\nclass DiagramType(enum.Enum):\n    flowchart = \"Flowchart\"",
+        "detail": "app.models",
+        "documentation": {}
+    },
+    {
+        "label": "RequirementCategory",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class RequirementCategory(str, enum.Enum):\n    functional = \"Functional\"\n    non_functional = \"Non-Functional\"\nclass RequirementStatus(str, enum.Enum):\n    pending = \"Pending\"\n    approved = \"Approved\"\n    implemented = \"Implemented\"\nclass TaskStatus(str, enum.Enum):\n    todo = \"To Do\"\n    in_progress = \"In Progress\"",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "RequirementStatus",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class RequirementStatus(str, enum.Enum):\n    pending = \"Pending\"\n    approved = \"Approved\"\n    implemented = \"Implemented\"\nclass TaskStatus(str, enum.Enum):\n    todo = \"To Do\"\n    in_progress = \"In Progress\"\n    done = \"Done\"\n# Project Schemas\nclass ProjectBase(BaseModel):",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "TaskStatus",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class TaskStatus(str, enum.Enum):\n    todo = \"To Do\"\n    in_progress = \"In Progress\"\n    done = \"Done\"\n# Project Schemas\nclass ProjectBase(BaseModel):\n    name: str\n    description: Optional[str] = None\nclass ProjectCreate(ProjectBase):\n    id: str  # Τώρα το id πρέπει να δίνεται από τον client",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "ProjectBase",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class ProjectBase(BaseModel):\n    name: str\n    description: Optional[str] = None\nclass ProjectCreate(ProjectBase):\n    id: str  # Τώρα το id πρέπει να δίνεται από τον client\nclass ProjectResponse(ProjectBase):\n    id: str\n    created_at: datetime\n    updated_at: datetime\n    class Config:",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "ProjectCreate",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class ProjectCreate(ProjectBase):\n    id: str  # Τώρα το id πρέπει να δίνεται από τον client\nclass ProjectResponse(ProjectBase):\n    id: str\n    created_at: datetime\n    updated_at: datetime\n    class Config:\n        from_attributes = True\n# Requirement Schemas\nclass RequirementBase(BaseModel):",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "ProjectResponse",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class ProjectResponse(ProjectBase):\n    id: str\n    created_at: datetime\n    updated_at: datetime\n    class Config:\n        from_attributes = True\n# Requirement Schemas\nclass RequirementBase(BaseModel):\n    description: str\n    category: RequirementCategory",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "RequirementBase",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class RequirementBase(BaseModel):\n    description: str\n    category: RequirementCategory\nclass RequirementCreate(RequirementBase):\n    pass\nclass RequirementResponse(RequirementBase):\n    id: int\n    status: RequirementStatus\n    class Config:\n        from_attributes = True",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "RequirementCreate",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class RequirementCreate(RequirementBase):\n    pass\nclass RequirementResponse(RequirementBase):\n    id: int\n    status: RequirementStatus\n    class Config:\n        from_attributes = True\n# Diagram Schemas\nclass DiagramBase(BaseModel):\n    title: str",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "RequirementResponse",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class RequirementResponse(RequirementBase):\n    id: int\n    status: RequirementStatus\n    class Config:\n        from_attributes = True\n# Diagram Schemas\nclass DiagramBase(BaseModel):\n    title: str\n    mermaid_code: str\n    type: str",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "DiagramBase",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class DiagramBase(BaseModel):\n    title: str\n    mermaid_code: str\n    type: str\nclass DiagramCreate(DiagramBase):\n    pass\nclass DiagramResponse(DiagramBase):\n    id: int\n    class Config:\n        from_attributes = True",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "DiagramCreate",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class DiagramCreate(DiagramBase):\n    pass\nclass DiagramResponse(DiagramBase):\n    id: int\n    class Config:\n        from_attributes = True\n# Team Schemas\nclass TeamBase(BaseModel):\n    name: str\n    members: Optional[str] = None",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "DiagramResponse",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class DiagramResponse(DiagramBase):\n    id: int\n    class Config:\n        from_attributes = True\n# Team Schemas\nclass TeamBase(BaseModel):\n    name: str\n    members: Optional[str] = None\nclass TeamCreate(TeamBase):\n    pass",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "TeamBase",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class TeamBase(BaseModel):\n    name: str\n    members: Optional[str] = None\nclass TeamCreate(TeamBase):\n    pass\nclass TeamResponse(TeamBase):\n    id: int\n    class Config:\n        from_attributes = True\n# Task Schemas",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "TeamCreate",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class TeamCreate(TeamBase):\n    pass\nclass TeamResponse(TeamBase):\n    id: int\n    class Config:\n        from_attributes = True\n# Task Schemas\nclass TaskBase(BaseModel):\n    description: str\n    assigned_to_team_id: Optional[int] = None",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "TeamResponse",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class TeamResponse(TeamBase):\n    id: int\n    class Config:\n        from_attributes = True\n# Task Schemas\nclass TaskBase(BaseModel):\n    description: str\n    assigned_to_team_id: Optional[int] = None\nclass TaskCreate(TaskBase):\n    pass",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "TaskBase",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class TaskBase(BaseModel):\n    description: str\n    assigned_to_team_id: Optional[int] = None\nclass TaskCreate(TaskBase):\n    pass\nclass TaskResponse(TaskBase):\n    id: int\n    status: TaskStatus\n    class Config:\n        from_attributes = True",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "TaskCreate",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class TaskCreate(TaskBase):\n    pass\nclass TaskResponse(TaskBase):\n    id: int\n    status: TaskStatus\n    class Config:\n        from_attributes = True\n# Project Outline (για το outline endpoint)\nclass ProjectOutlineResponse(ProjectResponse):\n    requirements: List[RequirementResponse] = Field(default_factory=list)",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "TaskResponse",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class TaskResponse(TaskBase):\n    id: int\n    status: TaskStatus\n    class Config:\n        from_attributes = True\n# Project Outline (για το outline endpoint)\nclass ProjectOutlineResponse(ProjectResponse):\n    requirements: List[RequirementResponse] = Field(default_factory=list)\n    diagrams: List[DiagramResponse] = Field(default_factory=list)\n    teams: List[TeamResponse] = Field(default_factory=list)",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "ProjectOutlineResponse",
+        "kind": 6,
+        "importPath": "app.schemas",
+        "description": "app.schemas",
+        "peekOfCode": "class ProjectOutlineResponse(ProjectResponse):\n    requirements: List[RequirementResponse] = Field(default_factory=list)\n    diagrams: List[DiagramResponse] = Field(default_factory=list)\n    teams: List[TeamResponse] = Field(default_factory=list)\n    tasks: List[TaskResponse] = Field(default_factory=list)\n    class Config:\n        from_attributes = True",
+        "detail": "app.schemas",
+        "documentation": {}
+    },
+    {
+        "label": "call_ollama",
+        "kind": 2,
+        "importPath": "app.ollama_client",
+        "description": "app.ollama_client",
+        "peekOfCode": "def call_ollama(prompt, prompt_key=\"unknown\"):\n    # Check token size and cost estimate before sending\n    stats = check_prompt_fits(prompt, model_context_limit=MODEL_CONTEXT_LIMIT)\n    prompt_tokens = stats[\"prompt_tokens\"]\n    if stats[\"total_tokens\"] > MODEL_CONTEXT_LIMIT:\n        logger.warning(\n            f\"⚠️ Estimated total tokens {stats['total_tokens']} exceed context window ({MODEL_CONTEXT_LIMIT}).\"\n        )\n    url = f\"{OLLAMA_HOST}/api/generate\"\n    payload = {",
+        "detail": "app.ollama_client",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "app.ollama_client",
+        "description": "app.ollama_client",
+        "peekOfCode": "logger = get_logger()\ndef call_ollama(prompt, prompt_key=\"unknown\"):\n    # Check token size and cost estimate before sending\n    stats = check_prompt_fits(prompt, model_context_limit=MODEL_CONTEXT_LIMIT)\n    prompt_tokens = stats[\"prompt_tokens\"]\n    if stats[\"total_tokens\"] > MODEL_CONTEXT_LIMIT:\n        logger.warning(\n            f\"⚠️ Estimated total tokens {stats['total_tokens']} exceed context window ({MODEL_CONTEXT_LIMIT}).\"\n        )\n    url = f\"{OLLAMA_HOST}/api/generate\"",
+        "detail": "app.ollama_client",
+        "documentation": {}
+    },
+    {
+        "label": "estimate_size",
+        "kind": 2,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "def estimate_size(text):\n    enc = tiktoken.encoding_for_model(\"gpt-4\")  # fallback\n    tokens = enc.encode(text)\n    prompt_token_count = len(tokens)\n    return prompt_token_count\ndef estimate_token_cost(text, model_name=DEFAULT_MODEL):\n    enc = tiktoken.encoding_for_model(\"gpt-4\")  # fallback\n    tokens = enc.encode(text)\n    prompt_token_count = len(tokens)\n    expected_response_tokens = int(prompt_token_count * 0.5)",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "estimate_token_cost",
+        "kind": 2,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "def estimate_token_cost(text, model_name=DEFAULT_MODEL):\n    enc = tiktoken.encoding_for_model(\"gpt-4\")  # fallback\n    tokens = enc.encode(text)\n    prompt_token_count = len(tokens)\n    expected_response_tokens = int(prompt_token_count * 0.5)\n    total_estimated_tokens = prompt_token_count + expected_response_tokens\n    cost_per_k = MODEL_COSTS.get(model_name, 0.002)\n    cost_estimate = (prompt_token_count / 1000) * cost_per_k\n    # logger.info(f\"🧮 Prompt tokens: {prompt_token_count}\")\n    # logger.info(f\"📤 Expected response tokens (~50% extra): {expected_response_tokens}\")",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "check_prompt_fits",
+        "kind": 2,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "def check_prompt_fits(text, model_context_limit=MODEL_CONTEXT_LIMIT):\n    stats = estimate_token_cost(text)\n    margin = model_context_limit - stats[\"total_tokens\"]\n    if stats[\"total_tokens\"] > model_context_limit:\n        logger.warning(f\"⚠️ WARNING: Total tokens exceed context window by {abs(margin)} tokens!\")\n    else:\n        logger.info(f\"✅ OK: Fits within context window (margin: {margin} tokens)\")\n    return stats\ndef log_prompt_run(prompt_key, model_name, prompt_text, measured_response_tokens=None):\n    os.makedirs(os.path.dirname(ANALYTICS_LOG), exist_ok=True)",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "log_prompt_run",
+        "kind": 2,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "def log_prompt_run(prompt_key, model_name, prompt_text, measured_response_tokens=None):\n    os.makedirs(os.path.dirname(ANALYTICS_LOG), exist_ok=True)\n    stats = estimate_token_cost(prompt_text, model_name=model_name)\n    if measured_response_tokens is not None:\n        stats[\"total_tokens\"] = stats[\"prompt_tokens\"] + measured_response_tokens\n    with open(ANALYTICS_LOG, mode=\"a\", newline=\"\", encoding=\"utf-8\") as csvfile:\n        writer = csv.writer(csvfile)\n        if csvfile.tell() == 0:\n            writer.writerow([\n                \"timestamp\", \"prompt_key\", \"model\", \"prompt_tokens\",",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "summarize_prompt_runs",
+        "kind": 2,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "def summarize_prompt_runs():\n    if not os.path.exists(ANALYTICS_LOG):\n        logger.info(\"No analytics log file found.\")\n        return\n    summary = {}\n    with open(ANALYTICS_LOG, mode=\"r\", encoding=\"utf-8\") as csvfile:\n        reader = csv.DictReader(csvfile)\n        for row in reader:\n            key = row[\"prompt_key\"]\n            summary.setdefault(key, {",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "logger = get_logger()\nANALYTICS_LOG = \"output/prompt_analytics_log.csv\"\nMODEL_CONTEXT_LIMIT = 4_096  # e.g., deepseek-coder\nDEFAULT_MODEL = \"deepseek-coder\"\nMODEL_COSTS = {\n    \"gpt-3.5-turbo\": 0.0015,\n    \"gpt-4\": 0.03,\n    \"gpt-4-turbo\": 0.01,\n    \"deepseek-coder\": 0.002,  # hypothetical — adjust as needed\n}",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "ANALYTICS_LOG",
+        "kind": 5,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "ANALYTICS_LOG = \"output/prompt_analytics_log.csv\"\nMODEL_CONTEXT_LIMIT = 4_096  # e.g., deepseek-coder\nDEFAULT_MODEL = \"deepseek-coder\"\nMODEL_COSTS = {\n    \"gpt-3.5-turbo\": 0.0015,\n    \"gpt-4\": 0.03,\n    \"gpt-4-turbo\": 0.01,\n    \"deepseek-coder\": 0.002,  # hypothetical — adjust as needed\n}\ndef estimate_size(text):",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "MODEL_CONTEXT_LIMIT",
+        "kind": 5,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "MODEL_CONTEXT_LIMIT = 4_096  # e.g., deepseek-coder\nDEFAULT_MODEL = \"deepseek-coder\"\nMODEL_COSTS = {\n    \"gpt-3.5-turbo\": 0.0015,\n    \"gpt-4\": 0.03,\n    \"gpt-4-turbo\": 0.01,\n    \"deepseek-coder\": 0.002,  # hypothetical — adjust as needed\n}\ndef estimate_size(text):\n    enc = tiktoken.encoding_for_model(\"gpt-4\")  # fallback",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "DEFAULT_MODEL",
+        "kind": 5,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "DEFAULT_MODEL = \"deepseek-coder\"\nMODEL_COSTS = {\n    \"gpt-3.5-turbo\": 0.0015,\n    \"gpt-4\": 0.03,\n    \"gpt-4-turbo\": 0.01,\n    \"deepseek-coder\": 0.002,  # hypothetical — adjust as needed\n}\ndef estimate_size(text):\n    enc = tiktoken.encoding_for_model(\"gpt-4\")  # fallback\n    tokens = enc.encode(text)",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "MODEL_COSTS",
+        "kind": 5,
+        "importPath": "app.prompt_analytics",
+        "description": "app.prompt_analytics",
+        "peekOfCode": "MODEL_COSTS = {\n    \"gpt-3.5-turbo\": 0.0015,\n    \"gpt-4\": 0.03,\n    \"gpt-4-turbo\": 0.01,\n    \"deepseek-coder\": 0.002,  # hypothetical — adjust as needed\n}\ndef estimate_size(text):\n    enc = tiktoken.encoding_for_model(\"gpt-4\")  # fallback\n    tokens = enc.encode(text)\n    prompt_token_count = len(tokens)",
+        "detail": "app.prompt_analytics",
+        "documentation": {}
+    },
+    {
+        "label": "get_logger",
+        "kind": 2,
+        "importPath": "app.logger",
+        "description": "app.logger",
+        "peekOfCode": "def get_logger(name='analyze_document', log_file='logs/analyze_document.log', level=logging.DEBUG):\n    # Ensure logs directory exists\n    os.makedirs(os.path.dirname(log_file), exist_ok=True)\n    # Create logger\n    logger = logging.getLogger(name)\n    logger.setLevel(level)\n    # Avoid adding handlers multiple times if called repeatedly\n    if not logger.handlers:\n        # Console handler\n        ch = logging.StreamHandler()",
+        "detail": "app.logger",
+        "documentation": {}
+    },
+    {
+        "label": "SequenceToC4Request",
+        "kind": 6,
+        "importPath": "api.assistant",
+        "description": "api.assistant",
+        "peekOfCode": "class SequenceToC4Request(BaseModel):\n    content: str\n    c4_type: int  # 1 για System Context, 2 για Container\n@router.post(\"/c4diagram\", response_model=dict)\nasync def generate_c4_diagram(request: SequenceToC4Request):\n    logger.info(f\"request: {request}\")\n    try:\n        response = c4_diagram(request.content, request.c4_type)\n        logger.info(\"============================\")\n        logger.debug(response)",
+        "detail": "api.assistant",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "kind": 5,
+        "importPath": "api.assistant",
+        "description": "api.assistant",
+        "peekOfCode": "router = APIRouter(prefix=\"/assistant\", tags=[\"Assistant\"])\nlogger = get_logger()\nclass SequenceToC4Request(BaseModel):\n    content: str\n    c4_type: int  # 1 για System Context, 2 για Container\n@router.post(\"/c4diagram\", response_model=dict)\nasync def generate_c4_diagram(request: SequenceToC4Request):\n    logger.info(f\"request: {request}\")\n    try:\n        response = c4_diagram(request.content, request.c4_type)",
+        "detail": "api.assistant",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "api.assistant",
+        "description": "api.assistant",
+        "peekOfCode": "logger = get_logger()\nclass SequenceToC4Request(BaseModel):\n    content: str\n    c4_type: int  # 1 για System Context, 2 για Container\n@router.post(\"/c4diagram\", response_model=dict)\nasync def generate_c4_diagram(request: SequenceToC4Request):\n    logger.info(f\"request: {request}\")\n    try:\n        response = c4_diagram(request.content, request.c4_type)\n        logger.info(\"============================\")",
+        "detail": "api.assistant",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "kind": 2,
+        "importPath": "api.diagrams",
+        "description": "api.diagrams",
+        "peekOfCode": "def get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n@router.post(\"/add\", response_model=schemas.DiagramResponse, status_code=status.HTTP_201_CREATED)\ndef add_diagram(\n    project_id: str,\n    diagram: schemas.DiagramCreate,",
+        "detail": "api.diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "add_diagram",
+        "kind": 2,
+        "importPath": "api.diagrams",
+        "description": "api.diagrams",
+        "peekOfCode": "def add_diagram(\n    project_id: str,\n    diagram: schemas.DiagramCreate,\n    db: Session = Depends(get_db)\n):\n    try:\n        created = insert_diagram(project_id, diagram, db)\n        return created\n    except HTTPException as e:\n        raise e",
+        "detail": "api.diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "update_diagram_endpoint",
+        "kind": 2,
+        "importPath": "api.diagrams",
+        "description": "api.diagrams",
+        "peekOfCode": "def update_diagram_endpoint(\n    project_id: str,\n    diagram_id: int,\n    diagram: schemas.DiagramCreate,\n    db: Session = Depends(get_db)\n):\n    try:\n        updated = update_diagram(diagram_id, diagram, db)\n        return updated\n    except HTTPException as e:",
+        "detail": "api.diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "list_diagrams_endpoint",
+        "kind": 2,
+        "importPath": "api.diagrams",
+        "description": "api.diagrams",
+        "peekOfCode": "def list_diagrams_endpoint(\n    project_id: str,\n    db: Session = Depends(get_db)\n):\n    try:\n        return list_diagrams(project_id, db)\n    except HTTPException as e:\n        raise e\n    except SQLAlchemyError as e:\n        logger.error(f\"Database error: {e}\")",
+        "detail": "api.diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "get_diagram_endpoint",
+        "kind": 2,
+        "importPath": "api.diagrams",
+        "description": "api.diagrams",
+        "peekOfCode": "def get_diagram_endpoint(\n    project_id: str,\n    diagram_id: int,\n    db: Session = Depends(get_db)\n):\n    try:\n        return get_diagram(project_id, diagram_id, db)\n    except HTTPException as e:\n        raise e\n    except SQLAlchemyError as e:",
+        "detail": "api.diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "delete_diagram_endpoint",
+        "kind": 2,
+        "importPath": "api.diagrams",
+        "description": "api.diagrams",
+        "peekOfCode": "def delete_diagram_endpoint(\n    project_id: str,\n    diagram_id: int,\n    db: Session = Depends(get_db)\n):\n    try:\n        delete_diagram(project_id, diagram_id, db)\n        return JSONResponse(status_code=status.HTTP_204_NO_CONTENT, content=None)\n    except HTTPException as e:\n        raise e",
+        "detail": "api.diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "api.diagrams",
+        "description": "api.diagrams",
+        "peekOfCode": "logger = logging.getLogger(\"diagrams_api\")\n# Το prefix περιέχει ήδη το {project_id}\nrouter = APIRouter(prefix=\"/projects/{project_id}/diagrams\", tags=[\"Diagrams\"])\ndef get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n@router.post(\"/add\", response_model=schemas.DiagramResponse, status_code=status.HTTP_201_CREATED)",
+        "detail": "api.diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "kind": 5,
+        "importPath": "api.diagrams",
+        "description": "api.diagrams",
+        "peekOfCode": "router = APIRouter(prefix=\"/projects/{project_id}/diagrams\", tags=[\"Diagrams\"])\ndef get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n@router.post(\"/add\", response_model=schemas.DiagramResponse, status_code=status.HTTP_201_CREATED)\ndef add_diagram(\n    project_id: str,",
+        "detail": "api.diagrams",
+        "documentation": {}
+    },
+    {
+        "label": "create_project",
+        "kind": 2,
+        "importPath": "api.projects",
+        "description": "api.projects",
+        "peekOfCode": "def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)):\n    db_project = models.Project(id=project.id, name=project.name, description=project.description)\n    db.add(db_project)\n    db.commit()\n    db.refresh(db_project)\n    return db_project\n@router.get(\"/list\", response_model=List[schemas.ProjectResponse])\ndef list_projects(db: Session = Depends(get_db)):\n    return db.query(models.Project).all()\n@router.get(\"/{project_id}/outline\", response_model=schemas.ProjectOutlineResponse)",
+        "detail": "api.projects",
+        "documentation": {}
+    },
+    {
+        "label": "list_projects",
+        "kind": 2,
+        "importPath": "api.projects",
+        "description": "api.projects",
+        "peekOfCode": "def list_projects(db: Session = Depends(get_db)):\n    return db.query(models.Project).all()\n@router.get(\"/{project_id}/outline\", response_model=schemas.ProjectOutlineResponse)\ndef project_outline(project_id: str, db: Session = Depends(get_db)):\n    project = db.query(models.Project).options(\n        joinedload(models.Project.requirements),\n        joinedload(models.Project.diagrams),\n        joinedload(models.Project.teams),\n        joinedload(models.Project.tasks),\n    ).filter(models.Project.id == project_id).first()",
+        "detail": "api.projects",
+        "documentation": {}
+    },
+    {
+        "label": "project_outline",
+        "kind": 2,
+        "importPath": "api.projects",
+        "description": "api.projects",
+        "peekOfCode": "def project_outline(project_id: str, db: Session = Depends(get_db)):\n    project = db.query(models.Project).options(\n        joinedload(models.Project.requirements),\n        joinedload(models.Project.diagrams),\n        joinedload(models.Project.teams),\n        joinedload(models.Project.tasks),\n    ).filter(models.Project.id == project_id).first()\n    if not project:\n        raise HTTPException(status_code=404, detail=\"Project not found\")\n    return project",
+        "detail": "api.projects",
+        "documentation": {}
+    },
+    {
+        "label": "delete_project",
+        "kind": 2,
+        "importPath": "api.projects",
+        "description": "api.projects",
+        "peekOfCode": "def delete_project(project_id: str, db: Session = Depends(get_db)):\n    project = db.query(models.Project).filter(models.Project.id == project_id).first()\n    if not project:\n        raise HTTPException(status_code=404, detail=\"Project not found\")\n    db.delete(project)\n    db.commit()\n    return {\"detail\": f\"Project {project_id} deleted successfully.\"}",
+        "detail": "api.projects",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "kind": 5,
+        "importPath": "api.projects",
+        "description": "api.projects",
+        "peekOfCode": "router = APIRouter(prefix=\"/projects\", tags=[\"Projects\"])\n@router.post(\"/create\", response_model=schemas.ProjectResponse, status_code=201)\ndef create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)):\n    db_project = models.Project(id=project.id, name=project.name, description=project.description)\n    db.add(db_project)\n    db.commit()\n    db.refresh(db_project)\n    return db_project\n@router.get(\"/list\", response_model=List[schemas.ProjectResponse])\ndef list_projects(db: Session = Depends(get_db)):",
+        "detail": "api.projects",
+        "documentation": {}
+    },
+    {
+        "label": "RequirementsRequest",
+        "kind": 6,
+        "importPath": "api.requirements",
+        "description": "api.requirements",
+        "peekOfCode": "class RequirementsRequest(BaseModel):\n    content: str\nclass RequirementItem(BaseModel):\n    title: str\n    description: str\n    functional: bool\ndef get_db():\n    db = database.SessionLocal()\n    try:\n        yield db",
+        "detail": "api.requirements",
+        "documentation": {}
+    },
+    {
+        "label": "RequirementItem",
+        "kind": 6,
+        "importPath": "api.requirements",
+        "description": "api.requirements",
+        "peekOfCode": "class RequirementItem(BaseModel):\n    title: str\n    description: str\n    functional: bool\ndef get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()",
+        "detail": "api.requirements",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "kind": 2,
+        "importPath": "api.requirements",
+        "description": "api.requirements",
+        "peekOfCode": "def get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n@router.post(\"/add\", response_model=schemas.RequirementResponse)\ndef add_requirement(\n    project_id: str = Path(..., description=\"ID του project\"),\n    req: schemas.RequirementCreate = Body(...),",
+        "detail": "api.requirements",
+        "documentation": {}
+    },
+    {
+        "label": "add_requirement",
+        "kind": 2,
+        "importPath": "api.requirements",
+        "description": "api.requirements",
+        "peekOfCode": "def add_requirement(\n    project_id: str = Path(..., description=\"ID του project\"),\n    req: schemas.RequirementCreate = Body(...),\n    db: Session = Depends(get_db)\n):\n    project = db.query(models.Project).filter(models.Project.id == project_id).first()\n    if not project:\n        raise HTTPException(status_code=404, detail=\"Project not found\")\n    db_req = models.Requirement(\n        project_id=project_id,",
+        "detail": "api.requirements",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "api.requirements",
+        "description": "api.requirements",
+        "peekOfCode": "logger = get_logger()\nrouter = APIRouter(prefix=\"/projects/{project_id}/requirements\", tags=[\"Requirements\"])\nclass RequirementsRequest(BaseModel):\n    content: str\nclass RequirementItem(BaseModel):\n    title: str\n    description: str\n    functional: bool\ndef get_db():\n    db = database.SessionLocal()",
+        "detail": "api.requirements",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "kind": 5,
+        "importPath": "api.requirements",
+        "description": "api.requirements",
+        "peekOfCode": "router = APIRouter(prefix=\"/projects/{project_id}/requirements\", tags=[\"Requirements\"])\nclass RequirementsRequest(BaseModel):\n    content: str\nclass RequirementItem(BaseModel):\n    title: str\n    description: str\n    functional: bool\ndef get_db():\n    db = database.SessionLocal()\n    try:",
+        "detail": "api.requirements",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "kind": 2,
+        "importPath": "api.tasks",
+        "description": "api.tasks",
+        "peekOfCode": "def get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n@router.post(\"/create\", response_model=schemas.TaskResponse)\ndef create_task(\n    project_id: str = Path(..., description=\"ID του project\"),\n    task: schemas.TaskCreate = Body(...),",
+        "detail": "api.tasks",
+        "documentation": {}
+    },
+    {
+        "label": "create_task",
+        "kind": 2,
+        "importPath": "api.tasks",
+        "description": "api.tasks",
+        "peekOfCode": "def create_task(\n    project_id: str = Path(..., description=\"ID του project\"),\n    task: schemas.TaskCreate = Body(...),\n    db: Session = Depends(get_db)\n):\n    project = db.query(models.Project).filter(models.Project.id == project_id).first()\n    if not project:\n        raise HTTPException(status_code=404, detail=\"Project not found\")\n    db_task = models.Task(\n        project_id=project_id,",
+        "detail": "api.tasks",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "kind": 5,
+        "importPath": "api.tasks",
+        "description": "api.tasks",
+        "peekOfCode": "router = APIRouter(prefix=\"/projects/{project_id}/tasks\", tags=[\"Tasks\"])\ndef get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n@router.post(\"/create\", response_model=schemas.TaskResponse)\ndef create_task(\n    project_id: str = Path(..., description=\"ID του project\"),",
+        "detail": "api.tasks",
+        "documentation": {}
+    },
+    {
+        "label": "get_db",
+        "kind": 2,
+        "importPath": "api.teams",
+        "description": "api.teams",
+        "peekOfCode": "def get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n@router.post(\"/assign\", response_model=schemas.TeamResponse)\ndef assign_team(\n    project_id: str = Path(..., description=\"ID του project\"),\n    team: schemas.TeamCreate = Body(...),",
+        "detail": "api.teams",
+        "documentation": {}
+    },
+    {
+        "label": "assign_team",
+        "kind": 2,
+        "importPath": "api.teams",
+        "description": "api.teams",
+        "peekOfCode": "def assign_team(\n    project_id: str = Path(..., description=\"ID του project\"),\n    team: schemas.TeamCreate = Body(...),\n    db: Session = Depends(get_db)\n):\n    project = db.query(models.Project).filter(models.Project.id == project_id).first()\n    if not project:\n        raise HTTPException(status_code=404, detail=\"Project not found\")\n    db_team = models.Team(\n        project_id=project_id,",
+        "detail": "api.teams",
+        "documentation": {}
+    },
+    {
+        "label": "router",
+        "kind": 5,
+        "importPath": "api.teams",
+        "description": "api.teams",
+        "peekOfCode": "router = APIRouter(prefix=\"/projects/{project_id}/teams\", tags=[\"Teams\"])\ndef get_db():\n    db = database.SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n@router.post(\"/assign\", response_model=schemas.TeamResponse)\ndef assign_team(\n    project_id: str = Path(..., description=\"ID του project\"),",
+        "detail": "api.teams",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def main():\n    print(\"Hello from so-assistant-server!\")\nif __name__ == \"__main__\":\n    main()",
+        "detail": "main",
+        "documentation": {}
+    }
+]

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.database import init_db
-from app.api import projects, requirements, diagrams, teams, tasks
+from api import projects, requirements, diagrams, teams, tasks, assistant
 from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
@@ -43,4 +43,5 @@ app.include_router(requirements.router)
 app.include_router(diagrams.router)
 app.include_router(teams.router)
 app.include_router(tasks.router)
+app.include_router(assistant.router)
 

@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama:rocm
+    container_name: ollama
+    ports:
+      - "11434:11434"  # Expose Ollama API
+    volumes:
+      - ollama_data:/root/.ollama  # Persist model data
+      - ./ollama-entrypoint.sh:/ollama-entrypoint.sh
+    environment:
+      - ROCM_VISIBLE_DEVICES=all  # Enable all AMD GPUs
+      - OLLAMA_HOST=0.0.0.0:11434  # Explicit bind (optional)
+      - OLLAMA_CONTEXT_LENGTH=8192  # Increase context window (if supported)
+    entrypoint: ["/bin/sh", "-c", "chmod +x /ollama-entrypoint.sh && /ollama-entrypoint.sh"]
+
+  so_assistant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: so_assistant
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_HOST=http://ollama:11434  # <-- Σημαντικό! Έτσι το app βλέπει το ollama container
+    depends_on:
+      - ollama
+
+volumes:
+  ollama_data:
