@@ -4,6 +4,8 @@ from sqlalchemy.orm import relationship, declarative_base
 import enum
 from datetime import datetime
 
+from starlette.responses import Content
+
 Base = declarative_base()
 
 class RequirementCategory(enum.Enum):
@@ -24,6 +26,14 @@ class TaskStatus(enum.Enum):
     todo = "To Do"
     in_progress = "In Progress"
     done = "Done"
+
+class SoStatus(enum.Enum):
+    not_started = "Not Started"
+    in_progress = "In Progress"
+    in_review = "In Review"
+    rejected = "Rejected"
+    done = "Done"
+
 
 class Project(Base):
     __tablename__ = "projects"
@@ -83,3 +93,13 @@ class Task(Base):
 
     project = relationship("Project", back_populates="tasks")
     assigned_team = relationship("Team", back_populates="tasks")
+
+
+class SolutionOutlineDocument(Base):
+    __tablename__ = "solution_outline_documents"
+    
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    status = Column(Enum(SoStatus), default=SoStatus.not_started)
+    version: Mapped[int] = mapped_column(Integer, default=0)

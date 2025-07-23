@@ -3,6 +3,7 @@ import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from .models import Base
+from contextlib import contextmanager
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./so_assistant.db")
 
@@ -20,9 +21,13 @@ def init_db():
 from sqlalchemy.orm import Session
 from fastapi import Depends
 
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
+    except Exception:
+        db.rollback()
+        raise
     finally:
         db.close()

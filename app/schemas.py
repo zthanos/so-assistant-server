@@ -90,6 +90,20 @@ class TaskResponse(TaskBase):
     class Config:
         from_attributes = True
 
+
+# SolutionOutlineDocument Schemas
+class SolutionOutlineDocumentBase(BaseModel):
+    content: str
+    status: str
+    version: int
+
+class SolutionOutlineDocumentCreate(DiagramBase):
+    pass
+
+class SolutionOutlineDocumentResponse(DiagramBase):
+    id: int
+    class Config:
+        from_attributes = True
 # Project Outline (για το outline endpoint)
 class ProjectOutlineResponse(ProjectResponse):
     requirements: List[RequirementResponse] = Field(default_factory=list)

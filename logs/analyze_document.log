@@ -5066,3 +5066,1024 @@ UpdateRelStyle(mbsfacade, mbs, $offsetY=\"-40\")",
 }
 ```
 2025-07-22 21:31:48 [INFO] analyze_document - ============================
+2025-07-23 09:52:54 [INFO] analyze_document - request: content='sequenceDiagram\n    participant web as Web Browser\n    participant blog as Blog Service\n    participant account as Account Service\n    participant mail as Mail Service\n    participant db as Storage\n\n    Note over web,db: The user must be logged in to submit blog posts\n    web->>+account: Logs in using credentials\n    account->>db: Query stored accounts\n    db->>account: Respond with query result\n\n    alt Credentials not found\n        account->>web: Invalid credentials\n    else Credentials found\n        account->>-web: Successfully logged in\n\n        Note over web,db: When the user is authenticated, they can now submit new posts\n        web->>+blog: Submit new post\n        blog->>db: Store post data\n\n        par Notifications\n            blog--)mail: Send mail to blog subscribers\n            blog--)db: Store in-site notifications\n        and Response\n            blog-->>-web: Successfully posted\n        end\n    end' c4_type=1
+2025-07-23 09:52:55 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 157714 tokens)
+2025-07-23 09:54:24 [DEBUG] analyze_document - Prompt to LLM: 
+    
+    
+You are an expert software architect specializing in system design and the C4 model.
+
+Your task is to convert the provided MermaidJS sequence diagram into a **MermaidJS C4 System Context diagram**.
+
+## MermaidJS C4 Syntax Rules
+You MUST use the following MermaidJS commands to construct the diagram. Do NOT use any other syntax.
+
+    
+    System Context Diagram sample
+    ```Mermaidjs
+    C4Context
+      title System Context diagram for Internet Banking System
+      Enterprise_Boundary(b0, "BankBoundary0") {
+        Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
+        Person(customerB, "Banking Customer B")
+        Person_Ext(customerC, "Banking Customer C", "desc")
+
+        Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+
+        System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+
+        Enterprise_Boundary(b1, "BankBoundary") {
+
+          SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+          System_Boundary(b2, "BankBoundary2") {
+            System(SystemA, "Banking System A")
+            System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts. next line.")
+          }
+
+          System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+          SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
+
+          Boundary(b3, "BankBoundary3", "boundary") {
+            SystemQueue(SystemF, "Banking System F Queue", "A system of the bank.")
+            SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
+          }
+        }
+      }
+
+      BiRel(customerA, SystemAA, "Uses")
+      BiRel(SystemAA, SystemE, "Uses")
+      Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
+      Rel(SystemC, customerA, "Sends e-mails to")
+
+      UpdateElementStyle(customerA, $fontColor="red", $bgColor="grey", $borderColor="red")
+      UpdateRelStyle(customerA, SystemAA, $textColor="blue", $lineColor="blue", $offsetX="5")
+      UpdateRelStyle(SystemAA, SystemE, $textColor="blue", $lineColor="blue", $offsetY="-10")
+      UpdateRelStyle(SystemAA, SystemC, $textColor="blue", $lineColor="blue", $offsetY="-40", $offsetX="-50")
+      UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+    ```
+    
+
+## Input Sequence Diagram:
+sequenceDiagram
+    participant web as Web Browser
+    participant blog as Blog Service
+    participant account as Account Service
+    participant mail as Mail Service
+    participant db as Storage
+
+    Note over web,db: The user must be logged in to submit blog posts
+    web->>+account: Logs in using credentials
+    account->>db: Query stored accounts
+    db->>account: Respond with query result
+
+    alt Credentials not found
+        account->>web: Invalid credentials
+    else Credentials found
+        account->>-web: Successfully logged in
+
+        Note over web,db: When the user is authenticated, they can now submit new posts
+        web->>+blog: Submit new post
+        blog->>db: Store post data
+
+        par Notifications
+            blog--)mail: Send mail to blog subscribers
+            blog--)db: Store in-site notifications
+        and Response
+            blog-->>-web: Successfully posted
+        end
+    end
+
+
+**Return the response strictly in JSON format with two fields:**
+- diagram: the MermaidJS C4 diagram as a string (inside triple backticks).
+- explanation: a short description of the design choices and mapping.
+
+```json
+{
+  "diagram": "Mermaidjs
+C4Component
+title Component diagram for Internet Banking System - API Application
+
+Container(spa, "Single Page Application", "javascript and angular", "Provides all the internet banking functionality to customers via their web browser.")
+Container(ma, "Mobile App", "Xamarin", "Provides a limited subset to the internet banking functionality to customers via their mobile device.")
+ContainerDb(db, "Database", "Relational Database Schema", "Stores user registration information, hashed authentication credentials, access logs, etc.")
+System_Ext(mbs, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+Container_Boundary(api, "API Application") {
+    Component(sign, "Sign In Controller", "MVC Rest Controller", "Allows users to sign in to the internet banking system")
+    Component(accounts, "Accounts Summary Controller", "MVC Rest Controller", "Provides customers with a summary of their bank accounts")
+    Component(security, "Security Component", "Spring Bean", "Provides functionality related to singing in, changing passwords, etc.")
+    Component(mbsfacade, "Mainframe Banking System Facade", "Spring Bean", "A facade onto the mainframe banking system.")
+
+    Rel(sign, security, "Uses")
+    Rel(accounts, mbsfacade, "Uses")
+    Rel(security, db, "Read & write to", "JDBC")
+    Rel(mbsfacade, mbs, "Uses", "XML/HTTPS")
+}
+
+Rel_Back(spa, sign, "Uses", "JSON/HTTPS")
+Rel(spa, accounts, "Uses", "JSON/HTTPS")
+
+Rel(ma, sign, "Uses", "JSON/HTTPS")
+Rel(ma, accounts, "Uses", "JSON/HTTPS")
+
+UpdateRelStyle(spa, sign, $offsetY="-40")
+UpdateRelStyle(spa, accounts, $offsetX="40", $offsetY="40")
+
+UpdateRelStyle(ma, sign, $offsetX="-90", $offsetY="40")
+UpdateRelStyle(ma, accounts, $offsetY="-40")
+
+UpdateRelStyle(sign, security, $offsetX="-160", $offsetY="10")
+UpdateRelStyle(accounts, mbsfacade, $offsetX="140", $offsetY="10")
+UpdateRelStyle(security, db, $offsetY="-40")
+UpdateRelStyle(mbsfacade, mbs, $offsetY="-40")
+",
+  "explanation": "The diagram maps the sequence participants into C4 containers and components. The web browser (SPA) and mobile app (ma) are containers. The backend API app contains components like sign (Sign In Controller) and accounts (Accounts Summary Controller), using Spring beans like security and mbsfacade. Relationships are drawn between components and external systems, like the mainframe. UpdateRelStyle adjusts label positions for clarity."
+}
+````
+Do not include any additional text or commentary outside the JSON.
+    
+2025-07-23 09:54:24 [INFO] analyze_document - 📊 Prompt analytics logged to output/prompt_analytics_log.csv
+2025-07-23 09:54:24 [DEBUG] analyze_document - LLM Response: ```json
+{
+  "diagram": "C4Context
+title System Context diagram for Internet Banking System
+
+Enterprise_Boundary(b0, \"BankBoundary0\") {
+  Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")
+  Person(customerB, \"Banking Customer B\")
+  Person_Ext(customerC, \"Banking Customer C\", \"desc\")
+  Person(customerD, \"Banking Customer D\", \"A customer of the bank, <br/> with personal bank accounts.\")
+  System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")
+  Enterprise_Boundary(b1, \"BankBoundary\") {
+    SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")
+    System_Boundary(b2, \"BankBoundary2\") {
+      System(SystemA, \"Banking System A\")
+      System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")
+    }
+    System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")
+    SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")
+    Boundary(b3, \"BankBoundary3\", \"boundary\") {
+      SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")
+      SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")
+    }
+  }
+}
+
+BiRel(customerA, SystemAA, \"Uses\")
+BiRel(SystemAA, SystemE, \"Uses\")
+Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")
+Rel(SystemC, customerA, \"Sends e-mails to\")",
+  "explanation": "The diagram maps the sequence participants into C4 elements: Person for customers and System for systems. It categorizes them into enterprises and boundaries, with appropriate relationships drawn based on their interactions."
+}
+```
+2025-07-23 09:54:24 [INFO] analyze_document - ```json
+{
+  "diagram": "C4Context
+title System Context diagram for Internet Banking System
+
+Enterprise_Boundary(b0, \"BankBoundary0\") {
+  Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")
+  Person(customerB, \"Banking Customer B\")
+  Person_Ext(customerC, \"Banking Customer C\", \"desc\")
+  Person(customerD, \"Banking Customer D\", \"A customer of the bank, <br/> with personal bank accounts.\")
+  System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")
+  Enterprise_Boundary(b1, \"BankBoundary\") {
+    SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")
+    System_Boundary(b2, \"BankBoundary2\") {
+      System(SystemA, \"Banking System A\")
+      System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")
+    }
+    System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")
+    SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")
+    Boundary(b3, \"BankBoundary3\", \"boundary\") {
+      SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")
+      SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")
+    }
+  }
+}
+
+BiRel(customerA, SystemAA, \"Uses\")
+BiRel(SystemAA, SystemE, \"Uses\")
+Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")
+Rel(SystemC, customerA, \"Sends e-mails to\")",
+  "explanation": "The diagram maps the sequence participants into C4 elements: Person for customers and System for systems. It categorizes them into enterprises and boundaries, with appropriate relationships drawn based on their interactions."
+}
+```
+2025-07-23 09:54:24 [INFO] analyze_document - ============================
+2025-07-23 09:54:24 [DEBUG] analyze_document - ```json
+{
+  "diagram": "C4Context
+title System Context diagram for Internet Banking System
+
+Enterprise_Boundary(b0, \"BankBoundary0\") {
+  Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")
+  Person(customerB, \"Banking Customer B\")
+  Person_Ext(customerC, \"Banking Customer C\", \"desc\")
+  Person(customerD, \"Banking Customer D\", \"A customer of the bank, <br/> with personal bank accounts.\")
+  System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")
+  Enterprise_Boundary(b1, \"BankBoundary\") {
+    SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")
+    System_Boundary(b2, \"BankBoundary2\") {
+      System(SystemA, \"Banking System A\")
+      System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")
+    }
+    System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")
+    SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")
+    Boundary(b3, \"BankBoundary3\", \"boundary\") {
+      SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")
+      SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")
+    }
+  }
+}
+
+BiRel(customerA, SystemAA, \"Uses\")
+BiRel(SystemAA, SystemE, \"Uses\")
+Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")
+Rel(SystemC, customerA, \"Sends e-mails to\")",
+  "explanation": "The diagram maps the sequence participants into C4 elements: Person for customers and System for systems. It categorizes them into enterprises and boundaries, with appropriate relationships drawn based on their interactions."
+}
+```
+2025-07-23 09:54:24 [INFO] analyze_document - ============================
+2025-07-23 09:54:24 [INFO] analyze_document - request: content='sequenceDiagram\n    participant web as Web Browser\n    participant blog as Blog Service\n    participant account as Account Service\n    participant mail as Mail Service\n    participant db as Storage\n\n    Note over web,db: The user must be logged in to submit blog posts\n    web->>+account: Logs in using credentials\n    account->>db: Query stored accounts\n    db->>account: Respond with query result\n\n    alt Credentials not found\n        account->>web: Invalid credentials\n    else Credentials found\n        account->>-web: Successfully logged in\n\n        Note over web,db: When the user is authenticated, they can now submit new posts\n        web->>+blog: Submit new post\n        blog->>db: Store post data\n\n        par Notifications\n            blog--)mail: Send mail to blog subscribers\n            blog--)db: Store in-site notifications\n        and Response\n            blog-->>-web: Successfully posted\n        end\n    end' c4_type=1
+2025-07-23 09:54:24 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 157714 tokens)
+2025-07-23 09:54:59 [DEBUG] analyze_document - Prompt to LLM: 
+    
+    
+You are an expert software architect specializing in system design and the C4 model.
+
+Your task is to convert the provided MermaidJS sequence diagram into a **MermaidJS C4 System Context diagram**.
+
+## MermaidJS C4 Syntax Rules
+You MUST use the following MermaidJS commands to construct the diagram. Do NOT use any other syntax.
+
+    
+    System Context Diagram sample
+    ```Mermaidjs
+    C4Context
+      title System Context diagram for Internet Banking System
+      Enterprise_Boundary(b0, "BankBoundary0") {
+        Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
+        Person(customerB, "Banking Customer B")
+        Person_Ext(customerC, "Banking Customer C", "desc")
+
+        Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+
+        System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+
+        Enterprise_Boundary(b1, "BankBoundary") {
+
+          SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+          System_Boundary(b2, "BankBoundary2") {
+            System(SystemA, "Banking System A")
+            System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts. next line.")
+          }
+
+          System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+          SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
+
+          Boundary(b3, "BankBoundary3", "boundary") {
+            SystemQueue(SystemF, "Banking System F Queue", "A system of the bank.")
+            SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
+          }
+        }
+      }
+
+      BiRel(customerA, SystemAA, "Uses")
+      BiRel(SystemAA, SystemE, "Uses")
+      Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
+      Rel(SystemC, customerA, "Sends e-mails to")
+
+      UpdateElementStyle(customerA, $fontColor="red", $bgColor="grey", $borderColor="red")
+      UpdateRelStyle(customerA, SystemAA, $textColor="blue", $lineColor="blue", $offsetX="5")
+      UpdateRelStyle(SystemAA, SystemE, $textColor="blue", $lineColor="blue", $offsetY="-10")
+      UpdateRelStyle(SystemAA, SystemC, $textColor="blue", $lineColor="blue", $offsetY="-40", $offsetX="-50")
+      UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+    ```
+    
+
+## Input Sequence Diagram:
+sequenceDiagram
+    participant web as Web Browser
+    participant blog as Blog Service
+    participant account as Account Service
+    participant mail as Mail Service
+    participant db as Storage
+
+    Note over web,db: The user must be logged in to submit blog posts
+    web->>+account: Logs in using credentials
+    account->>db: Query stored accounts
+    db->>account: Respond with query result
+
+    alt Credentials not found
+        account->>web: Invalid credentials
+    else Credentials found
+        account->>-web: Successfully logged in
+
+        Note over web,db: When the user is authenticated, they can now submit new posts
+        web->>+blog: Submit new post
+        blog->>db: Store post data
+
+        par Notifications
+            blog--)mail: Send mail to blog subscribers
+            blog--)db: Store in-site notifications
+        and Response
+            blog-->>-web: Successfully posted
+        end
+    end
+
+
+**Return the response strictly in JSON format with two fields:**
+- diagram: the MermaidJS C4 diagram as a string (inside triple backticks).
+- explanation: a short description of the design choices and mapping.
+
+```json
+{
+  "diagram": "Mermaidjs
+C4Component
+title Component diagram for Internet Banking System - API Application
+
+Container(spa, "Single Page Application", "javascript and angular", "Provides all the internet banking functionality to customers via their web browser.")
+Container(ma, "Mobile App", "Xamarin", "Provides a limited subset to the internet banking functionality to customers via their mobile device.")
+ContainerDb(db, "Database", "Relational Database Schema", "Stores user registration information, hashed authentication credentials, access logs, etc.")
+System_Ext(mbs, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+Container_Boundary(api, "API Application") {
+    Component(sign, "Sign In Controller", "MVC Rest Controller", "Allows users to sign in to the internet banking system")
+    Component(accounts, "Accounts Summary Controller", "MVC Rest Controller", "Provides customers with a summary of their bank accounts")
+    Component(security, "Security Component", "Spring Bean", "Provides functionality related to singing in, changing passwords, etc.")
+    Component(mbsfacade, "Mainframe Banking System Facade", "Spring Bean", "A facade onto the mainframe banking system.")
+
+    Rel(sign, security, "Uses")
+    Rel(accounts, mbsfacade, "Uses")
+    Rel(security, db, "Read & write to", "JDBC")
+    Rel(mbsfacade, mbs, "Uses", "XML/HTTPS")
+}
+
+Rel_Back(spa, sign, "Uses", "JSON/HTTPS")
+Rel(spa, accounts, "Uses", "JSON/HTTPS")
+
+Rel(ma, sign, "Uses", "JSON/HTTPS")
+Rel(ma, accounts, "Uses", "JSON/HTTPS")
+
+UpdateRelStyle(spa, sign, $offsetY="-40")
+UpdateRelStyle(spa, accounts, $offsetX="40", $offsetY="40")
+
+UpdateRelStyle(ma, sign, $offsetX="-90", $offsetY="40")
+UpdateRelStyle(ma, accounts, $offsetY="-40")
+
+UpdateRelStyle(sign, security, $offsetX="-160", $offsetY="10")
+UpdateRelStyle(accounts, mbsfacade, $offsetX="140", $offsetY="10")
+UpdateRelStyle(security, db, $offsetY="-40")
+UpdateRelStyle(mbsfacade, mbs, $offsetY="-40")
+",
+  "explanation": "The diagram maps the sequence participants into C4 containers and components. The web browser (SPA) and mobile app (ma) are containers. The backend API app contains components like sign (Sign In Controller) and accounts (Accounts Summary Controller), using Spring beans like security and mbsfacade. Relationships are drawn between components and external systems, like the mainframe. UpdateRelStyle adjusts label positions for clarity."
+}
+````
+Do not include any additional text or commentary outside the JSON.
+    
+2025-07-23 09:54:59 [INFO] analyze_document - 📊 Prompt analytics logged to output/prompt_analytics_log.csv
+2025-07-23 09:54:59 [DEBUG] analyze_document - LLM Response: ```json
+{
+  "diagram": "Mermaidjs
+C4Context
+title System Context diagram for Internet Banking System
+
+Enterprise_Boundary(b0, \"BankBoundary\") {
+Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")
+Person(customerB, \"Banking Customer B\")
+Person_Ext(customerC, \"Banking Customer C\", \"desc\")
+Person(customerD, \"Banking Customer D\", \"A customer of the bank, <br/> with personal bank accounts.\")
+System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")
+Enterprise_Boundary(b1, \"BankBoundary\") {
+SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")
+System_Boundary(b2, \"BankBoundary2\") {
+System(SystemA, \"Banking System A\")
+System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")
+}
+System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")
+SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")
+Boundary(b3, \"BankBoundary3\", \"boundary\") {
+SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")
+SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")
+}
+}
+BiRel(customerA, SystemAA, \"Uses\")
+BiRel(SystemAA, SystemE, \"Uses\")
+Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")
+Rel(SystemC, customerA, \"Sends e-mails to\")",
+  "explanation": "The provided sequence diagram is transformed into a C4 system context diagram. Key elements like persons (customers) and systems (Internet Banking System, Mainframe Banking System, etc.) are mapped accordingly. External systems like email service are also included. The relationships between the components have been adjusted to reflect how customers interact with the bank's digital services."
+}
+```
+2025-07-23 09:54:59 [INFO] analyze_document - ```json
+{
+  "diagram": "Mermaidjs
+C4Context
+title System Context diagram for Internet Banking System
+
+Enterprise_Boundary(b0, \"BankBoundary\") {
+Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")
+Person(customerB, \"Banking Customer B\")
+Person_Ext(customerC, \"Banking Customer C\", \"desc\")
+Person(customerD, \"Banking Customer D\", \"A customer of the bank, <br/> with personal bank accounts.\")
+System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")
+Enterprise_Boundary(b1, \"BankBoundary\") {
+SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")
+System_Boundary(b2, \"BankBoundary2\") {
+System(SystemA, \"Banking System A\")
+System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")
+}
+System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")
+SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")
+Boundary(b3, \"BankBoundary3\", \"boundary\") {
+SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")
+SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")
+}
+}
+BiRel(customerA, SystemAA, \"Uses\")
+BiRel(SystemAA, SystemE, \"Uses\")
+Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")
+Rel(SystemC, customerA, \"Sends e-mails to\")",
+  "explanation": "The provided sequence diagram is transformed into a C4 system context diagram. Key elements like persons (customers) and systems (Internet Banking System, Mainframe Banking System, etc.) are mapped accordingly. External systems like email service are also included. The relationships between the components have been adjusted to reflect how customers interact with the bank's digital services."
+}
+```
+2025-07-23 09:54:59 [INFO] analyze_document - ============================
+2025-07-23 09:54:59 [DEBUG] analyze_document - ```json
+{
+  "diagram": "Mermaidjs
+C4Context
+title System Context diagram for Internet Banking System
+
+Enterprise_Boundary(b0, \"BankBoundary\") {
+Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")
+Person(customerB, \"Banking Customer B\")
+Person_Ext(customerC, \"Banking Customer C\", \"desc\")
+Person(customerD, \"Banking Customer D\", \"A customer of the bank, <br/> with personal bank accounts.\")
+System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")
+Enterprise_Boundary(b1, \"BankBoundary\") {
+SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")
+System_Boundary(b2, \"BankBoundary2\") {
+System(SystemA, \"Banking System A\")
+System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")
+}
+System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")
+SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")
+Boundary(b3, \"BankBoundary3\", \"boundary\") {
+SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")
+SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")
+}
+}
+BiRel(customerA, SystemAA, \"Uses\")
+BiRel(SystemAA, SystemE, \"Uses\")
+Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")
+Rel(SystemC, customerA, \"Sends e-mails to\")",
+  "explanation": "The provided sequence diagram is transformed into a C4 system context diagram. Key elements like persons (customers) and systems (Internet Banking System, Mainframe Banking System, etc.) are mapped accordingly. External systems like email service are also included. The relationships between the components have been adjusted to reflect how customers interact with the bank's digital services."
+}
+```
+2025-07-23 09:54:59 [INFO] analyze_document - ============================
+2025-07-23 09:55:46 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 157459 tokens)
+2025-07-23 09:57:03 [DEBUG] analyze_document - Prompt to LLM: 
+You are an experienced business analyst.
+
+Analyze the following document written in Greek, describing the current (as-is) and desired (to-be) business processes.
+
+Extract ONLY the requirements related to the "to-be" state.
+
+Return ONLY a JSON array, where each requirement has:
+- title: short title (keep in Greek)
+- description: short description (1-2 sentences, in Greek)
+- functional: true if functional requirement, false if non-functional
+
+### Example format:
+[
+    {
+        "title": "Cardless ανάληψη με QR",
+        "description": "Ο πελάτης μπορεί να κάνει ανάληψη μετρητών στο ATM χρησιμοποιώντας QR code χωρίς κάρτα.",
+        "functional": true
+    }
+]
+
+DO NOT include any explanation or commentary, only the JSON array.
+
+    108481-GR/ 06.10.2022 (BUSINESS REQUIREMENTS DOCUMENT - BRD) [2645725138 WINBANK OMNI- ATM TRANSACTIONS USING WINBANK APP\QR CODE] [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 2 108481-GR/ 06.10.2022 1 1 .............................................................................................. 2 2 ............................................................................................... 3 3 ............................................................................................. 3 4 ................................................................................................................... 3 5 ............................................................................................. 4 5.1 ................................................................................................. 4 5.2 ............................................................................................................................ 4 5.3 ....................................................................................................... 4 5.3.1 ........................................................................................................... 4 5.3.2 ............................................................. Error! Bookmark not defined. 5.4 ............................................................................................................ 4 5.5 .......................................................................... Error! Bookmark not defined. 5.6 ................................................................................................................... 5 5.7 .............................................................................. Error! Bookmark not defined. 5.8 ................................................................................................... 5 5.8.1 Business Owner .................................................................................................................................. 5 5.8.2 / ........................................................................................ 5 6 ............................................. Error! Bookmark not defined. 6.1 (As-Is) ................................................................. 6 6.2 (To-Be) ......................................................... 6 6.3 ................ 9 6.4 .................................. 9 7 .......................................................................................................... 10 7.1 .............................................................................................. 10 7.2 ........................................................................................................... 10 7.3 ............................................................................................................ 10 [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 3 108481-GR/ 06.10.2022 2 2645725138 Winbank omni- ATM transactions using winbank app\QR code / 1.0 / 26/09/2023 3 29/08/2023 1.0 26/09/2023 1.1 4 Business Owner Digital Banking Product & Services Development 26/9/2023 [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 4 108481-GR/ 06.10.2022 5 5.1 Simplicity & Efficiency , ( ) , ( ) ( ). QR , ( Digital Wallet) . 5.2 , , , winbank web & app. QR Code & Barcode reader . 5.3 5.3.1 To be defined 5.3.2 / [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 5 108481-GR/ 06.10.2022 5.4 , winbank. , retail winbank web & app. , business . 5.5 H OMNI channel QR Code ( web) mobile app. , , . , geolocation security issues. . 5.6 QR Code/Barcode reader . , QR , . 5.7 geolocation ( 5.5) . 5.8 winbank ATM 5.8.1 Business Owner Business Owner: Digital Banking 5.8.2 / IT - Cards & Self-Service Machines - Self Service Mach & Switching [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 6 108481-GR/ 06.10.2022 - Cards & Self-Service Machines - Debit Cards Digital Banking & Cards Business Retail Marketing Communications, Digital Retail Banking & Distribution Networks 6 6.1 (As-Is) / : (retail) winbank . o . winbank mobile app QR Code winbank mobile app . QR Code geolocation ( section 5.5) 6.2 (To-Be) cardless winbank o Login winbank web winbank mobile app. o . o , ( ) 20 50 . o Safer Payments o Strong Customer Authentication. o QR Code . QR Code . o ( e-mail ). , , , winbank, QR Code. Commented [NP1]: AML/CTF: ( ) ( QR code), ; ; Commented [2R1]: , mobile app login ( ). . Commented [NP3R1]: AML/CTF: . Commented [TV4]: [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 7 108481-GR/ 06.10.2022 cardless winbank o Login winbank web winbank mobile app. o . o , () . o . o Safer Payments o Strong Customer Authentication. o QR Code. , , , winbank, QR Code. QR Code: o Barcode/QR code reader o Cardless ENTER . o fault Barcode/QR code reader , QR winbank app. o app. o QR , geolocation mobile , o (.. 50 50) ( ). . , winbank. o () . o Safer Payments o . o winbank email . [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 8 108481-GR/ 06.10.2022 o QR Code . : o , , winbank . : o (.. 50 50) ( ). . , winbank. o () . o Safer Payments o . o winbank email . QR Code: o Barcode/QR code reader on-line . o Cardless ENTER . o fault Barcode/QR code reader , QR winbank app. o app. o QR , geolocation mobile , o . . o Safer Payments o . winbank. o winbank email . [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 9 108481-GR/ 06.10.2022 o QR Code . : o on-line . o Cardless ENTER . o fault . o ( / ) , QR ( ). o QR winbank app. o QR , geolocation mobile o . . o Safer Payments o . winbank. o winbank email . o QR Code . 6.3 # / [. , , & , ] 1. (Reporting) [. ] 1. - - [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 10 108481-GR/ 06.10.2022 - - - - - QR Code - QR Code [. , ] 1. 1. 6.4 # 1. [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 11 108481-GR/ 06.10.2022 7 7.1 [ , .] 7.2 [ , , , .] 7.3 [ , , , .] [ / , Product Working Group.] Produc
+    ```
+    return only the json nothing else
+    
+2025-07-23 09:57:03 [INFO] analyze_document - 📊 Prompt analytics logged to output/prompt_analytics_log.csv
+2025-07-23 09:57:03 [DEBUG] analyze_document - LLM Response: ```json
+[
+    {
+        "title": "Simplicity & Efficiency",
+        "description": "Ο πελάτης θα μπορεί να κάνει λήψη μετρητών από τον ATM χωρίς να χρειάζεται κάρτα, ενεργοποιώντας την κυβέρνηση του λογαριασμού του στα Winbank web και mobile app.",
+        "functional": true
+    },
+    {
+        "title": "Cardless Withdrawal",
+        "description": "Ο πελάτης θα μπορεί να εισέλθει στο σύστημα χρησιμοποιώντας το email του και να αναπτυχθούν ασφαλείς πληροφορίες για πληρωμές.",
+        "functional": true
+    },
+    {
+        "title": "Strong Customer Authentication",
+        "description": "Για την πιστοποίηση ταυτότητας του πελάτη, θα χρειαστεί να εφαρμοσθεί δυνατότητα πιστοποίησης μέσω ασφαλούς κωδικού πρόσβασης.",
+        "functional": true
+    }
+]
+```
+2025-07-23 09:57:03 [DEBUG] analyze_document - Raw Answer:```json
+[
+    {
+        "title": "Simplicity & Efficiency",
+        "description": "Ο πελάτης θα μπορεί να κάνει λήψη μετρητών από τον ATM χωρίς να χρειάζεται κάρτα, ενεργοποιώντας την κυβέρνηση του λογαριασμού του στα Winbank web και mobile app.",
+        "functional": true
+    },
+    {
+        "title": "Cardless Withdrawal",
+        "description": "Ο πελάτης θα μπορεί να εισέλθει στο σύστημα χρησιμοποιώντας το email του και να αναπτυχθούν ασφαλείς πληροφορίες για πληρωμές.",
+        "functional": true
+    },
+    {
+        "title": "Strong Customer Authentication",
+        "description": "Για την πιστοποίηση ταυτότητας του πελάτη, θα χρειαστεί να εφαρμοσθεί δυνατότητα πιστοποίησης μέσω ασφαλούς κωδικού πρόσβασης.",
+        "functional": true
+    }
+]
+```
+2025-07-23 09:57:03 [DEBUG] analyze_document - [{'title': 'Simplicity & Efficiency', 'description': 'Ο πελάτης θα μπορεί να κάνει λήψη μετρητών από τον ATM χωρίς να χρειάζεται κάρτα, ενεργοποιώντας την κυβέρνηση του λογαριασμού του στα Winbank web και mobile app.', 'functional': True}, {'title': 'Cardless Withdrawal', 'description': 'Ο πελάτης θα μπορεί να εισέλθει στο σύστημα χρησιμοποιώντας το email του και να αναπτυχθούν ασφαλείς πληροφορίες για πληρωμές.', 'functional': True}, {'title': 'Strong Customer Authentication', 'description': 'Για την πιστοποίηση ταυτότητας του πελάτη, θα χρειαστεί να εφαρμοσθεί δυνατότητα πιστοποίησης μέσω ασφαλούς κωδικού πρόσβασης.', 'functional': True}]
+2025-07-23 09:57:36 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 157459 tokens)
+2025-07-23 09:57:47 [DEBUG] analyze_document - Prompt to LLM: 
+You are an experienced business analyst.
+
+Analyze the following document written in Greek, describing the current (as-is) and desired (to-be) business processes.
+
+Extract ONLY the requirements related to the "to-be" state.
+
+Return ONLY a JSON array, where each requirement has:
+- title: short title (keep in Greek)
+- description: short description (1-2 sentences, in Greek)
+- functional: true if functional requirement, false if non-functional
+
+### Example format:
+[
+    {
+        "title": "Cardless ανάληψη με QR",
+        "description": "Ο πελάτης μπορεί να κάνει ανάληψη μετρητών στο ATM χρησιμοποιώντας QR code χωρίς κάρτα.",
+        "functional": true
+    }
+]
+
+DO NOT include any explanation or commentary, only the JSON array.
+
+    108481-GR/ 06.10.2022 (BUSINESS REQUIREMENTS DOCUMENT - BRD) [2645725138 WINBANK OMNI- ATM TRANSACTIONS USING WINBANK APP\QR CODE] [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 2 108481-GR/ 06.10.2022 1 1 .............................................................................................. 2 2 ............................................................................................... 3 3 ............................................................................................. 3 4 ................................................................................................................... 3 5 ............................................................................................. 4 5.1 ................................................................................................. 4 5.2 ............................................................................................................................ 4 5.3 ....................................................................................................... 4 5.3.1 ........................................................................................................... 4 5.3.2 ............................................................. Error! Bookmark not defined. 5.4 ............................................................................................................ 4 5.5 .......................................................................... Error! Bookmark not defined. 5.6 ................................................................................................................... 5 5.7 .............................................................................. Error! Bookmark not defined. 5.8 ................................................................................................... 5 5.8.1 Business Owner .................................................................................................................................. 5 5.8.2 / ........................................................................................ 5 6 ............................................. Error! Bookmark not defined. 6.1 (As-Is) ................................................................. 6 6.2 (To-Be) ......................................................... 6 6.3 ................ 9 6.4 .................................. 9 7 .......................................................................................................... 10 7.1 .............................................................................................. 10 7.2 ........................................................................................................... 10 7.3 ............................................................................................................ 10 [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 3 108481-GR/ 06.10.2022 2 2645725138 Winbank omni- ATM transactions using winbank app\QR code / 1.0 / 26/09/2023 3 29/08/2023 1.0 26/09/2023 1.1 4 Business Owner Digital Banking Product & Services Development 26/9/2023 [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 4 108481-GR/ 06.10.2022 5 5.1 Simplicity & Efficiency , ( ) , ( ) ( ). QR , ( Digital Wallet) . 5.2 , , , winbank web & app. QR Code & Barcode reader . 5.3 5.3.1 To be defined 5.3.2 / [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 5 108481-GR/ 06.10.2022 5.4 , winbank. , retail winbank web & app. , business . 5.5 H OMNI channel QR Code ( web) mobile app. , , . , geolocation security issues. . 5.6 QR Code/Barcode reader . , QR , . 5.7 geolocation ( 5.5) . 5.8 winbank ATM 5.8.1 Business Owner Business Owner: Digital Banking 5.8.2 / IT - Cards & Self-Service Machines - Self Service Mach & Switching [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 6 108481-GR/ 06.10.2022 - Cards & Self-Service Machines - Debit Cards Digital Banking & Cards Business Retail Marketing Communications, Digital Retail Banking & Distribution Networks 6 6.1 (As-Is) / : (retail) winbank . o . winbank mobile app QR Code winbank mobile app . QR Code geolocation ( section 5.5) 6.2 (To-Be) cardless winbank o Login winbank web winbank mobile app. o . o , ( ) 20 50 . o Safer Payments o Strong Customer Authentication. o QR Code . QR Code . o ( e-mail ). , , , winbank, QR Code. Commented [NP1]: AML/CTF: ( ) ( QR code), ; ; Commented [2R1]: , mobile app login ( ). . Commented [NP3R1]: AML/CTF: . Commented [TV4]: [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 7 108481-GR/ 06.10.2022 cardless winbank o Login winbank web winbank mobile app. o . o , () . o . o Safer Payments o Strong Customer Authentication. o QR Code. , , , winbank, QR Code. QR Code: o Barcode/QR code reader o Cardless ENTER . o fault Barcode/QR code reader , QR winbank app. o app. o QR , geolocation mobile , o (.. 50 50) ( ). . , winbank. o () . o Safer Payments o . o winbank email . [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 8 108481-GR/ 06.10.2022 o QR Code . : o , , winbank . : o (.. 50 50) ( ). . , winbank. o () . o Safer Payments o . o winbank email . QR Code: o Barcode/QR code reader on-line . o Cardless ENTER . o fault Barcode/QR code reader , QR winbank app. o app. o QR , geolocation mobile , o . . o Safer Payments o . winbank. o winbank email . [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 9 108481-GR/ 06.10.2022 o QR Code . : o on-line . o Cardless ENTER . o fault . o ( / ) , QR ( ). o QR winbank app. o QR , geolocation mobile o . . o Safer Payments o . winbank. o winbank email . o QR Code . 6.3 # / [. , , & , ] 1. (Reporting) [. ] 1. - - [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 10 108481-GR/ 06.10.2022 - - - - - QR Code - QR Code [. , ] 1. 1. 6.4 # 1. [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 11 108481-GR/ 06.10.2022 7 7.1 [ , .] 7.2 [ , , , .] 7.3 [ , , , .] [ / , Product Working Group.] Produc
+    ```
+    return only the json nothing else
+    
+2025-07-23 09:57:47 [INFO] analyze_document - 📊 Prompt analytics logged to output/prompt_analytics_log.csv
+2025-07-23 09:57:47 [DEBUG] analyze_document - LLM Response: ```json
+[
+    {
+        "title": "Cardless ανάληψη με QR",
+        "description": "Ο πελάτης θα μπορεί να κάνει ανάληψη μετρητών στο ATM χρησιμοποιώντας τον κωδικό QR χωρίς την υποχρέωση της παρουσίας κάρτας.",
+        "functional": true
+    }
+]
+```
+2025-07-23 09:57:47 [DEBUG] analyze_document - Raw Answer:```json
+[
+    {
+        "title": "Cardless ανάληψη με QR",
+        "description": "Ο πελάτης θα μπορεί να κάνει ανάληψη μετρητών στο ATM χρησιμοποιώντας τον κωδικό QR χωρίς την υποχρέωση της παρουσίας κάρτας.",
+        "functional": true
+    }
+]
+```
+2025-07-23 09:57:47 [DEBUG] analyze_document - [{'title': 'Cardless ανάληψη με QR', 'description': 'Ο πελάτης θα μπορεί να κάνει ανάληψη μετρητών στο ATM χρησιμοποιώντας τον κωδικό QR χωρίς την υποχρέωση της παρουσίας κάρτας.', 'functional': True}]
+2025-07-23 09:58:38 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 157459 tokens)
+2025-07-23 09:59:33 [DEBUG] analyze_document - Prompt to LLM: 
+You are an experienced business analyst.
+
+Analyze the following document written in Greek, describing the current (as-is) and desired (to-be) business processes.
+
+Extract ONLY the requirements related to the "to-be" state.
+
+Return ONLY a JSON array, where each requirement has:
+- title: short title (keep in Greek)
+- description: short description (1-2 sentences, in Greek)
+- functional: true if functional requirement, false if non-functional
+
+### Example format:
+[
+    {
+        "title": "Cardless ανάληψη με QR",
+        "description": "Ο πελάτης μπορεί να κάνει ανάληψη μετρητών στο ATM χρησιμοποιώντας QR code χωρίς κάρτα.",
+        "functional": true
+    }
+]
+
+DO NOT include any explanation or commentary, only the JSON array.
+
+    108481-GR/ 06.10.2022 (BUSINESS REQUIREMENTS DOCUMENT - BRD) [2645725138 WINBANK OMNI- ATM TRANSACTIONS USING WINBANK APP\QR CODE] [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 2 108481-GR/ 06.10.2022 1 1 .............................................................................................. 2 2 ............................................................................................... 3 3 ............................................................................................. 3 4 ................................................................................................................... 3 5 ............................................................................................. 4 5.1 ................................................................................................. 4 5.2 ............................................................................................................................ 4 5.3 ....................................................................................................... 4 5.3.1 ........................................................................................................... 4 5.3.2 ............................................................. Error! Bookmark not defined. 5.4 ............................................................................................................ 4 5.5 .......................................................................... Error! Bookmark not defined. 5.6 ................................................................................................................... 5 5.7 .............................................................................. Error! Bookmark not defined. 5.8 ................................................................................................... 5 5.8.1 Business Owner .................................................................................................................................. 5 5.8.2 / ........................................................................................ 5 6 ............................................. Error! Bookmark not defined. 6.1 (As-Is) ................................................................. 6 6.2 (To-Be) ......................................................... 6 6.3 ................ 9 6.4 .................................. 9 7 .......................................................................................................... 10 7.1 .............................................................................................. 10 7.2 ........................................................................................................... 10 7.3 ............................................................................................................ 10 [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 3 108481-GR/ 06.10.2022 2 2645725138 Winbank omni- ATM transactions using winbank app\QR code / 1.0 / 26/09/2023 3 29/08/2023 1.0 26/09/2023 1.1 4 Business Owner Digital Banking Product & Services Development 26/9/2023 [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 4 108481-GR/ 06.10.2022 5 5.1 Simplicity & Efficiency , ( ) , ( ) ( ). QR , ( Digital Wallet) . 5.2 , , , winbank web & app. QR Code & Barcode reader . 5.3 5.3.1 To be defined 5.3.2 / [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 5 108481-GR/ 06.10.2022 5.4 , winbank. , retail winbank web & app. , business . 5.5 H OMNI channel QR Code ( web) mobile app. , , . , geolocation security issues. . 5.6 QR Code/Barcode reader . , QR , . 5.7 geolocation ( 5.5) . 5.8 winbank ATM 5.8.1 Business Owner Business Owner: Digital Banking 5.8.2 / IT - Cards & Self-Service Machines - Self Service Mach & Switching [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 6 108481-GR/ 06.10.2022 - Cards & Self-Service Machines - Debit Cards Digital Banking & Cards Business Retail Marketing Communications, Digital Retail Banking & Distribution Networks 6 6.1 (As-Is) / : (retail) winbank . o . winbank mobile app QR Code winbank mobile app . QR Code geolocation ( section 5.5) 6.2 (To-Be) cardless winbank o Login winbank web winbank mobile app. o . o , ( ) 20 50 . o Safer Payments o Strong Customer Authentication. o QR Code . QR Code . o ( e-mail ). , , , winbank, QR Code. Commented [NP1]: AML/CTF: ( ) ( QR code), ; ; Commented [2R1]: , mobile app login ( ). . Commented [NP3R1]: AML/CTF: . Commented [TV4]: [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 7 108481-GR/ 06.10.2022 cardless winbank o Login winbank web winbank mobile app. o . o , () . o . o Safer Payments o Strong Customer Authentication. o QR Code. , , , winbank, QR Code. QR Code: o Barcode/QR code reader o Cardless ENTER . o fault Barcode/QR code reader , QR winbank app. o app. o QR , geolocation mobile , o (.. 50 50) ( ). . , winbank. o () . o Safer Payments o . o winbank email . [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 8 108481-GR/ 06.10.2022 o QR Code . : o , , winbank . : o (.. 50 50) ( ). . , winbank. o () . o Safer Payments o . o winbank email . QR Code: o Barcode/QR code reader on-line . o Cardless ENTER . o fault Barcode/QR code reader , QR winbank app. o app. o QR , geolocation mobile , o . . o Safer Payments o . winbank. o winbank email . [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 9 108481-GR/ 06.10.2022 o QR Code . : o on-line . o Cardless ENTER . o fault . o ( / ) , QR ( ). o QR winbank app. o QR , geolocation mobile o . . o Safer Payments o . winbank. o winbank email . o QR Code . 6.3 # / [. , , & , ] 1. (Reporting) [. ] 1. - - [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 10 108481-GR/ 06.10.2022 - - - - - QR Code - QR Code [. , ] 1. 1. 6.4 # 1. [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 11 108481-GR/ 06.10.2022 7 7.1 [ , .] 7.2 [ , , , .] 7.3 [ , , , .] [ / , Product Working Group.] Produc
+    ```
+    return only the json nothing else
+    
+2025-07-23 09:59:33 [INFO] analyze_document - 📊 Prompt analytics logged to output/prompt_analytics_log.csv
+2025-07-23 09:59:33 [DEBUG] analyze_document - LLM Response: ```json
+[
+    {
+        "title": "QR Code χωρίς κάρτα",
+        "description": "Ο πελάτης μπορεί να κάνει αναλήψεις μετρητών στο ATM χρησιμοποιώντας QR code χωρίς την ανάγκη για κάρτα.",
+        "functional": true
+    },
+    {
+        "title": "Εύκολη πρόσβαση στο λογαριασμό",
+        "description": "Οι πελάτες μπορούν να κάνουν είσοδο στον ιστότοπος της Winbank και στη μέση Winbank χρησιμοποιώντας QR code.",
+        "functional": true
+    },
+    {
+        "title": "Ασφαλή πληρωμές",
+        "description": "Υπάρχει η απαίτηση για την υλοποίηση Strong Customer Authentication για να εξασφαλιστεί η ασφάλεια και προστασία σε όλες τις δραστηριότητες πληρωμών.",
+        "functional": false
+    },
+    {
+        "title": "Πολυπλοκότητα και αποδοτικότητα",
+        "description": "Οι χρήστες θα πρέπει να μπορούν εύκολα να χρησιμοποιήσουν την Winbank App για αναλήψεις και δραστηριότητες λογαριασμού.",
+        "functional": true
+    },
+    {
+        "title": "Μετρητά στο ATM χωρίς κάρτα",
+        "description": "Οι πελάτες θα μπορούν να αναπτύξουν την δυνατότητα να κάνουν αναλήψεις μετρητών χωρίς να εμπλουτίζουν περαιτέρω τις λεπτομέρειες για την Winbank App.",
+        "functional": true
+    }
+]
+```
+2025-07-23 09:59:33 [DEBUG] analyze_document - Raw Answer:```json
+[
+    {
+        "title": "QR Code χωρίς κάρτα",
+        "description": "Ο πελάτης μπορεί να κάνει αναλήψεις μετρητών στο ATM χρησιμοποιώντας QR code χωρίς την ανάγκη για κάρτα.",
+        "functional": true
+    },
+    {
+        "title": "Εύκολη πρόσβαση στο λογαριασμό",
+        "description": "Οι πελάτες μπορούν να κάνουν είσοδο στον ιστότοπος της Winbank και στη μέση Winbank χρησιμοποιώντας QR code.",
+        "functional": true
+    },
+    {
+        "title": "Ασφαλή πληρωμές",
+        "description": "Υπάρχει η απαίτηση για την υλοποίηση Strong Customer Authentication για να εξασφαλιστεί η ασφάλεια και προστασία σε όλες τις δραστηριότητες πληρωμών.",
+        "functional": false
+    },
+    {
+        "title": "Πολυπλοκότητα και αποδοτικότητα",
+        "description": "Οι χρήστες θα πρέπει να μπορούν εύκολα να χρησιμοποιήσουν την Winbank App για αναλήψεις και δραστηριότητες λογαριασμού.",
+        "functional": true
+    },
+    {
+        "title": "Μετρητά στο ATM χωρίς κάρτα",
+        "description": "Οι πελάτες θα μπορούν να αναπτύξουν την δυνατότητα να κάνουν αναλήψεις μετρητών χωρίς να εμπλουτίζουν περαιτέρω τις λεπτομέρειες για την Winbank App.",
+        "functional": true
+    }
+]
+```
+2025-07-23 09:59:33 [DEBUG] analyze_document - [{'title': 'QR Code χωρίς κάρτα', 'description': 'Ο πελάτης μπορεί να κάνει αναλήψεις μετρητών στο ATM χρησιμοποιώντας QR code χωρίς την ανάγκη για κάρτα.', 'functional': True}, {'title': 'Εύκολη πρόσβαση στο λογαριασμό', 'description': 'Οι πελάτες μπορούν να κάνουν είσοδο στον ιστότοπος της Winbank και στη μέση Winbank χρησιμοποιώντας QR code.', 'functional': True}, {'title': 'Ασφαλή πληρωμές', 'description': 'Υπάρχει η απαίτηση για την υλοποίηση Strong Customer Authentication για να εξασφαλιστεί η ασφάλεια και προστασία σε όλες τις δραστηριότητες πληρωμών.', 'functional': False}, {'title': 'Πολυπλοκότητα και αποδοτικότητα', 'description': 'Οι χρήστες θα πρέπει να μπορούν εύκολα να χρησιμοποιήσουν την Winbank App για αναλήψεις και δραστηριότητες λογαριασμού.', 'functional': True}, {'title': 'Μετρητά στο ATM χωρίς κάρτα', 'description': 'Οι πελάτες θα μπορούν να αναπτύξουν την δυνατότητα να κάνουν αναλήψεις μετρητών χωρίς να εμπλουτίζουν περαιτέρω τις λεπτομέρειες για την Winbank App.', 'functional': True}]
+2025-07-23 12:10:48 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 157459 tokens)
+2025-07-23 12:12:51 [DEBUG] analyze_document - Prompt to LLM: 
+You are an experienced business analyst.
+
+Analyze the following document written in Greek, describing the current (as-is) and desired (to-be) business processes.
+
+Extract ONLY the requirements related to the "to-be" state.
+
+Return ONLY a JSON array, where each requirement has:
+- title: short title (keep in Greek)
+- description: short description (1-2 sentences, in Greek)
+- functional: true if functional requirement, false if non-functional
+
+### Example format:
+[
+    {
+        "title": "Cardless ανάληψη με QR",
+        "description": "Ο πελάτης μπορεί να κάνει ανάληψη μετρητών στο ATM χρησιμοποιώντας QR code χωρίς κάρτα.",
+        "functional": true
+    }
+]
+
+DO NOT include any explanation or commentary, only the JSON array.
+
+    108481-GR/ 06.10.2022 (BUSINESS REQUIREMENTS DOCUMENT - BRD) [2645725138 WINBANK OMNI- ATM TRANSACTIONS USING WINBANK APP\QR CODE] [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 2 108481-GR/ 06.10.2022 1 1 .............................................................................................. 2 2 ............................................................................................... 3 3 ............................................................................................. 3 4 ................................................................................................................... 3 5 ............................................................................................. 4 5.1 ................................................................................................. 4 5.2 ............................................................................................................................ 4 5.3 ....................................................................................................... 4 5.3.1 ........................................................................................................... 4 5.3.2 ............................................................. Error! Bookmark not defined. 5.4 ............................................................................................................ 4 5.5 .......................................................................... Error! Bookmark not defined. 5.6 ................................................................................................................... 5 5.7 .............................................................................. Error! Bookmark not defined. 5.8 ................................................................................................... 5 5.8.1 Business Owner .................................................................................................................................. 5 5.8.2 / ........................................................................................ 5 6 ............................................. Error! Bookmark not defined. 6.1 (As-Is) ................................................................. 6 6.2 (To-Be) ......................................................... 6 6.3 ................ 9 6.4 .................................. 9 7 .......................................................................................................... 10 7.1 .............................................................................................. 10 7.2 ........................................................................................................... 10 7.3 ............................................................................................................ 10 [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 3 108481-GR/ 06.10.2022 2 2645725138 Winbank omni- ATM transactions using winbank app\QR code / 1.0 / 26/09/2023 3 29/08/2023 1.0 26/09/2023 1.1 4 Business Owner Digital Banking Product & Services Development 26/9/2023 [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 4 108481-GR/ 06.10.2022 5 5.1 Simplicity & Efficiency , ( ) , ( ) ( ). QR , ( Digital Wallet) . 5.2 , , , winbank web & app. QR Code & Barcode reader . 5.3 5.3.1 To be defined 5.3.2 / [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 5 108481-GR/ 06.10.2022 5.4 , winbank. , retail winbank web & app. , business . 5.5 H OMNI channel QR Code ( web) mobile app. , , . , geolocation security issues. . 5.6 QR Code/Barcode reader . , QR , . 5.7 geolocation ( 5.5) . 5.8 winbank ATM 5.8.1 Business Owner Business Owner: Digital Banking 5.8.2 / IT - Cards & Self-Service Machines - Self Service Mach & Switching [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 6 108481-GR/ 06.10.2022 - Cards & Self-Service Machines - Debit Cards Digital Banking & Cards Business Retail Marketing Communications, Digital Retail Banking & Distribution Networks 6 6.1 (As-Is) / : (retail) winbank . o . winbank mobile app QR Code winbank mobile app . QR Code geolocation ( section 5.5) 6.2 (To-Be) cardless winbank o Login winbank web winbank mobile app. o . o , ( ) 20 50 . o Safer Payments o Strong Customer Authentication. o QR Code . QR Code . o ( e-mail ). , , , winbank, QR Code. Commented [NP1]: AML/CTF: ( ) ( QR code), ; ; Commented [2R1]: , mobile app login ( ). . Commented [NP3R1]: AML/CTF: . Commented [TV4]: [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 7 108481-GR/ 06.10.2022 cardless winbank o Login winbank web winbank mobile app. o . o , () . o . o Safer Payments o Strong Customer Authentication. o QR Code. , , , winbank, QR Code. QR Code: o Barcode/QR code reader o Cardless ENTER . o fault Barcode/QR code reader , QR winbank app. o app. o QR , geolocation mobile , o (.. 50 50) ( ). . , winbank. o () . o Safer Payments o . o winbank email . [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 8 108481-GR/ 06.10.2022 o QR Code . : o , , winbank . : o (.. 50 50) ( ). . , winbank. o () . o Safer Payments o . o winbank email . QR Code: o Barcode/QR code reader on-line . o Cardless ENTER . o fault Barcode/QR code reader , QR winbank app. o app. o QR , geolocation mobile , o . . o Safer Payments o . winbank. o winbank email . [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 9 108481-GR/ 06.10.2022 o QR Code . : o on-line . o Cardless ENTER . o fault . o ( / ) , QR ( ). o QR winbank app. o QR , geolocation mobile o . . o Safer Payments o . winbank. o winbank email . o QR Code . 6.3 # / [. , , & , ] 1. (Reporting) [. ] 1. - - [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 10 108481-GR/ 06.10.2022 - - - - - QR Code - QR Code [. , ] 1. 1. 6.4 # 1. [2645725138 Winbank omni- ATM transactions using winbank app\QR code] 11 108481-GR/ 06.10.2022 7 7.1 [ , .] 7.2 [ , , , .] 7.3 [ , , , .] [ / , Product Working Group.] Produc
+    ```
+    return only the json nothing else
+    
+2025-07-23 12:12:51 [INFO] analyze_document - 📊 Prompt analytics logged to output/prompt_analytics_log.csv
+2025-07-23 12:12:51 [DEBUG] analyze_document - LLM Response: ```json
+[
+    {
+        "title": "QR Code Cardless ATM Transactions",
+        "description": "Ο πελάτης θα μπορεί να κάνει αναλήψεις μετρητών στο ATM χρησιμοποιώντας QR code, εξαιτίας της απλότητας και αποτελεσματικότητας.",
+        "functional": true
+    },
+    {
+        "title": "Login via Web and Mobile App",
+        "description": "Ο πελάτης θα μπορεί να συνδεθεί χρησιμοποιώντας το web και την εφαρμογή mobile, για να κάνει αναλήψεις.",
+        "functional": true
+    },
+    {
+        "title": "Enhanced Security Measures",
+        "description": "Γίνεται χρήση της Strong Customer Authentication και Safer Payments για να βελτιωθεί η ασφάλεια των πληρωμών.",
+        "functional": false
+    },
+    {
+        "title": "Integration of QR Code Technology",
+        "description": "Η υποστήριξη για τεχνολογία QR code επιτρέπει πιο ασφαλή και άμεση ανάληψη μετρητών.",
+        "functional": true
+    },
+    {
+        "title": "Support for Geolocation Services",
+        "description": "Χρησιμοποίηση υπηρεσίας geolocation για τον έλεγχο της τοποθεσίας κατά την πραγματοποίηση μεταφορών.",
+        "functional": false
+    }
+]
+```
+2025-07-23 12:12:51 [DEBUG] analyze_document - Raw Answer:```json
+[
+    {
+        "title": "QR Code Cardless ATM Transactions",
+        "description": "Ο πελάτης θα μπορεί να κάνει αναλήψεις μετρητών στο ATM χρησιμοποιώντας QR code, εξαιτίας της απλότητας και αποτελεσματικότητας.",
+        "functional": true
+    },
+    {
+        "title": "Login via Web and Mobile App",
+        "description": "Ο πελάτης θα μπορεί να συνδεθεί χρησιμοποιώντας το web και την εφαρμογή mobile, για να κάνει αναλήψεις.",
+        "functional": true
+    },
+    {
+        "title": "Enhanced Security Measures",
+        "description": "Γίνεται χρήση της Strong Customer Authentication και Safer Payments για να βελτιωθεί η ασφάλεια των πληρωμών.",
+        "functional": false
+    },
+    {
+        "title": "Integration of QR Code Technology",
+        "description": "Η υποστήριξη για τεχνολογία QR code επιτρέπει πιο ασφαλή και άμεση ανάληψη μετρητών.",
+        "functional": true
+    },
+    {
+        "title": "Support for Geolocation Services",
+        "description": "Χρησιμοποίηση υπηρεσίας geolocation για τον έλεγχο της τοποθεσίας κατά την πραγματοποίηση μεταφορών.",
+        "functional": false
+    }
+]
+```
+2025-07-23 12:12:51 [DEBUG] analyze_document - [{'title': 'QR Code Cardless ATM Transactions', 'description': 'Ο πελάτης θα μπορεί να κάνει αναλήψεις μετρητών στο ATM χρησιμοποιώντας QR code, εξαιτίας της απλότητας και αποτελεσματικότητας.', 'functional': True}, {'title': 'Login via Web and Mobile App', 'description': 'Ο πελάτης θα μπορεί να συνδεθεί χρησιμοποιώντας το web και την εφαρμογή mobile, για να κάνει αναλήψεις.', 'functional': True}, {'title': 'Enhanced Security Measures', 'description': 'Γίνεται χρήση της Strong Customer Authentication και Safer Payments για να βελτιωθεί η ασφάλεια των πληρωμών.', 'functional': False}, {'title': 'Integration of QR Code Technology', 'description': 'Η υποστήριξη για τεχνολογία QR code επιτρέπει πιο ασφαλή και άμεση ανάληψη μετρητών.', 'functional': True}, {'title': 'Support for Geolocation Services', 'description': 'Χρησιμοποίηση υπηρεσίας geolocation για τον έλεγχο της τοποθεσίας κατά την πραγματοποίηση μεταφορών.', 'functional': False}]
+2025-07-23 12:17:03 [INFO] analyze_document - request: content='sequenceDiagram\n    participant web as Web Browser\n    participant blog as Blog Service\n    participant account as Account Service\n    participant mail as Mail Service\n    participant db as Storage\n\n    Note over web,db: The user must be logged in to submit blog posts\n    web->>+account: Logs in using credentials\n    account->>db: Query stored accounts\n    db->>account: Respond with query result\n\n    alt Credentials not found\n        account->>web: Invalid credentials\n    else Credentials found\n        account->>-web: Successfully logged in\n\n        Note over web,db: When the user is authenticated, they can now submit new posts\n        web->>+blog: Submit new post\n        blog->>db: Store post data\n\n        par Notifications\n            blog--)mail: Send mail to blog subscribers\n            blog--)db: Store in-site notifications\n        and Response\n            blog-->>-web: Successfully posted\n        end\n    end' c4_type=1
+2025-07-23 12:17:03 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 157714 tokens)
+2025-07-23 12:18:24 [DEBUG] analyze_document - Prompt to LLM: 
+    
+    
+You are an expert software architect specializing in system design and the C4 model.
+
+Your task is to convert the provided MermaidJS sequence diagram into a **MermaidJS C4 System Context diagram**.
+
+## MermaidJS C4 Syntax Rules
+You MUST use the following MermaidJS commands to construct the diagram. Do NOT use any other syntax.
+
+    
+    System Context Diagram sample
+    ```Mermaidjs
+    C4Context
+      title System Context diagram for Internet Banking System
+      Enterprise_Boundary(b0, "BankBoundary0") {
+        Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
+        Person(customerB, "Banking Customer B")
+        Person_Ext(customerC, "Banking Customer C", "desc")
+
+        Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+
+        System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+
+        Enterprise_Boundary(b1, "BankBoundary") {
+
+          SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+          System_Boundary(b2, "BankBoundary2") {
+            System(SystemA, "Banking System A")
+            System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts. next line.")
+          }
+
+          System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+          SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
+
+          Boundary(b3, "BankBoundary3", "boundary") {
+            SystemQueue(SystemF, "Banking System F Queue", "A system of the bank.")
+            SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
+          }
+        }
+      }
+
+      BiRel(customerA, SystemAA, "Uses")
+      BiRel(SystemAA, SystemE, "Uses")
+      Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
+      Rel(SystemC, customerA, "Sends e-mails to")
+
+      UpdateElementStyle(customerA, $fontColor="red", $bgColor="grey", $borderColor="red")
+      UpdateRelStyle(customerA, SystemAA, $textColor="blue", $lineColor="blue", $offsetX="5")
+      UpdateRelStyle(SystemAA, SystemE, $textColor="blue", $lineColor="blue", $offsetY="-10")
+      UpdateRelStyle(SystemAA, SystemC, $textColor="blue", $lineColor="blue", $offsetY="-40", $offsetX="-50")
+      UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+    ```
+    
+
+## Input Sequence Diagram:
+sequenceDiagram
+    participant web as Web Browser
+    participant blog as Blog Service
+    participant account as Account Service
+    participant mail as Mail Service
+    participant db as Storage
+
+    Note over web,db: The user must be logged in to submit blog posts
+    web->>+account: Logs in using credentials
+    account->>db: Query stored accounts
+    db->>account: Respond with query result
+
+    alt Credentials not found
+        account->>web: Invalid credentials
+    else Credentials found
+        account->>-web: Successfully logged in
+
+        Note over web,db: When the user is authenticated, they can now submit new posts
+        web->>+blog: Submit new post
+        blog->>db: Store post data
+
+        par Notifications
+            blog--)mail: Send mail to blog subscribers
+            blog--)db: Store in-site notifications
+        and Response
+            blog-->>-web: Successfully posted
+        end
+    end
+
+
+**Return the response strictly in JSON format with two fields:**
+- diagram: the MermaidJS C4 diagram as a string (inside triple backticks).
+- explanation: a short description of the design choices and mapping.
+
+```json
+{
+  "diagram": "Mermaidjs
+C4Component
+title Component diagram for Internet Banking System - API Application
+
+Container(spa, "Single Page Application", "javascript and angular", "Provides all the internet banking functionality to customers via their web browser.")
+Container(ma, "Mobile App", "Xamarin", "Provides a limited subset to the internet banking functionality to customers via their mobile device.")
+ContainerDb(db, "Database", "Relational Database Schema", "Stores user registration information, hashed authentication credentials, access logs, etc.")
+System_Ext(mbs, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+Container_Boundary(api, "API Application") {
+    Component(sign, "Sign In Controller", "MVC Rest Controller", "Allows users to sign in to the internet banking system")
+    Component(accounts, "Accounts Summary Controller", "MVC Rest Controller", "Provides customers with a summary of their bank accounts")
+    Component(security, "Security Component", "Spring Bean", "Provides functionality related to singing in, changing passwords, etc.")
+    Component(mbsfacade, "Mainframe Banking System Facade", "Spring Bean", "A facade onto the mainframe banking system.")
+
+    Rel(sign, security, "Uses")
+    Rel(accounts, mbsfacade, "Uses")
+    Rel(security, db, "Read & write to", "JDBC")
+    Rel(mbsfacade, mbs, "Uses", "XML/HTTPS")
+}
+
+Rel_Back(spa, sign, "Uses", "JSON/HTTPS")
+Rel(spa, accounts, "Uses", "JSON/HTTPS")
+
+Rel(ma, sign, "Uses", "JSON/HTTPS")
+Rel(ma, accounts, "Uses", "JSON/HTTPS")
+
+UpdateRelStyle(spa, sign, $offsetY="-40")
+UpdateRelStyle(spa, accounts, $offsetX="40", $offsetY="40")
+
+UpdateRelStyle(ma, sign, $offsetX="-90", $offsetY="40")
+UpdateRelStyle(ma, accounts, $offsetY="-40")
+
+UpdateRelStyle(sign, security, $offsetX="-160", $offsetY="10")
+UpdateRelStyle(accounts, mbsfacade, $offsetX="140", $offsetY="10")
+UpdateRelStyle(security, db, $offsetY="-40")
+UpdateRelStyle(mbsfacade, mbs, $offsetY="-40")
+",
+  "explanation": "The diagram maps the sequence participants into C4 containers and components. The web browser (SPA) and mobile app (ma) are containers. The backend API app contains components like sign (Sign In Controller) and accounts (Accounts Summary Controller), using Spring beans like security and mbsfacade. Relationships are drawn between components and external systems, like the mainframe. UpdateRelStyle adjusts label positions for clarity."
+}
+````
+Do not include any additional text or commentary outside the JSON.
+    
+2025-07-23 12:18:24 [INFO] analyze_document - 📊 Prompt analytics logged to output/prompt_analytics_log.csv
+2025-07-23 12:18:24 [DEBUG] analyze_document - LLM Response: ```json
+{
+  "diagram": "C4Context
+title System Context diagram for Internet Banking System
+
+Enterprise_Boundary(b0, \"BankBoundary0\") {
+  Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")
+  Person(customerB, \"Banking Customer B\")
+  Person_Ext(customerC, \"Banking Customer C\", \"desc\")
+  Person(customerD, \"Banking Customer D\", \"A customer of the bank, \\nwith personal bank accounts.\")
+  System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")
+  Enterprise_Boundary(b1, \"BankBoundary\") {
+    SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")
+    System_Boundary(b2, \"BankBoundary2\") {
+      System(SystemA, \"Banking System A\")
+      System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")
+    }
+    System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")
+    SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")
+    Boundary(b3, \"BankBoundary3\", \"boundary\") {
+      SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")
+      SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")
+    }
+  }
+}
+
+BiRel(customerA, SystemAA, \"Uses\")
+BiRel(SystemAA, SystemE, \"Uses\")
+Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")
+Rel(SystemC, customerA, \"Sends e-mails to\")",
+  "explanation": "The diagram maps the sequence participants into C4 system context elements. People like Banking Customer A and System AA (Internet Banking System) are depicted as persons and systems respectively. External systems such as E-mail system and Mainframe Banking System are represented using System_Ext and SystemDb_Ext tags, while internal systems are contained within boundaries."
+}
+```
+2025-07-23 12:18:24 [INFO] analyze_document - ```json
+{
+  "diagram": "C4Context
+title System Context diagram for Internet Banking System
+
+Enterprise_Boundary(b0, \"BankBoundary0\") {
+  Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")
+  Person(customerB, \"Banking Customer B\")
+  Person_Ext(customerC, \"Banking Customer C\", \"desc\")
+  Person(customerD, \"Banking Customer D\", \"A customer of the bank, \\nwith personal bank accounts.\")
+  System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")
+  Enterprise_Boundary(b1, \"BankBoundary\") {
+    SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")
+    System_Boundary(b2, \"BankBoundary2\") {
+      System(SystemA, \"Banking System A\")
+      System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")
+    }
+    System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")
+    SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")
+    Boundary(b3, \"BankBoundary3\", \"boundary\") {
+      SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")
+      SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")
+    }
+  }
+}
+
+BiRel(customerA, SystemAA, \"Uses\")
+BiRel(SystemAA, SystemE, \"Uses\")
+Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")
+Rel(SystemC, customerA, \"Sends e-mails to\")",
+  "explanation": "The diagram maps the sequence participants into C4 system context elements. People like Banking Customer A and System AA (Internet Banking System) are depicted as persons and systems respectively. External systems such as E-mail system and Mainframe Banking System are represented using System_Ext and SystemDb_Ext tags, while internal systems are contained within boundaries."
+}
+```
+2025-07-23 12:18:24 [INFO] analyze_document - ============================
+2025-07-23 12:18:24 [DEBUG] analyze_document - ```json
+{
+  "diagram": "C4Context
+title System Context diagram for Internet Banking System
+
+Enterprise_Boundary(b0, \"BankBoundary0\") {
+  Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")
+  Person(customerB, \"Banking Customer B\")
+  Person_Ext(customerC, \"Banking Customer C\", \"desc\")
+  Person(customerD, \"Banking Customer D\", \"A customer of the bank, \\nwith personal bank accounts.\")
+  System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")
+  Enterprise_Boundary(b1, \"BankBoundary\") {
+    SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")
+    System_Boundary(b2, \"BankBoundary2\") {
+      System(SystemA, \"Banking System A\")
+      System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")
+    }
+    System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")
+    SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")
+    Boundary(b3, \"BankBoundary3\", \"boundary\") {
+      SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")
+      SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")
+    }
+  }
+}
+
+BiRel(customerA, SystemAA, \"Uses\")
+BiRel(SystemAA, SystemE, \"Uses\")
+Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")
+Rel(SystemC, customerA, \"Sends e-mails to\")",
+  "explanation": "The diagram maps the sequence participants into C4 system context elements. People like Banking Customer A and System AA (Internet Banking System) are depicted as persons and systems respectively. External systems such as E-mail system and Mainframe Banking System are represented using System_Ext and SystemDb_Ext tags, while internal systems are contained within boundaries."
+}
+```
+2025-07-23 12:18:24 [INFO] analyze_document - ============================
