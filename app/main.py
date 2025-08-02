@@ -1,18 +1,38 @@
-from fastapi import FastAPI
-from contextlib import asynccontextmanager
-from app.database import init_db
-from api import projects, requirements, diagrams, teams, tasks, assistant
+"""FastAPI application setup."""
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from fastapi.encoders import jsonable_encoder
+import logging
+
+# Import core modules
+from app.core.database import init_db, async_init_db
+from app.core.exceptions import AppException
+
+# Import all domain models to ensure they are registered with SQLAlchemy
+import app.domain.models  # This imports all models
+
+# Import API router
+from app.api.v1.router import router as api_v1_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """Lifespan events for the FastAPI application."""
     # Startup
-    init_db()
+    logging.info("Initializing database...")
+    try:
+        await async_init_db()
+    except RuntimeError:
+        # Fall back to synchronous initialization if async is not available
+        init_db()
+    logging.info("Database initialized.")
     yield
-    # Shutdown (αν χρειαστεί, π.χ. cleanup)
-    # pass
+    # Shutdown
+    logging.info("Shutting down...")
 
-# Δημιουργία της FastAPI εφαρμογής
+# Create the FastAPI application
 app = FastAPI(
     title="Solution Outline Assistant API",
     description="API to help architects create Solution Outlines.",
@@ -20,28 +40,33 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Επέτρεψε όλα τα origins (για development)
+# Add middleware
+from app.core.middleware import ErrorLoggingMiddleware, SSEMiddleware
+
+# Add error logging middleware
+app.add_middleware(ErrorLoggingMiddleware)
+
+# Add SSE middleware
+app.add_middleware(SSEMiddleware)
+
+# Allow CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # ή βάλε λίστα με συγκεκριμένα origins π.χ. ["http://localhost:3000"]
+    allow_origins=["*"],  # For development, in production use specific origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Ένα απλό, αρχικό endpoint για έλεγχο
+# Register exception handlers
+from app.core.exceptions import register_exception_handlers
+register_exception_handlers(app)
+
+# Root endpoint
 @app.get("/")
 def read_root():
-    """
-    Root endpoint to check if the API is running.
-    """
+    """Root endpoint to check if the API is running."""
     return {"message": "Welcome to the Solution Outline Assistant API!"}
 
-# Εγγραφή router
-app.include_router(projects.router)
-app.include_router(requirements.router)
-app.include_router(diagrams.router)
-app.include_router(teams.router)
-app.include_router(tasks.router)
-app.include_router(assistant.router)
-
+# Include API routers
+app.include_router(api_v1_router)

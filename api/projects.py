@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.repositories import projects_repository
 from app import models, schemas
-from app.database import get_db
+from app.core.database import get_db
 import logging
 from app.decorators.safe_route import safe_route, safe_get_route
 from sqlalchemy.exc import SQLAlchemyError

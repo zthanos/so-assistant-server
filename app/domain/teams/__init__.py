@@ -1,0 +1,1 @@
+"""Teams domain models and business logic."""

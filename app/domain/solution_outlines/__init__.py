@@ -1,0 +1,1 @@
+"""Solution outlines domain models and business logic."""
