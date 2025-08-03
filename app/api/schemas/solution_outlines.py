@@ -24,6 +24,10 @@ class SolutionOutlineUpdate(SolutionOutlineBase):
     content: Optional[str] = None
     status: Optional[SolutionOutlineStatus] = None
 
+class SolutionOutlineUpsert(SolutionOutlineBase):
+    """Solution Outline upsert schema for create or update operations."""
+    pass
+
 class SolutionOutlineResponse(SolutionOutlineBase):
     """Solution Outline response schema."""
     id: int

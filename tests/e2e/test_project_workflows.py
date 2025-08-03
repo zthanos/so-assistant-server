@@ -145,7 +145,7 @@ class TestCompleteProjectWorkflow:
         
         # Step 6: Update solution outline (creating new version)
         updated_content = project_workflow_data["solution_outline"]["content"] + "\n\n## Updated Architecture\nAdded microservices architecture considerations."
-        updated_outline_response = client.put(
+        updated_outline_response = client.post(
             f"/api/v1/projects/{project_id}/solution-outlines",
             params={"content": updated_content, "status": "published"}
         )

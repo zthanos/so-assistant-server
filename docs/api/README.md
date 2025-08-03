@@ -407,10 +407,14 @@ Get the total number of ADRs for a project.
 
 ## Solution Outlines API
 
-### Create Solution Outline
-Create a new solution outline for a project (version 1).
+### Create or Update Solution Outline (Upsert)
+Create a new solution outline or update an existing one with automatic versioning using upsert logic.
 
 **Endpoint:** `POST /api/v1/projects/{project_id}/solution-outlines`
+
+**Behavior:**
+- If no solution outline exists for the project: Creates version 1
+- If solution outline already exists: Creates a new version with incremented version number
 
 **Query Parameters:**
 - `content` (required) - Solution outline content
@@ -420,46 +424,20 @@ Create a new solution outline for a project (version 1).
 ```json
 {
   "success": true,
-  "message": "Solution outline created successfully",
-  "data": {
-    "id": 1,
-    "project_id": "my-project-id",
-    "content": "# Solution Outline\n\nThis is the solution outline content...",
-    "version": 1,
-    "status": "draft",
-    "created_at": "2023-01-01T00:00:00Z",
-    "updated_at": "2023-01-01T00:00:00Z"
-  },
-  "timestamp": "2023-01-01T00:00:00Z"
-}
-```
-
-### Update Solution Outline
-Update a solution outline, creating a new version.
-
-**Endpoint:** `PUT /api/v1/projects/{project_id}/solution-outlines`
-
-**Query Parameters:**
-- `content` (required) - Updated solution outline content
-- `status` (optional) - New status
-
-**Response:** `200 OK`
-```json
-{
-  "success": true,
-  "message": "Solution outline updated successfully",
+  "message": "Solution outline created/updated successfully",
   "data": {
     "id": 2,
     "project_id": "my-project-id",
     "content": "# Updated Solution Outline\n\nThis is the updated content...",
     "version": 2,
-    "status": "published",
-    "created_at": "2023-01-02T00:00:00Z",
-    "updated_at": "2023-01-02T00:00:00Z"
+    "status": "draft",
+    "created_at": "2023-01-01T00:00:00Z",
+    "updated_at": "2023-01-01T01:00:00Z"
   },
-  "timestamp": "2023-01-02T00:00:00Z"
+  "timestamp": "2023-01-01T01:00:00Z"
 }
 ```
+
 
 ### Get Latest Solution Outline
 Get the latest version of a solution outline for a project.

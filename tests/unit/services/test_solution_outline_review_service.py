@@ -46,12 +46,13 @@ class TestSolutionOutlineReviewService:
         self.solution_outline_repository.get_or_404.return_value = self.solution_outline
         self.review_comment_repository.create.return_value = self.review_comment
         
-        # Mock the generate_stream method to return chunks
+        # Mock the generate_stream method to return SSE-formatted chunks
         self.ollama_client.generate_stream = AsyncMock()
         self.ollama_client.generate_stream.return_value.__aiter__.return_value = [
-            "This is a test comment.\n\n",
-            "1. First issue: Something is wrong.\n\n",
-            "2. Second issue: Something else is wrong."
+            'event: llm.chunk\ndata: {"content": "This is a test comment.\\n\\n", "prompt_key": "review_generation"}\n\n',
+            'event: llm.chunk\ndata: {"content": "1. First issue: Something is wrong.\\n\\n", "prompt_key": "review_generation"}\n\n',
+            'event: llm.chunk\ndata: {"content": "2. Second issue: Something else is wrong.", "prompt_key": "review_generation"}\n\n',
+            'event: llm.complete\ndata: {"content": "", "prompt_key": "review_generation", "done": true}\n\n'
         ]
         
         # Act
@@ -71,12 +72,13 @@ class TestSolutionOutlineReviewService:
         self.solution_outline_repository.get_or_404.return_value = self.solution_outline
         self.review_comment_repository.create.return_value = self.review_comment
         
-        # Mock the generate_stream method to return chunks
+        # Mock the generate_stream method to return SSE-formatted chunks
         self.ollama_client.generate_stream = AsyncMock()
         self.ollama_client.generate_stream.return_value.__aiter__.return_value = [
-            "This is a test comment.\n\n",
-            "1. First issue: Something is wrong.\n\n",
-            "2. Second issue: Something else is wrong."
+            'event: llm.chunk\ndata: {"content": "This is a test comment.\\n\\n", "prompt_key": "review_generation"}\n\n',
+            'event: llm.chunk\ndata: {"content": "1. First issue: Something is wrong.\\n\\n", "prompt_key": "review_generation"}\n\n',
+            'event: llm.chunk\ndata: {"content": "2. Second issue: Something else is wrong.", "prompt_key": "review_generation"}\n\n',
+            'event: llm.complete\ndata: {"content": "", "prompt_key": "review_generation", "done": true}\n\n'
         ]
         
         # Act

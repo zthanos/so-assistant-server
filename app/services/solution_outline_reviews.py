@@ -83,7 +83,12 @@ class SolutionOutlineReviewService:
                 )
             
             # Stream LLM response
-            async for chunk in self.ollama_client.generate_stream(prompt, prompt_key="solution_outline_review"):
+            async for sse_event in self.ollama_client.generate_stream(prompt, prompt_key="solution_outline_review"):
+                # Parse SSE event to extract content
+                chunk = self._extract_content_from_sse(sse_event)
+                if chunk is None:
+                    continue  # Skip non-content events or parsing errors
+                
                 # Process chunk to extract comments
                 current_comment, comments = self._process_review_chunk(current_comment + chunk)
                 
@@ -330,6 +335,34 @@ class SolutionOutlineReviewService:
                         break
         
         return remaining_text, comments
+    
+    def _extract_content_from_sse(self, sse_event: str) -> Optional[str]:
+        """Extract content from an SSE event.
+        
+        Args:
+            sse_event: The SSE event string.
+            
+        Returns:
+            The content string if this is a content chunk, None otherwise.
+        """
+        import json
+        
+        # Only process llm.chunk events
+        if "event: llm.chunk" not in sse_event:
+            return None
+        
+        # Extract data line from SSE event
+        lines = sse_event.strip().split('\n')
+        for line in lines:
+            if line.startswith('data: '):
+                try:
+                    data_json = line[6:]  # Remove 'data: ' prefix
+                    data = json.loads(data_json)
+                    return data.get("content", "")
+                except json.JSONDecodeError:
+                    continue
+        
+        return None
 
 # Create a singleton instance
 solution_outline_review_service = SolutionOutlineReviewService()

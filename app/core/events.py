@@ -6,6 +6,7 @@ and managing the lifecycle of SSE connections.
 """
 from fastapi import Request, BackgroundTasks
 import asyncio
+import json
 import uuid
 import logging
 import time
@@ -79,13 +80,16 @@ class SSEManager:
                             # Update last activity time
                             self.client_info[client_id]["last_activity"] = time.time()
                             
+                            # Ensure data is properly JSON serialized
+                            if isinstance(event.get("data"), (dict, list)):
+                                event["data"] = json.dumps(event["data"])
                             yield event
                         except asyncio.TimeoutError:
                             # Send keepalive event
                             yield {"event": "keepalive", "data": ""}
                 except Exception as e:
                     logger.error(f"Error in event generator for client {client_id}: {str(e)}")
-                    yield {"event": "error", "data": {"message": "Internal server error"}}
+                    yield {"event": "error", "data": json.dumps({"message": "Internal server error"})}
                 finally:
                     await self.unregister_client(client_id)
                     

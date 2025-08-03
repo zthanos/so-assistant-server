@@ -64,8 +64,12 @@ class SolutionOutlineService:
         # Create with version
         return self.solution_outline_repository.create_with_version(self.db, obj_in=solution_outline_data)
     
-    def update_solution_outline(self, project_id: str, content: str, status: Optional[SolutionOutlineStatus] = None) -> SolutionOutline:
-        """Update a solution outline, creating a new version.
+
+    def upsert_solution_outline(self, project_id: str, content: str, status: Optional[SolutionOutlineStatus] = None) -> SolutionOutline:
+        """Create or update a solution outline, creating a new version if it exists.
+        
+        This method implements upsert logic - if a solution outline exists for the project,
+        it creates a new version. If no solution outline exists, it creates the first version.
         
         Args:
             project_id: The ID of the project.
@@ -73,7 +77,7 @@ class SolutionOutlineService:
             status: The status of the solution outline.
             
         Returns:
-            The updated solution outline.
+            The created or updated solution outline.
             
         Raises:
             NotFoundException: If the project is not found.
@@ -81,14 +85,14 @@ class SolutionOutlineService:
         # Check if project exists
         project = self.project_repository.get_or_404(self.db, project_id)
         
-        # Create solution outline with new version
+        # Create solution outline with new version (repository handles versioning automatically)
         solution_outline_data = SolutionOutlineCreate(
             project_id=project_id,
             content=content,
             status=status if status is not None else SolutionOutlineStatus.draft
         )
         
-        # Create with version
+        # Create with version (this automatically handles both create and update scenarios)
         return self.solution_outline_repository.create_with_version(self.db, obj_in=solution_outline_data)
     
     def get_latest_solution_outline(self, project_id: str) -> SolutionOutline:
@@ -98,10 +102,10 @@ class SolutionOutlineService:
             project_id: The ID of the project.
             
         Returns:
-            The latest version of the solution outline.
+            The latest version of the solution outline, or an empty solution outline if none exists.
             
         Raises:
-            NotFoundException: If the project or solution outline is not found.
+            NotFoundException: If the project is not found.
         """
         # Check if project exists
         project = self.project_repository.get_or_404(self.db, project_id)
@@ -109,10 +113,22 @@ class SolutionOutlineService:
         # Get latest version
         solution_outline = self.solution_outline_repository.get_latest_version(self.db, project_id=project_id)
         if solution_outline is None:
-            raise NotFoundException(
-                f"No solution outline found for project {project_id}",
-                resource_type="SolutionOutline"
-            )
+            # Return an empty solution outline object instead of raising an exception
+            from datetime import datetime
+            from app.api.schemas.solution_outlines import SolutionOutlineResponse
+            
+            # Create a mock object that behaves like a SolutionOutline model
+            class EmptySolutionOutline:
+                def __init__(self):
+                    self.id = 0
+                    self.project_id = project_id
+                    self.content = ""
+                    self.status = SolutionOutlineStatus.draft
+                    self.version = 0
+                    self.created_at = datetime.now()
+                    self.updated_at = datetime.now()
+            
+            return EmptySolutionOutline()
         
         return solution_outline
     

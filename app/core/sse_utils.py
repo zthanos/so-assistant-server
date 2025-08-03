@@ -45,7 +45,7 @@ async def stream_llm_response(
         
         # Stream the response
         try:
-            async for chunk in ollama_client.generate_stream(prompt):
+            async for chunk in ollama_client.generate_stream_raw(prompt):
                 await sse_manager.send_event(
                     client_id, 
                     "chunk", 

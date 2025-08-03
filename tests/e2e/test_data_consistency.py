@@ -62,7 +62,7 @@ class TestDataConsistencyWorkflows:
         
         # Update solution outline (should create version 2)
         updated_content = "Updated solution outline content"
-        update_response = client.put(
+        update_response = client.post(
             f"/api/v1/projects/{project_id}/solution-outlines",
             params={"content": updated_content, "status": "published"}
         )

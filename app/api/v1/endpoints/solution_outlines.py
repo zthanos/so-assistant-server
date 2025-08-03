@@ -17,7 +17,7 @@ from app.services.solution_outlines import SolutionOutlineService
 from app.domain.models.solution_outlines import SolutionOutlineStatus
 from app.api.schemas.solution_outlines import (
     SolutionOutlineCreate,
-    SolutionOutlineUpdate,
+    SolutionOutlineUpsert,
     SolutionOutlineResponse,
     SolutionOutlineVersionInfo
 )
@@ -33,10 +33,10 @@ router = APIRouter()
     "/projects/{project_id}/solution-outlines",
     response_model=SolutionOutlineResponse,
     status_code=status.HTTP_201_CREATED,
-    summary="Create a new solution outline",
-    description="Create a new solution outline for a project with version 1."
+    summary="Create or update a solution outline",
+    description="Create a new solution outline or update an existing one with a new version using upsert logic."
 )
-def create_solution_outline(
+def upsert_solution_outline(
     project_id: str = Path(..., description="The ID of the project"),
     content: str = Query(..., description="The content of the solution outline"),
     status: Optional[SolutionOutlineStatus] = Query(
@@ -45,7 +45,11 @@ def create_solution_outline(
     ),
     service: SolutionOutlineService = Depends(get_solution_outline_service)
 ):
-    """Create a new solution outline.
+    """Create or update a solution outline using upsert logic.
+    
+    This endpoint implements upsert logic:
+    - If no solution outline exists for the project, creates version 1
+    - If a solution outline already exists, creates a new version with incremented version number
     
     Args:
         project_id: The ID of the project.
@@ -54,50 +58,16 @@ def create_solution_outline(
         service: The solution outline service.
         
     Returns:
-        The created solution outline.
+        The created or updated solution outline with version information.
         
     Raises:
         NotFoundException: If the project is not found.
     """
     try:
-        return service.create_solution_outline(project_id, content, status)
+        return service.upsert_solution_outline(project_id, content, status)
     except NotFoundException as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
-@router.put(
-    "/projects/{project_id}/solution-outlines",
-    response_model=SolutionOutlineResponse,
-    status_code=status.HTTP_200_OK,
-    summary="Update a solution outline",
-    description="Update a solution outline, creating a new version."
-)
-def update_solution_outline(
-    project_id: str = Path(..., description="The ID of the project"),
-    content: str = Query(..., description="The content of the solution outline"),
-    status: Optional[SolutionOutlineStatus] = Query(
-        None,
-        description="The status of the solution outline"
-    ),
-    service: SolutionOutlineService = Depends(get_solution_outline_service)
-):
-    """Update a solution outline.
-    
-    Args:
-        project_id: The ID of the project.
-        content: The content of the solution outline.
-        status: The status of the solution outline.
-        service: The solution outline service.
-        
-    Returns:
-        The updated solution outline.
-        
-    Raises:
-        NotFoundException: If the project is not found.
-    """
-    try:
-        return service.update_solution_outline(project_id, content, status)
-    except NotFoundException as e:
-        raise HTTPException(status_code=e.status_code, detail=e.message)
 
 @router.get(
     "/projects/{project_id}/solution-outlines/latest",

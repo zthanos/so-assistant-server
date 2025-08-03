@@ -52,10 +52,10 @@ class StreamingOllamaClient:
         system_prompt: Optional[str] = None,
         options: Optional[Dict[str, Any]] = None
     ) -> AsyncGenerator[str, None]:
-        """Generate a streaming response from the LLM.
+        """Generate a streaming response from the LLM in SSE format.
         
-        This method sends a prompt to the Ollama LLM and yields chunks of the
-        response as they become available.
+        This method sends a prompt to the Ollama LLM and yields SSE-formatted
+        events with chunks of the response as they become available.
         
         Args:
             prompt: The prompt to send to the LLM
@@ -64,7 +64,8 @@ class StreamingOllamaClient:
             options: Optional model parameters
             
         Yields:
-            Chunks of the LLM response as they become available
+            SSE-formatted events with LLM response chunks
+            Format: "event: llm.chunk\ndata: {\"content\": \"chunk\", \"prompt_key\": \"key\"}\n\n"
             
         Raises:
             LLMException: If there's an error calling the LLM
@@ -111,10 +112,24 @@ class StreamingOllamaClient:
                             
                             if chunk:
                                 full_response += chunk
-                                yield chunk
+                                # Format as SSE event
+                                sse_data = {
+                                    "content": chunk,
+                                    "prompt_key": prompt_key
+                                }
+                                sse_event = f"event: llm.chunk\ndata: {json.dumps(sse_data)}\n\n"
+                                yield sse_event
                                 
                             # Check if this is the final response
                             if data.get("done", False):
+                                # Send completion event
+                                completion_data = {
+                                    "content": "",
+                                    "prompt_key": prompt_key,
+                                    "done": True
+                                }
+                                completion_event = f"event: llm.complete\ndata: {json.dumps(completion_data)}\n\n"
+                                yield completion_event
                                 break
                         except json.JSONDecodeError:
                             self.logger.error(f"Failed to parse JSON from Ollama: {line}")
@@ -133,14 +148,38 @@ class StreamingOllamaClient:
         except httpx.HTTPStatusError as e:
             error_msg = f"HTTP error calling Ollama: {e.response.status_code} - {e.response.text}"
             self.logger.error(f"❌ {error_msg}")
+            # Send error event
+            error_data = {
+                "content": "",
+                "prompt_key": prompt_key,
+                "error": error_msg
+            }
+            error_event = f"event: llm.error\ndata: {json.dumps(error_data)}\n\n"
+            yield error_event
             raise LLMException(error_msg, original_exception=e)
         except httpx.RequestError as e:
             error_msg = f"Request error calling Ollama: {str(e)}"
             self.logger.error(f"❌ {error_msg}")
+            # Send error event
+            error_data = {
+                "content": "",
+                "prompt_key": prompt_key,
+                "error": error_msg
+            }
+            error_event = f"event: llm.error\ndata: {json.dumps(error_data)}\n\n"
+            yield error_event
             raise LLMException(error_msg, original_exception=e)
         except Exception as e:
             error_msg = f"Error calling Ollama: {str(e)}"
             self.logger.error(f"❌ {error_msg}")
+            # Send error event
+            error_data = {
+                "content": "",
+                "prompt_key": prompt_key,
+                "error": error_msg
+            }
+            error_event = f"event: llm.error\ndata: {json.dumps(error_data)}\n\n"
+            yield error_event
             raise LLMException(error_msg, original_exception=e)
             
     async def generate(
@@ -154,7 +193,7 @@ class StreamingOllamaClient:
         
         This method sends a prompt to the Ollama LLM and returns the complete
         response. It uses the streaming API internally but collects all chunks
-        into a single response.
+        into a single response by parsing the SSE events.
         
         Args:
             prompt: The prompt to send to the LLM
@@ -170,11 +209,94 @@ class StreamingOllamaClient:
         """
         result = ""
         try:
-            async for chunk in self.generate_stream(prompt, prompt_key, system_prompt, options):
-                result += chunk
+            async for sse_event in self.generate_stream(prompt, prompt_key, system_prompt, options):
+                # Parse SSE event to extract content
+                if "event: llm.chunk" in sse_event:
+                    # Extract data line from SSE event
+                    lines = sse_event.strip().split('\n')
+                    for line in lines:
+                        if line.startswith('data: '):
+                            try:
+                                data_json = line[6:]  # Remove 'data: ' prefix
+                                data = json.loads(data_json)
+                                content = data.get("content", "")
+                                if content:
+                                    result += content
+                            except json.JSONDecodeError:
+                                continue
+                elif "event: llm.complete" in sse_event:
+                    # Stream is complete
+                    break
+                elif "event: llm.error" in sse_event:
+                    # Extract error from SSE event
+                    lines = sse_event.strip().split('\n')
+                    for line in lines:
+                        if line.startswith('data: '):
+                            try:
+                                data_json = line[6:]  # Remove 'data: ' prefix
+                                data = json.loads(data_json)
+                                error_msg = data.get("error", "Unknown error")
+                                raise LLMException(f"LLM error: {error_msg}")
+                            except json.JSONDecodeError:
+                                continue
             return result
         except Exception as e:
             raise LLMException(f"Error generating non-streaming response: {str(e)}", original_exception=e)
+    
+    async def generate_stream_raw(
+        self,
+        prompt: str,
+        prompt_key: str = "unknown",
+        system_prompt: Optional[str] = None,
+        options: Optional[Dict[str, Any]] = None
+    ) -> AsyncGenerator[str, None]:
+        """Generate a streaming response from the LLM (raw content only).
+        
+        This method provides backward compatibility by yielding just the content
+        chunks without SSE formatting.
+        
+        Args:
+            prompt: The prompt to send to the LLM
+            prompt_key: A key for logging and analytics
+            system_prompt: Optional system prompt to prepend
+            options: Optional model parameters
+            
+        Yields:
+            Raw content chunks from the LLM response
+            
+        Raises:
+            LLMException: If there's an error calling the LLM
+        """
+        async for sse_event in self.generate_stream(prompt, prompt_key, system_prompt, options):
+            # Parse SSE event to extract content
+            if "event: llm.chunk" in sse_event:
+                # Extract data line from SSE event
+                lines = sse_event.strip().split('\n')
+                for line in lines:
+                    if line.startswith('data: '):
+                        try:
+                            data_json = line[6:]  # Remove 'data: ' prefix
+                            data = json.loads(data_json)
+                            content = data.get("content", "")
+                            if content:
+                                yield content
+                        except json.JSONDecodeError:
+                            continue
+            elif "event: llm.complete" in sse_event:
+                # Stream is complete
+                break
+            elif "event: llm.error" in sse_event:
+                # Extract error from SSE event
+                lines = sse_event.strip().split('\n')
+                for line in lines:
+                    if line.startswith('data: '):
+                        try:
+                            data_json = line[6:]  # Remove 'data: ' prefix
+                            data = json.loads(data_json)
+                            error_msg = data.get("error", "Unknown error")
+                            raise LLMException(f"LLM error: {error_msg}")
+                        except json.JSONDecodeError:
+                            continue
 
 # Legacy function for backward compatibility
 async def async_call_ollama(prompt, prompt_key="unknown"):

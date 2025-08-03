@@ -61,14 +61,14 @@ class TestSolutionOutlineService:
         with pytest.raises(NotFoundException):
             self.service.create_solution_outline(self.project_id, "Test content")
     
-    def test_update_solution_outline(self):
-        """Test updating a solution outline."""
+    def test_upsert_solution_outline(self):
+        """Test upserting a solution outline."""
         # Arrange
         self.project_repository.get_or_404.return_value = self.project
         self.solution_outline_repository.create_with_version.return_value = self.solution_outline
         
         # Act
-        result = self.service.update_solution_outline(self.project_id, "Updated content")
+        result = self.service.upsert_solution_outline(self.project_id, "Updated content")
         
         # Assert
         self.project_repository.get_or_404.assert_called_once_with(self.db, self.project_id)
@@ -90,14 +90,26 @@ class TestSolutionOutlineService:
         assert result == self.solution_outline
     
     def test_get_latest_solution_outline_not_found(self):
-        """Test getting the latest solution outline when none exists."""
+        """Test getting the latest solution outline when none exists - should return empty outline."""
         # Arrange
         self.project_repository.get_or_404.return_value = self.project
         self.solution_outline_repository.get_latest_version.return_value = None
         
-        # Act & Assert
-        with pytest.raises(NotFoundException):
-            self.service.get_latest_solution_outline(self.project_id)
+        # Act
+        result = self.service.get_latest_solution_outline(self.project_id)
+        
+        # Assert
+        self.project_repository.get_or_404.assert_called_once_with(self.db, self.project_id)
+        self.solution_outline_repository.get_latest_version.assert_called_once_with(self.db, project_id=self.project_id)
+        
+        # Verify it returns an empty solution outline
+        assert result.id == 0
+        assert result.project_id == self.project_id
+        assert result.content == ""
+        assert result.status == SolutionOutlineStatus.draft
+        assert result.version == 0
+        assert result.created_at is not None
+        assert result.updated_at is not None
     
     def test_get_solution_outline_by_version(self):
         """Test getting a solution outline by version."""

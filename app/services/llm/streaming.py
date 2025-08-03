@@ -76,7 +76,7 @@ class LLMStreamingService:
             
             # Stream the response
             try:
-                async for chunk in self.ollama_client.generate_stream(
+                async for chunk in self.ollama_client.generate_stream_raw(
                     prompt,
                     prompt_key,
                     system_prompt,
@@ -168,7 +168,7 @@ class LLMStreamingService:
             })
             
             # Stream the response
-            async for chunk in self.ollama_client.generate_stream(
+            async for chunk in self.ollama_client.generate_stream_raw(
                 prompt,
                 prompt_key,
                 system_prompt,

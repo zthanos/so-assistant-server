@@ -3,6 +3,7 @@
 This module provides endpoints for interacting with LLMs, including
 streaming responses using SSE.
 """
+import json
 from typing import Dict, Any, Optional, Tuple
 from fastapi import APIRouter, Depends, Request, BackgroundTasks, HTTPException, status
 from sse_starlette.sse import EventSourceResponse
@@ -185,14 +186,14 @@ async def stream_llm_response_direct(
             # Send start event
             yield {
                 "event": "llm.start",
-                "data": {
+                "data": json.dumps({
                     "message": "Starting LLM processing",
                     "prompt_key": request.prompt_key
-                }
+                })
             }
             
-            # Stream the response
-            async for chunk in ollama_client.generate_stream(
+            # Stream the response using raw content chunks
+            async for chunk in ollama_client.generate_stream_raw(
                 request.prompt,
                 request.prompt_key,
                 request.system_prompt,
@@ -203,39 +204,39 @@ async def stream_llm_response_direct(
                     
                 yield {
                     "event": "llm.chunk",
-                    "data": {
+                    "data": json.dumps({
                         "content": chunk,
                         "prompt_key": request.prompt_key
-                    }
+                    })
                 }
                 
             # Send completion event
             yield {
                 "event": "llm.complete",
-                "data": {
+                "data": json.dumps({
                     "message": "LLM processing complete",
                     "prompt_key": request.prompt_key
-                }
+                })
             }
         except LLMException as e:
             # Send error event
             yield {
                 "event": "llm.error",
-                "data": {
+                "data": json.dumps({
                     "message": str(e),
                     "prompt_key": request.prompt_key,
                     "error_type": "llm_error"
-                }
+                })
             }
         except Exception as e:
             # Send error event
             yield {
                 "event": "llm.error",
-                "data": {
+                "data": json.dumps({
                     "message": "An unexpected error occurred",
                     "prompt_key": request.prompt_key,
                     "error_type": "unexpected_error"
-                }
+                })
             }
     
     return EventSourceResponse(event_generator())

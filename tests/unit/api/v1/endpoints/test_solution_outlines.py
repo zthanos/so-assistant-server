@@ -76,20 +76,20 @@ class TestSolutionOutlineEndpoints:
         assert response.status_code == 404
         assert response.json()["detail"] == "Project not found"
     
-    def test_update_solution_outline(self):
-        """Test updating a solution outline."""
+    def test_upsert_solution_outline(self):
+        """Test upserting a solution outline."""
         # Arrange
-        mock_service.update_solution_outline.return_value = mock_solution_outline
+        mock_service.upsert_solution_outline.return_value = mock_solution_outline
         
         # Act
-        response = client.put(
+        response = client.post(
             "/projects/test-project/solution-outlines?content=Test%20content"
         )
         
         # Assert
-        assert response.status_code == 200
-        mock_service.update_solution_outline.assert_called_once_with(
-            "test-project", "Test content", None
+        assert response.status_code == 201
+        mock_service.upsert_solution_outline.assert_called_once_with(
+            "test-project", "Test content", SolutionOutlineStatus.draft
         )
         assert response.json() == mock_solution_outline
     
