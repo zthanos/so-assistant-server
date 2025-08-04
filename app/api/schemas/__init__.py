@@ -74,6 +74,22 @@ from app.api.schemas.llm import (
     LLMStreamResponse,
     LLMErrorResponse,
 )
+from app.api.schemas.requirements import (
+    RequirementBase,
+    RequirementCreate,
+    RequirementUpdate,
+    RequirementResponse,
+    RequirementCategory,
+    RequirementStatus,
+    RequirementDocumentBase,
+    RequirementDocumentCreate,
+    RequirementDocumentUpdate,
+    RequirementDocumentUpsert,
+    RequirementDocumentResponse,
+    RequirementDocumentVersionInfo,
+    RequirementDocumentStatus,
+    SourceType,
+)
 
 __all__ = [
     # Common schemas
@@ -135,4 +151,19 @@ __all__ = [
     "LLMResponse",
     "LLMStreamResponse",
     "LLMErrorResponse",
+    # Requirements schemas
+    "RequirementBase",
+    "RequirementCreate",
+    "RequirementUpdate",
+    "RequirementResponse",
+    "RequirementCategory",
+    "RequirementStatus",
+    "RequirementDocumentBase",
+    "RequirementDocumentCreate",
+    "RequirementDocumentUpdate",
+    "RequirementDocumentUpsert",
+    "RequirementDocumentResponse",
+    "RequirementDocumentVersionInfo",
+    "RequirementDocumentStatus",
+    "SourceType",
 ]

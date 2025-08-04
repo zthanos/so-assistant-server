@@ -73,7 +73,7 @@ class ErrorLoggingMiddleware(BaseHTTPMiddleware):
             
             # Use safe JSON serialization to avoid datetime serialization issues
             try:
-                content = error_response.model_dump()
+                content = error_response.model_dump(mode='json')
             except Exception:
                 # Fallback to a simple error message if model serialization fails
                 content = {

@@ -202,7 +202,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content=error_response.model_dump()
+        content=error_response.model_dump(mode='json')
     )
 
 async def pydantic_validation_exception_handler(request: Request, exc: ValidationError) -> JSONResponse:
@@ -224,7 +224,7 @@ async def pydantic_validation_exception_handler(request: Request, exc: Validatio
     
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content=error_response.model_dump()
+        content=error_response.model_dump(mode='json')
     )
 
 async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
@@ -251,7 +251,7 @@ async def global_exception_handler(request: Request, exc: Exception) -> JSONResp
     
     # Use safe serialization to avoid datetime serialization issues
     try:
-        content = error_response.model_dump()
+        content = error_response.model_dump(mode='json')
     except Exception:
         # Fallback to a simple error message if model serialization fails
         content = {

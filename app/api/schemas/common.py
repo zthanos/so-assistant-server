@@ -11,6 +11,11 @@ class BaseResponse(BaseModel, Generic[T]):
     message: str = Field(description="Human-readable message about the response")
     data: Optional[T] = Field(default=None, description="Response data")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Response timestamp")
+    
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat() if v else None
+        }
 
 class SuccessResponse(BaseResponse[T]):
     """Success response model."""
@@ -23,6 +28,11 @@ class ErrorResponse(BaseModel):
     error_code: Optional[str] = Field(default=None, description="Machine-readable error code")
     details: Optional[Dict[str, Any]] = Field(default=None, description="Additional error details")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Error timestamp")
+    
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat() if v else None
+        }
 
 class ValidationErrorResponse(ErrorResponse):
     """Validation error response model."""

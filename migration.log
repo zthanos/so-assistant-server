@@ -1,0 +1,19 @@
+2025-08-03 21:34:26,391 - INFO - Applied migrations: []
+2025-08-03 21:34:26,391 - INFO - Found 3 migrations to run
+2025-08-03 21:34:26,391 - INFO - Executing migration 000: create_migration_tables.sql
+2025-08-03 21:34:26,406 - INFO - Executing migration 001: create_requirement_documents_table.sql
+2025-08-03 21:34:26,422 - ERROR - Migration 001 failed, stopping
+2025-08-03 21:36:17,773 - INFO - Starting database migration
+2025-08-03 21:36:17,775 - INFO - Applied migrations: ['000']
+2025-08-03 21:36:17,775 - INFO - Found 2 migrations to run
+2025-08-03 21:36:17,775 - INFO - Executing migration 001: create_requirement_documents_table.sql
+2025-08-03 21:36:17,835 - INFO - Migration 001 completed successfully (1 records affected, 54ms)
+2025-08-03 21:36:17,835 - INFO - Executing migration 002: migrate_existing_requirements.sql
+2025-08-03 21:36:17,843 - INFO - Migration 002 completed successfully (0 records affected, 1ms)
+2025-08-03 21:36:17,843 - INFO - All 2 migrations completed successfully
+2025-08-03 21:36:17,844 - INFO - Verifying database integrity
+2025-08-03 21:36:17,844 - INFO - requirement_documents table exists
+2025-08-03 21:36:17,845 - INFO - All expected indexes exist
+2025-08-03 21:36:17,845 - INFO - Version constraint working
+2025-08-03 21:36:17,846 - INFO - Unique constraint working
+2025-08-03 21:36:17,850 - INFO - Database integrity verification completed

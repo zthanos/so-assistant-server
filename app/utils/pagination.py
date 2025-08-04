@@ -47,6 +47,21 @@ class PaginationResult(Generic[T]):
     has_next: bool
     has_prev: bool
 
+
+class PaginatedResponse(BaseModel, Generic[T]):
+    """Pydantic model for paginated API responses."""
+    items: List[T]
+    total: int = Field(description="Total number of items")
+    page: int = Field(description="Current page number")
+    per_page: int = Field(description="Items per page")
+    pages: int = Field(description="Total number of pages")
+    has_next: bool = Field(description="Whether there is a next page")
+    has_prev: bool = Field(description="Whether there is a previous page")
+    
+    class Config:
+        from_attributes = True
+        arbitrary_types_allowed = True
+
 class Paginator:
     """Utility class for handling pagination."""
     
