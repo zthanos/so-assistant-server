@@ -31,4 +31,5 @@ class Project(Base):
     tasks = relationship("Task", back_populates="project")
     requirements = relationship("Requirement", back_populates="project")
     requirement_documents = relationship("RequirementDocument", back_populates="project")
+    requirement_items = relationship("RequirementItem", back_populates="project")
     diagrams = relationship("Diagram", back_populates="project")

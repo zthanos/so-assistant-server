@@ -4,18 +4,37 @@ from typing import Dict, Any, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from datetime import datetime, timedelta
 
-from app.core.monitoring import (
-    monitoring_dashboard,
-    system_monitor,
-    app_monitor,
-    performance_logger,
-    get_monitoring_report
-)
-from app.core.performance import (
-    performance_monitor,
-    cache_manager,
-    get_performance_report
-)
+try:
+    from app.core.monitoring import (
+        monitoring_dashboard,
+        system_monitor,
+        app_monitor,
+        performance_logger,
+        get_monitoring_report
+    )
+except ImportError:
+    # Fallback for missing monitoring components
+    monitoring_dashboard = None
+    system_monitor = None
+    app_monitor = None
+    performance_logger = None
+    
+    def get_monitoring_report():
+        return {"status": "monitoring_unavailable"}
+
+try:
+    from app.core.performance import (
+        performance_monitor,
+        cache_manager,
+        get_performance_report
+    )
+except ImportError:
+    # Fallback for missing performance components
+    performance_monitor = None
+    cache_manager = None
+    
+    def get_performance_report():
+        return {"status": "performance_monitoring_unavailable"}
 from app.services.optimized_requirement_document_service import concurrent_pdf_processor
 
 router = APIRouter()

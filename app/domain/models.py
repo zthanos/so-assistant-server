@@ -29,6 +29,8 @@ class Project(Base):
     
     # Relationships
     requirements = relationship("Requirement", back_populates="project", cascade="all, delete-orphan")
+    requirement_documents = relationship("RequirementDocument", back_populates="project", cascade="all, delete-orphan")
+    requirement_items = relationship("RequirementItem", back_populates="project", cascade="all, delete-orphan")
     diagrams = relationship("Diagram", back_populates="project", cascade="all, delete-orphan")
     teams = relationship("Team", back_populates="project", cascade="all, delete-orphan")
     tasks = relationship("Task", back_populates="project", cascade="all, delete-orphan")

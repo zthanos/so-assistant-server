@@ -34,6 +34,21 @@ class RequirementDocumentStatus(enum.Enum):
     archived = "archived"
 
 
+class RequirementItemStatus(enum.Enum):
+    """Requirement item status enum."""
+    new = "new"
+    accepted = "accepted"
+    rejected = "rejected"
+
+
+class RequirementItemPriority(enum.Enum):
+    """Requirement item priority enum."""
+    low = "low"
+    medium = "medium"
+    high = "high"
+    critical = "critical"
+
+
 class Requirement(Base):
     """Requirement model (legacy - kept for backward compatibility)."""
     __tablename__ = "requirements"
@@ -69,3 +84,20 @@ class RequirementDocument(Base):
     __table_args__ = (
         UniqueConstraint('project_id', 'version', name='uq_requirement_document_project_version'),
     )
+
+
+class RequirementItem(Base):
+    """Individual requirement item model."""
+    __tablename__ = "requirement_items"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    project_id = Column(String(255), ForeignKey("projects.id"), nullable=False)
+    title = Column(String(500), nullable=False)
+    description = Column(Text, nullable=False)
+    priority = Column(Enum(RequirementItemPriority), default=RequirementItemPriority.medium)
+    status = Column(Enum(RequirementItemStatus), default=RequirementItemStatus.new)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    project = relationship("Project", back_populates="requirement_items")

@@ -21,6 +21,20 @@ from app.domain.models.tasks import (
     Task,
     TaskStatus,
 )
+from app.domain.models.requirements import (
+    RequirementItem,
+    RequirementItemStatus,
+    RequirementItemPriority,
+    RequirementDocument,
+    RequirementDocumentStatus,
+    Requirement,
+    RequirementCategory,
+    RequirementStatus,
+    SourceType,
+)
+from app.domain.models.diagrams import (
+    Diagram,
+)
 
 __all__ = [
     "SolutionOutline",
@@ -33,4 +47,14 @@ __all__ = [
     "Team",
     "Task",
     "TaskStatus",
+    "RequirementItem",
+    "RequirementItemStatus",
+    "RequirementItemPriority",
+    "RequirementDocument",
+    "RequirementDocumentStatus",
+    "Requirement",
+    "RequirementCategory",
+    "RequirementStatus",
+    "SourceType",
+    "Diagram",
 ]

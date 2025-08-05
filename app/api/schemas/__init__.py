@@ -89,6 +89,20 @@ from app.api.schemas.requirements import (
     RequirementDocumentVersionInfo,
     RequirementDocumentStatus,
     SourceType,
+    # Requirement Item schemas
+    RequirementItemCreate,
+    RequirementItemUpdate,
+    RequirementItemUpsert,
+    RequirementItemBatchUpsert,
+    RequirementItemBatchUpsertResponse,
+    RequirementItemResponse,
+    RequirementItemStatusUpdate,
+    RequirementItemStatus,
+    RequirementItemPriority,
+    # AI Suggestion schemas
+    RequirementSuggestionRequest,
+    RequirementSuggestion,
+    RequirementSuggestionResponse,
 )
 
 __all__ = [
@@ -166,4 +180,18 @@ __all__ = [
     "RequirementDocumentVersionInfo",
     "RequirementDocumentStatus",
     "SourceType",
+    # Requirement Item schemas
+    "RequirementItemCreate",
+    "RequirementItemUpdate",
+    "RequirementItemUpsert",
+    "RequirementItemBatchUpsert",
+    "RequirementItemBatchUpsertResponse",
+    "RequirementItemResponse",
+    "RequirementItemStatusUpdate",
+    "RequirementItemStatus",
+    "RequirementItemPriority",
+    # AI Suggestion schemas
+    "RequirementSuggestionRequest",
+    "RequirementSuggestion",
+    "RequirementSuggestionResponse",
 ]
