@@ -11,7 +11,7 @@ from app.core.database import get_db
 from app.repositories.adr_repository import adr_repository
 from app.repositories.project_repository import project_repository
 from app.domain.models.adrs import ADR
-from app.api.schemas.adrs import ADRCreate, ADRUpdate, ADRResponse
+from app.api.schemas.adrs import ADRCreate, ADRUpdate, ADRUpsert, ADRResponse
 from app.core.exceptions import NotFoundException, ConflictException, BadRequestException
 from app.utils.pagination import PaginationParams, PaginationResult, Paginator
 from app.utils.filtering import FilterCondition, QueryFilter
@@ -32,43 +32,44 @@ class ADRService:
         self.adr_repository = adr_repository
         self.project_repository = project_repository
     
-    def create_adr(self, project_id: str, title: str, content: str) -> ADR:
-        """Create a new ADR.
+    # def create_adr(self, project_id: str, title: str, content: str) -> ADRResponse:
+    #     """Create a new ADR.
         
-        Args:
-            project_id: The ID of the project.
-            title: The title of the ADR.
-            content: The content of the ADR.
+    #     Args:
+    #         project_id: The ID of the project.
+    #         title: The title of the ADR.
+    #         content: The content of the ADR.
             
-        Returns:
-            The created ADR.
+    #     Returns:
+    #         The created ADR.
             
-        Raises:
-            NotFoundException: If the project is not found.
-            ConflictException: If an ADR with the same title already exists for the project.
-        """
-        # Check if project exists
-        project = self.project_repository.get_or_404(self.db, project_id)
+    #     Raises:
+    #         NotFoundException: If the project is not found.
+    #         ConflictException: If an ADR with the same title already exists for the project.
+    #     """
+    #     # Check if project exists
+    #     project = self.project_repository.get_or_404(self.db, project_id)
         
-        # Check if ADR with same title exists
-        existing_adr = self.adr_repository.get_by_title(self.db, project_id=project_id, title=title)
-        if existing_adr:
-            raise ConflictException(
-                f"ADR with title '{title}' already exists for project {project_id}",
-                resource_type="ADR",
-                conflict_field="title"
-            )
+    #     # Check if ADR with same title exists
+    #     existing_adr = self.adr_repository.get_by_title(self.db, project_id=project_id, title=title)
+    #     if existing_adr:
+    #         raise ConflictException(
+    #             f"ADR with title '{title}' already exists for project {project_id}",
+    #             resource_type="ADR",
+    #             resource_id=existing_adr.id
+    #         )
         
-        # Create ADR
-        adr_data = ADRCreate(
-            project_id=project_id,
-            title=title,
-            content=content
-        )
+    #     # Create ADR
+    #     adr_data = ADRCreate(
+    #         project_id=project_id,
+    #         title=title,
+    #         content=content
+    #     )
         
-        return self.adr_repository.create(self.db, obj_in=adr_data)
+    #     adr = self.adr_repository.create(self.db, obj_in=adr_data)
+    #     return ADRResponse.from_orm(adr)
     
-    def get_adr(self, adr_id: int) -> ADR:
+    def get_adr(self, adr_id: int) -> ADRResponse:
         """Get an ADR by ID.
         
         Args:
@@ -80,15 +81,15 @@ class ADRService:
         Raises:
             NotFoundException: If the ADR is not found.
         """
-        return self.adr_repository.get_or_404(self.db, adr_id)
-    
+        return  self.adr_repository.get_or_404(self.db, adr_id)
+
     def get_adrs_for_project(
         self, 
         project_id: str, 
         pagination: PaginationParams,
         filters: Optional[List[FilterCondition]] = None,
         search: Optional[str] = None
-    ) -> PaginationResult[ADR]:
+    ) -> PaginationResult[ADRResponse]:
         """Get all ADRs for a project with pagination and filtering.
         
         Args:
@@ -120,8 +121,8 @@ class ADRService:
             query = QueryFilter.apply_search(query, search, search_fields, ADR)
         
         # Apply pagination
-        allowed_sort_fields = ["title", "created_at", "updated_at"]
-        return Paginator.paginate_query(
+        allowed_sort_fields = ["title", "status", "author", "created_at", "updated_at"]
+        result = Paginator.paginate_query(
             query,
             pagination.page,
             pagination.per_page,
@@ -129,8 +130,21 @@ class ADRService:
             pagination.sort_order,
             allowed_sort_fields
         )
+        
+        # Convert SQLAlchemy models to Pydantic models
+        adr_responses = to_response(ADRResponse, result.items)
+        
+        return PaginationResult(
+            items=adr_responses,
+            total=result.total,
+            page=result.page,
+            per_page=result.per_page,
+            pages=result.pages,
+            has_next=result.has_next,
+            has_prev=result.has_prev
+        )
     
-    def update_adr(self, adr_id: int, title: Optional[str] = None, content: Optional[str] = None) -> ADR:
+    def update_adr(self, adr_id: int, title: Optional[str] = None, content: Optional[str] = None) -> ADRResponse:
         """Update an ADR.
         
         Args:
@@ -160,7 +174,7 @@ class ADRService:
                 raise ConflictException(
                     f"ADR with title '{title}' already exists for project {adr.project_id}",
                     resource_type="ADR",
-                    conflict_field="title"
+                    resource_id=existing_adr.id
                 )
         
         # Create update data
@@ -169,9 +183,10 @@ class ADRService:
             content=content if content is not None else adr.content
         )
         
-        return self.adr_repository.update(self.db, db_obj=adr, obj_in=update_data)
+        updated_adr = self.adr_repository.update(self.db, db_obj=adr, obj_in=update_data)
+        return to_response(ADRResponse, updated_adr.items)
     
-    def delete_adr(self, adr_id: int) -> ADR:
+    def delete_adr(self, adr_id: int) -> ADRResponse:
         """Delete an ADR.
         
         Args:
@@ -186,14 +201,15 @@ class ADRService:
         # Check if ADR exists
         adr = self.adr_repository.get_or_404(self.db, adr_id)
         
-        return self.adr_repository.delete(self.db, id=adr_id)
+        deleted_adr = self.adr_repository.delete(self.db, id=adr_id)
+        return to_response(ADRResponse, deleted_adr)
     
     def search_adrs(
         self, 
         project_id: str, 
         search_query: str, 
         pagination: PaginationParams
-    ) -> PaginationResult[ADR]:
+    ) -> PaginationResult[ADRResponse]:
         """Search ADRs by title or content for a project.
         
         Args:
@@ -219,7 +235,7 @@ class ADRService:
         
         # Apply pagination
         allowed_sort_fields = ["title", "created_at", "updated_at"]
-        return Paginator.paginate_query(
+        result = Paginator.paginate_query(
             query,
             pagination.page,
             pagination.per_page,
@@ -227,8 +243,24 @@ class ADRService:
             pagination.sort_order,
             allowed_sort_fields
         )
+        
+        # Convert SQLAlchemy models to Pydantic models
+        adr_responses = [
+            ADRResponse.model_validate(row, from_attributes=True)
+            for row in result.items
+        ]
+        
+        return PaginationResult(
+            items=adr_responses,
+            total=result.total,
+            page=result.page,
+            per_page=result.per_page,
+            pages=result.pages,
+            has_next=result.has_next,
+            has_prev=result.has_prev
+        )
     
-    def get_recent_adrs(self, project_id: str, limit: int = 5) -> List[ADR]:
+    def get_recent_adrs(self, project_id: str, limit: int = 5) -> List[ADRResponse]:
         """Get recent ADRs for a project.
         
         Args:
@@ -244,7 +276,9 @@ class ADRService:
         # Check if project exists
         project = self.project_repository.get_or_404(self.db, project_id)
         
-        return self.adr_repository.get_recent_adrs(self.db, project_id=project_id, limit=limit)
+        adrs = self.adr_repository.get_recent_adrs(self.db, project_id=project_id, limit=limit)
+        
+        return to_response(ADRResponse, adrs.items)
     
     def count_adrs_for_project(self, project_id: str) -> int:
         """Count the number of ADRs for a project.
@@ -262,6 +296,81 @@ class ADRService:
         project = self.project_repository.get_or_404(self.db, project_id)
         
         return self.adr_repository.count_by_project(self.db, project_id=project_id)
+    
+    def upsert_adr(self, project_id: str, upsert_data: ADRUpsert) -> ADRResponse:
+        """Create or update an ADR (upsert operation).
+        
+        Args:
+            project_id: The ID of the project.
+            upsert_data: The upsert data containing title, content, and optional adr_id.
+            
+        Returns:
+            The created or updated ADR.
+            
+        Raises:
+            NotFoundException: If the project or ADR (for update) is not found.
+            ConflictException: If an ADR with the same title already exists for the project.
+        """
+        # Check if project exists
+        project = self.project_repository.get_or_404(self.db, project_id)
+        
+        if upsert_data.adr_id is not None:
+            # Update existing ADR
+            adr = self.adr_repository.get_or_404(self.db, upsert_data.adr_id)
+            
+            # Verify the ADR belongs to the specified project
+            if adr.project_id != project_id:
+                raise NotFoundException(
+                    f"ADR {upsert_data.adr_id} not found in project {project_id}",
+                    resource_type="ADR"
+                )
+            
+            # Check if title conflicts with another ADR in the same project
+            existing_adr = self.adr_repository.get_by_title(
+                self.db, project_id=project_id, title=upsert_data.title
+            )
+            if existing_adr and existing_adr.id != upsert_data.adr_id:
+                raise ConflictException(
+                    f"ADR with title '{upsert_data.title}' already exists for project {project_id}",
+                    resource_type="ADR",
+                    resource_id=existing_adr.id
+                )
+            
+            # Update the ADR
+            update_data = ADRUpdate(
+                title=upsert_data.title,
+                content=upsert_data.content
+            )
+            updated_adr = self.adr_repository.update(self.db, db_obj=adr, obj_in=update_data)
+            return to_response(ADRResponse, updated_adr)
+        
+        else:
+            # Create new ADR
+            # Check if ADR with same title exists
+            existing_adr = self.adr_repository.get_by_title(
+                self.db, project_id=project_id, title=upsert_data.title
+            )
+            if existing_adr:
+                raise ConflictException(
+                    f"ADR with title '{upsert_data.title}' already exists for project {project_id}",
+                    resource_type="ADR",
+                    resource_id=existing_adr.id
+                )
+            
+            # Create ADR
+            adr_data = ADRCreate(
+                project_id=project_id,
+                title=upsert_data.title,
+                content=upsert_data.content
+            )
+            
+            adr = self.adr_repository.create(self.db, obj_in=adr_data)
+            return to_response(ADRResponse, adr.items)
+
 
 # Create a singleton instance
 adr_service = ADRService()
+
+
+def to_response(model_cls, items):
+    return [model_cls.model_validate(i, from_attributes=True) for i in items]

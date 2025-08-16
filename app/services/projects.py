@@ -6,6 +6,7 @@ from app.repositories.projects import ProjectRepository
 from app.domain.models import Project
 from app.api.schemas.projects import ProjectCreate, ProjectUpdate
 from app.core.exceptions import NotFoundException
+from sqlalchemy.inspection import inspect
 
 
 class ProjectService:
@@ -28,6 +29,8 @@ class ProjectService:
     def get_project_outline(self, project_id: str) -> Project:
         """Get project outline with all related entities."""
         project = self.repository.get_project_outline(project_id)
+                
+        debug_project(project)
         if not project:
             raise NotFoundException(f"Project with id {project_id} not found")
         return project
@@ -45,3 +48,12 @@ class ProjectService:
         """Delete project."""
         if not self.repository.delete_by_id(project_id):
             raise NotFoundException(f"Project with id {project_id} not found")
+        
+def debug_project(project):
+    mapper = inspect(project)
+    print("Columns:")
+    for column in mapper.attrs:
+        try:
+            print(f"  {column.key}: {getattr(project, column.key)}")
+        except Exception as e:
+            print(f"  {column.key}: <error: {e}>")        

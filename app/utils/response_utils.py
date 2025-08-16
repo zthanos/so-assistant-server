@@ -3,6 +3,8 @@ from typing import Any, Dict, List, Optional, Type, TypeVar
 from fastapi import HTTPException, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+import json
+from datetime import datetime
 from app.api.schemas.common import (
     SuccessResponse,
     ErrorResponse,
@@ -15,6 +17,27 @@ from app.api.schemas.common import (
     create_list_response,
     create_paginated_response,
 )
+
+# Custom JSON encoder for datetime objects
+def custom_json_encoder(obj: Any) -> Any:
+    """Custom JSON encoder for non-serializable objects."""
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
+class CustomJSONResponse(JSONResponse):
+    """Custom JSON response that handles datetime serialization."""
+    
+    def render(self, content: Any) -> bytes:
+        """Render content to JSON bytes with custom datetime handling."""
+        return json.dumps(
+            content,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=None,
+            separators=(",", ":"),
+            default=custom_json_encoder
+        ).encode("utf-8")
 
 T = TypeVar('T', bound=BaseModel)
 
@@ -29,7 +52,7 @@ class ResponseFormatter:
     ) -> JSONResponse:
         """Format a success response."""
         response = create_success_response(data=data, message=message)
-        return JSONResponse(
+        return CustomJSONResponse(
             content=response.model_dump(),
             status_code=status_code
         )
@@ -76,7 +99,7 @@ class ResponseFormatter:
     ) -> JSONResponse:
         """Format a list response."""
         response = create_list_response(data=data, message=message)
-        return JSONResponse(
+        return CustomJSONResponse(
             content=response.model_dump(),
             status_code=status.HTTP_200_OK
         )
@@ -97,7 +120,7 @@ class ResponseFormatter:
             total=total,
             message=message
         )
-        return JSONResponse(
+        return CustomJSONResponse(
             content=response.model_dump(),
             status_code=status.HTTP_200_OK
         )
@@ -115,7 +138,7 @@ class ResponseFormatter:
             error_code=error_code,
             details=details
         )
-        return JSONResponse(
+        return CustomJSONResponse(
             content=response.model_dump(),
             status_code=status_code
         )
@@ -180,7 +203,7 @@ class ResponseFormatter:
             message=message,
             details=details
         )
-        return JSONResponse(
+        return CustomJSONResponse(
             content=response.model_dump(),
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )

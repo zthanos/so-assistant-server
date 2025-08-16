@@ -94,7 +94,9 @@ def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
     try:
         yield db
-    except Exception:
+    except Exception as ex:
+        logging.error(f"Error in database session: {ex}")
+        print(ex)
         db.rollback()
         raise
     finally:

@@ -17,3 +17,24 @@
 2025-08-03 21:36:17,845 - INFO - Version constraint working
 2025-08-03 21:36:17,846 - INFO - Unique constraint working
 2025-08-03 21:36:17,850 - INFO - Database integrity verification completed
+2025-08-06 06:24:50,011 - INFO - Starting database migration
+2025-08-06 06:24:50,014 - INFO - Applied migrations: ['000', '001', '002']
+2025-08-06 06:24:50,014 - INFO - Found 2 migrations to run
+2025-08-06 06:24:50,014 - INFO - Executing migration 003: 003_create_systems_teams_tables.sql
+2025-08-06 06:24:50,092 - ERROR - Migration 003 failed: cannot commit - no transaction is active
+2025-08-06 06:24:50,101 - ERROR - Migration 003 failed, stopping
+2025-08-06 06:24:50,101 - ERROR - 0/2 migrations completed
+2025-08-06 06:28:25,754 - INFO - Starting database migration
+2025-08-06 06:28:25,756 - INFO - Applied migrations: ['000', '001', '002']
+2025-08-06 06:28:25,756 - INFO - Found 3 migrations to run
+2025-08-06 06:28:25,756 - INFO - Executing migration 003: 003_create_systems_teams_tables.sql
+2025-08-06 06:28:25,758 - ERROR - Migration 003 failed: cannot commit - no transaction is active
+2025-08-06 06:28:25,772 - ERROR - Migration 003 failed, stopping
+2025-08-06 06:28:25,772 - ERROR - 0/3 migrations completed
+2025-08-06 06:30:25,250 - INFO - Starting database migration
+2025-08-06 06:30:25,250 - INFO - Applied migrations: ['000', '001', '002']
+2025-08-06 06:30:25,250 - INFO - Found 2 migrations to run
+2025-08-06 06:30:25,250 - INFO - Executing migration 004: 004_create_systems_teams_enhanced.sql
+2025-08-06 06:30:25,262 - ERROR - Migration 004 failed: cannot commit - no transaction is active
+2025-08-06 06:30:25,270 - ERROR - Migration 004 failed, stopping
+2025-08-06 06:30:25,270 - ERROR - 0/2 migrations completed

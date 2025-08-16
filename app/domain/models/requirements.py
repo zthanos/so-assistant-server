@@ -49,18 +49,18 @@ class RequirementItemPriority(enum.Enum):
     critical = "critical"
 
 
-class Requirement(Base):
-    """Requirement model (legacy - kept for backward compatibility)."""
-    __tablename__ = "requirements"
+# class Requirement(Base):
+#     """Requirement model (legacy - kept for backward compatibility)."""
+#     __tablename__ = "requirements"
     
-    id = Column(Integer, primary_key=True, index=True)
-    project_id = Column(String(255), ForeignKey("projects.id"), nullable=False)
-    description = Column(Text, nullable=False)
-    category = Column(Enum(RequirementCategory), nullable=False)
-    status = Column(Enum(RequirementStatus), default=RequirementStatus.pending)
+#     id = Column(Integer, primary_key=True, index=True)
+#     project_id = Column(String(255), ForeignKey("projects.id"), nullable=False)
+#     description = Column(Text, nullable=False)
+#     category = Column(Enum(RequirementCategory), nullable=False)
+#     status = Column(Enum(RequirementStatus), default=RequirementStatus.pending)
     
-    # Relationships
-    project = relationship("Project", back_populates="requirements")
+#     # Relationships
+#     project = relationship("Project", back_populates="requirements")
 
 
 class RequirementDocument(Base):

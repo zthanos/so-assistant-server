@@ -27,9 +27,11 @@ class Project(Base):
     # Relationships (temporarily without cascade to avoid database schema issues)
     solution_outlines = relationship("SolutionOutline", back_populates="project")
     adrs = relationship("ADR", back_populates="project")
+    notes = relationship("Note", back_populates="project")
     teams = relationship("Team", back_populates="project")
+    systems = relationship("System", back_populates="project")
     tasks = relationship("Task", back_populates="project")
-    requirements = relationship("Requirement", back_populates="project")
+
     requirement_documents = relationship("RequirementDocument", back_populates="project")
     requirement_items = relationship("RequirementItem", back_populates="project")
     diagrams = relationship("Diagram", back_populates="project")

@@ -6,6 +6,9 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 import logging
+import json
+from datetime import datetime
+from typing import Any
 
 # Import core modules
 from app.core.database import init_db, async_init_db
@@ -16,6 +19,28 @@ import app.domain.models  # This imports all models
 
 # Import API router
 from app.api.v1.router import router as api_v1_router
+
+# Custom JSON encoder for datetime objects
+class CustomJSONResponse(JSONResponse):
+    """Custom JSON response that handles datetime serialization."""
+    
+    def render(self, content: Any) -> bytes:
+        """Render content to JSON bytes with custom datetime handling."""
+        return json.dumps(
+            content,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=None,
+            separators=(",", ":"),
+            default=self._json_encoder
+        ).encode("utf-8")
+    
+    @staticmethod
+    def _json_encoder(obj: Any) -> Any:
+        """Custom JSON encoder for non-serializable objects."""
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,7 +62,8 @@ app = FastAPI(
     title="Solution Outline Assistant API",
     description="API to help architects create Solution Outlines.",
     version="0.1.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    default_response_class=CustomJSONResponse
 )
 
 # Add middleware

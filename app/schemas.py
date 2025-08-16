@@ -1,7 +1,9 @@
+import app.api.v1.endpoints
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
 import enum
+from app.api.schemas.requirements import RequirementItemResponse
 
 # Enums (ώστε να ταιριάζουν με τα models)
 class RequirementCategory(str, enum.Enum):
@@ -42,12 +44,6 @@ class RequirementBase(BaseModel):
 
 class RequirementCreate(RequirementBase):
     pass
-
-class RequirementResponse(RequirementBase):
-    id: int
-    status: RequirementStatus
-    class Config:
-        from_attributes = True
 
 # Diagram Schemas
 class DiagramBase(BaseModel):
@@ -106,7 +102,7 @@ class SolutionOutlineDocumentResponse(DiagramBase):
         from_attributes = True
 # Project Outline (για το outline endpoint)
 class ProjectOutlineResponse(ProjectResponse):
-    requirements: List[RequirementResponse] = Field(default_factory=list)
+    requirement_items: List[RequirementItemResponse] = Field(default_factory=list)
     diagrams: List[DiagramResponse] = Field(default_factory=list)
     teams: List[TeamResponse] = Field(default_factory=list)
     tasks: List[TaskResponse] = Field(default_factory=list)

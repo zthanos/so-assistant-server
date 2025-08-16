@@ -51,14 +51,6 @@ class RequirementUpdate(BaseModel):
     status: Optional[RequirementStatus] = None
 
 
-class RequirementResponse(RequirementBase):
-    """Requirement response schema."""
-    id: int
-    project_id: str
-    status: RequirementStatus
-    
-    class Config:
-        from_attributes = True
 
 
 # New requirement document schemas with versioning

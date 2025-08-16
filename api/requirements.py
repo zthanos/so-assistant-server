@@ -31,7 +31,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/add", response_model=schemas.RequirementResponse)
+@router.post("/add", response_model=schemas.RequirementItemResponse)
 def add_requirement(
     project_id: str = Path(..., description="ID του project"),
     req: schemas.RequirementCreate = Body(...),

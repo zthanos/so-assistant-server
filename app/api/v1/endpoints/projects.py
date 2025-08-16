@@ -138,6 +138,8 @@ def get_project_outline(
         NotFoundException: If the project is not found.
     """
     try:
+        project = service.get_project(project_id)
+        return ProjectOutlineResponse.from_orm_with_latest(project=project)
         return service.get_project_outline(project_id)
     except NotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))

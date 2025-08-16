@@ -14,7 +14,7 @@ from app.api.dependencies import (
     get_filter_params
 )
 from app.services.adrs import ADRService
-from app.api.schemas.adrs import ADRCreate, ADRUpdate, ADRResponse
+from app.api.schemas.adrs import ADRCreate, ADRUpdate, ADRUpsert, ADRResponse
 from app.api.schemas.common import PaginatedResponse
 from app.core.exceptions import NotFoundException, ConflictException, BadRequestException
 from app.utils.pagination import PaginationParams
@@ -26,33 +26,31 @@ router = APIRouter(tags=["ADRs"])
 @router.post(
     "/projects/{project_id}/adrs",
     response_model=ADRResponse,
-    status_code=status.HTTP_201_CREATED,
-    summary="Create a new ADR",
-    description="Create a new Architecture Decision Record (ADR) for a project."
+    status_code=status.HTTP_200_OK,
+    summary="Create or update an ADR (upsert)",
+    description="Create a new ADR or update an existing one. If adr_id is provided in the request body, the ADR will be updated; otherwise, a new ADR will be created."
 )
-def create_adr(
+def upsert_adr(
     project_id: str = Path(..., description="The ID of the project"),
-    title: str = Query(..., description="The title of the ADR"),
-    content: str = Query(..., description="The content of the ADR"),
+    adr_data: ADRUpsert = ...,
     service: ADRService = Depends(get_adr_service)
 ):
-    """Create a new ADR.
+    """Create or update an ADR (upsert operation).
     
     Args:
         project_id: The ID of the project.
-        title: The title of the ADR.
-        content: The content of the ADR.
+        adr_data: The ADR data containing title, content, and optional adr_id.
         service: The ADR service.
         
     Returns:
-        The created ADR.
+        The created or updated ADR.
         
     Raises:
-        NotFoundException: If the project is not found.
+        NotFoundException: If the project or ADR (for update) is not found.
         ConflictException: If an ADR with the same title already exists for the project.
     """
     try:
-        return service.create_adr(project_id, title, content)
+        return service.upsert_adr(project_id, adr_data)
     except (NotFoundException, ConflictException) as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
@@ -133,39 +131,7 @@ def get_adrs_for_project(
     except NotFoundException as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
-@router.put(
-    "/adrs/{adr_id}",
-    response_model=ADRResponse,
-    status_code=status.HTTP_200_OK,
-    summary="Update an ADR",
-    description="Update an Architecture Decision Record (ADR)."
-)
-def update_adr(
-    adr_id: int = Path(..., description="The ID of the ADR"),
-    title: Optional[str] = Query(None, description="The new title of the ADR"),
-    content: Optional[str] = Query(None, description="The new content of the ADR"),
-    service: ADRService = Depends(get_adr_service)
-):
-    """Update an ADR.
-    
-    Args:
-        adr_id: The ID of the ADR.
-        title: The new title of the ADR.
-        content: The new content of the ADR.
-        service: The ADR service.
-        
-    Returns:
-        The updated ADR.
-        
-    Raises:
-        NotFoundException: If the ADR is not found.
-        ConflictException: If an ADR with the same title already exists for the project.
-        BadRequestException: If no update fields are provided.
-    """
-    try:
-        return service.update_adr(adr_id, title, content)
-    except (NotFoundException, ConflictException, BadRequestException) as e:
-        raise HTTPException(status_code=e.status_code, detail=e.message)
+
 
 @router.delete(
     "/adrs/{adr_id}",
