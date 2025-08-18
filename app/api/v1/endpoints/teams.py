@@ -1,7 +1,7 @@
 """Team API endpoints."""
 
-from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, Query, Path, Body
+from typing import List, Optional, Dict, Any
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Path, Body, Request
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -14,12 +14,22 @@ from app.api.schemas.teams import (
     TeamResponse,
     TeamSearchFilters
 )
-from app.api.schemas.common import PaginatedResponse, create_paginated_response
+from app.api.dependencies import (
+    get_team_service, 
+    get_pagination_params_dependency, 
+    get_search_params, 
+    get_filter_params
+)
 from app.core.exceptions import NotFoundException, BadRequestException, DatabaseException
 from app.exceptions.systems_teams_exceptions import (
     TeamNotFoundException, DuplicateTeamException, TeamValidationException,
     TeamMemberValidationException, TeamOperationException
 )
+from app.api.schemas.common import PaginatedResponse
+from app.core.exceptions import NotFoundException, ConflictException, BadRequestException
+from app.utils.pagination import PaginationParams
+from app.utils.filtering import parse_filter_params
+from app.utils.response_utils import paginated_response
 
 router = APIRouter(prefix="/projects/{project_id}/teams", tags=["Teams"])
 
@@ -34,12 +44,6 @@ def get_project_repository() -> ProjectRepository:
     return ProjectRepository()
 
 
-def get_team_service(
-    team_repository: TeamRepository = Depends(get_team_repository),
-    project_repository: ProjectRepository = Depends(get_project_repository)
-) -> TeamService:
-    """Get team service dependency."""
-    return TeamService(team_repository, project_repository)
 
 
 @router.post(
@@ -116,66 +120,117 @@ def get_team(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
+
 @router.get(
     "",
     response_model=PaginatedResponse[TeamResponse],
     status_code=status.HTTP_200_OK,
-    summary="List teams",
-    description="List teams for a project with optional filtering and pagination."
+    summary="Get all Teams for a project",
+    description="Get all Teams for a project with pagination, filtering, and search support."
 )
-def list_teams(
-    project_id: str = Path(..., description="The project ID"),
-    name: Optional[str] = Query(None, description="Filter by team name (partial match)"),
-    role: Optional[str] = Query(None, description="Filter by team role (partial match)"),
-    member: Optional[str] = Query(None, description="Filter by team member name (partial match)"),
-    responsibility: Optional[str] = Query(None, description="Filter by responsibility (partial match)"),
-    skip: int = Query(0, ge=0, description="Number of records to skip"),
-    limit: int = Query(100, ge=1, le=1000, description="Maximum number of records to return"),
-    db: Session = Depends(get_db),
+def get_teams_for_project(
+    request: Request,
+    project_id: str = Path(..., description="The ID of the project"),
+    pagination: PaginationParams = Depends(get_pagination_params_dependency),
+    search: Optional[str] = Depends(get_search_params),
+    filter_params: Dict[str, Any] = Depends(get_filter_params),
     service: TeamService = Depends(get_team_service)
 ):
-    """List teams for a project with optional filtering and pagination.
+    """Get all teams for a project with pagination, filtering, and search.
     
     Args:
-        project_id: The project ID from the URL path.
-        name: Optional name filter (partial match).
-        role: Optional role filter (partial match).
-        member: Optional member filter (partial match).
-        responsibility: Optional responsibility filter (partial match).
-        skip: Number of records to skip for pagination.
-        limit: Maximum number of records to return.
-        db: Database session.
-        service: The team service.
+        request: The FastAPI request object.
+        project_id: The ID of the project.
+        pagination: Pagination parameters.
+        search: Search term.
+        filter_params: Filter parameters.
+        service: The Team service.
         
     Returns:
-        Paginated list of teams.
+        Paginated list of Teams for the project.
         
     Raises:
-        HTTPException: If the project doesn't exist.
+        NotFoundException: If the project is not found.
     """
     try:
-        # Create filters object
-        filters = TeamSearchFilters(
-            name=name,
-            role=role,
-            member=member,
-            responsibility=responsibility
-        )
+        # Parse filter conditions
+        filters = parse_filter_params(filter_params) if filter_params else None
         
-        # Get teams and total count
-        teams = service.list_teams(db, project_id, filters, skip, limit)
-        total_count = service.count_teams(db, project_id, filters)
+        # Get paginated Teams
+        result = service.get_teams_for_project(project_id, pagination, filters, search)
         
-        return create_paginated_response(
-            items=teams,
-            total=total_count,
-            skip=skip,
-            limit=limit
+        # Return paginated response
+        return paginated_response(
+            data=result.items,
+            page=result.page,
+            per_page=result.per_page,
+            total=result.total,
+            message="Teams retrieved successfully"
         )
     except NotFoundException as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except DatabaseException as e:
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+
+
+# @router.get(
+#     "",
+#     response_model=PaginatedResponse[TeamResponse],
+#     status_code=status.HTTP_200_OK,
+#     summary="List teams",
+#     description="List teams for a project with optional filtering and pagination."
+# )
+# def list_teams(
+#     project_id: str = Path(..., description="The project ID"),
+#     name: Optional[str] = Query(None, description="Filter by team name (partial match)"),
+#     role: Optional[str] = Query(None, description="Filter by team role (partial match)"),
+#     member: Optional[str] = Query(None, description="Filter by team member name (partial match)"),
+#     responsibility: Optional[str] = Query(None, description="Filter by responsibility (partial match)"),
+#     skip: int = Query(0, ge=0, description="Number of records to skip"),
+#     limit: int = Query(100, ge=1, le=1000, description="Maximum number of records to return"),
+#     db: Session = Depends(get_db),
+#     service: TeamService = Depends(get_team_service)
+# ):
+#     """List teams for a project with optional filtering and pagination.
+    
+#     Args:
+#         project_id: The project ID from the URL path.
+#         name: Optional name filter (partial match).
+#         role: Optional role filter (partial match).
+#         member: Optional member filter (partial match).
+#         responsibility: Optional responsibility filter (partial match).
+#         skip: Number of records to skip for pagination.
+#         limit: Maximum number of records to return.
+#         db: Database session.
+#         service: The team service.
+        
+#     Returns:
+#         Paginated list of teams.
+        
+#     Raises:
+#         HTTPException: If the project doesn't exist.
+#     """
+#     try:
+#         # Create filters object
+#         filters = TeamSearchFilters(
+#             name=name,
+#             role=role,
+#             member=member,
+#             responsibility=responsibility
+#         )
+        
+#         # Get teams and total count
+#         teams = service.list_teams(db, project_id, filters, skip, limit)
+#         total_count = service.count_teams(db, project_id, filters)
+        
+#         return create_paginated_response(
+#             items=teams,
+#             total=total_count,
+#             skip=skip,
+#             limit=limit
+#         )
+#     except NotFoundException as e:
+#         raise HTTPException(status_code=404, detail=str(e))
+#     except DatabaseException as e:
+#         raise HTTPException(status_code=500, detail="Internal server error")
 
 
 @router.patch(

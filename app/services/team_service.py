@@ -3,9 +3,11 @@
 import logging
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
+from fastapi import Depends
 
-from app.repositories.team_repository import TeamRepository
-from app.repositories.project_repository import ProjectRepository
+from app.core.database import get_db
+from app.repositories.team_repository import team_repository
+from app.repositories.project_repository import project_repository
 from app.domain.models.teams import Team
 from app.api.schemas.teams import (
     TeamCreate, TeamUpdate, TeamUpsert, TeamResponse, 
@@ -16,6 +18,8 @@ from app.exceptions.systems_teams_exceptions import (
     TeamNotFoundException, DuplicateTeamException, TeamValidationException,
     TeamMemberValidationException, TeamOperationException
 )
+from app.utils.pagination import PaginationParams, PaginationResult, Paginator
+from app.utils.filtering import FilterCondition, QueryFilter
 
 logger = logging.getLogger(__name__)
 
@@ -23,18 +27,14 @@ logger = logging.getLogger(__name__)
 class TeamService:
     """Service for team operations with business logic."""
     
-    def __init__(
-        self, 
-        repository: TeamRepository,
-        project_repository: ProjectRepository
-    ):
-        """Initialize the service with repositories.
+    def __init__(self, db: Session = Depends(get_db)):
+        """Initialize the service with dependencies.
         
         Args:
-            repository: The team repository.
-            project_repository: The project repository for validation.
+            db: The database session.
         """
-        self.repository = repository
+        self.db = db
+        self.repository = team_repository
         self.project_repository = project_repository
     
     def create_team(self, db: Session, team_data: TeamCreate) -> TeamResponse:
@@ -294,6 +294,68 @@ class TeamService:
             logger.error(f"Error deleting team {team_id}: {e}")
             raise DatabaseException(f"Error deleting team: {str(e)}", original_exception=e)
     
+    def get_teams_for_project(
+        self, 
+        project_id: str, 
+        pagination: PaginationParams,
+        filters: Optional[List[FilterCondition]] = None,
+        search: Optional[str] = None
+    ) -> PaginationResult[TeamResponse]:
+        """Get all Teams for a project with pagination and filtering.
+        
+        Args:
+            project_id: The ID of the project.
+            pagination: Pagination parameters.
+            filters: List of filter conditions.
+            search: Search term.
+            
+        Returns:
+            Paginated result of Teams for the project.
+            
+        Raises:
+            NotFoundException: If the project is not found.
+        """
+        # Check if project exists
+        project = self.project_repository.get_or_404(self.db, project_id)
+        
+        # Build base query
+        query = self.db.query(Team).filter(Team.project_id == project_id)
+        
+        # Apply filters
+        if filters:
+            allowed_fields = ["name", "role", "created_at", "updated_at"]
+            query = QueryFilter.apply_filters(query, filters, Team, allowed_fields)
+        
+        # Apply search
+        if search:
+            search_fields = ["name", "role"]
+            query = QueryFilter.apply_search(query, search, search_fields, Team)
+        
+        # Apply pagination
+        allowed_sort_fields = ["name", "role", "created_at", "updated_at"]
+        result = Paginator.paginate_query(
+            query,
+            pagination.page,
+            pagination.per_page,
+            pagination.sort_by,
+            pagination.sort_order,
+            allowed_sort_fields
+        )
+        
+        # Convert SQLAlchemy models to Pydantic models
+        team_responses = to_response(TeamResponse, result.items)
+        
+        return PaginationResult(
+            items=team_responses,
+            total=result.total,
+            page=result.page,
+            per_page=result.per_page,
+            pages=result.pages,
+            has_next=result.has_next,
+            has_prev=result.has_prev
+        )
+
+
     def list_teams(
         self, 
         db: Session, 
@@ -568,3 +630,5 @@ class TeamService:
             created_at=team.created_at,
             updated_at=team.updated_at
         )
+def to_response(model_cls, items):
+    return [model_cls.model_validate(i, from_attributes=True) for i in items]        

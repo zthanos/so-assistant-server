@@ -194,6 +194,30 @@ def get_adr_service(db: Session = Depends(get_db)):
     from app.services.adrs import ADRService
     return ADRService(db)
 
+def get_system_service(db: Session = Depends(get_db)):
+    """Get the System service.
+    
+    Args:
+        db: The database session
+        
+    Returns:
+        The System service instance
+    """
+    from app.services.system_service import SystemService
+    return SystemService(db)
+
+def get_team_service(db: Session = Depends(get_db)):
+    """Get the System service.
+    
+    Args:
+        db: The database session
+        
+    Returns:
+        The System service instance
+    """
+    from app.services.team_service import TeamService
+    return TeamService(db)
+
 def get_team_service(db: Session = Depends(get_db)):
     """Get the team service.
     
@@ -203,7 +227,7 @@ def get_team_service(db: Session = Depends(get_db)):
     Returns:
         The team service instance
     """
-    from app.services.teams import TeamService
+    from app.services.team_service import TeamService
     return TeamService(db)
 
 def get_task_service(db: Session = Depends(get_db)):

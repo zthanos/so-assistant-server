@@ -481,3 +481,5 @@ class SystemRepository(CRUDRepository[System, SystemCreate, SystemUpdate]):
         except Exception as e:
             logger.error(f"Error retrieving systems with dependencies for project {project_id}: {e}")
             raise DatabaseException(f"Error retrieving systems with dependencies: {str(e)}", original_exception=e)
+
+system_repository = SystemRepository()

@@ -4,38 +4,38 @@ import logging
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 
-from app.repositories.system_repository import SystemRepository
-from app.repositories.project_repository import ProjectRepository
+from app.repositories.system_repository import system_repository
+from app.repositories.project_repository import project_repository
 from app.domain.models.systems import System, SystemType
 from app.api.schemas.systems import (
     SystemCreate, SystemUpdate, SystemUpsert, SystemResponse, 
     SystemSearchFilters, SystemDependencyValidationResponse
 )
+from app.core.database import get_db
 from app.core.exceptions import NotFoundException, BadRequestException, DatabaseException
 from app.exceptions.systems_teams_exceptions import (
     SystemNotFoundException, DuplicateSystemException, InvalidDependencyException,
     CircularDependencyException, SystemValidationException, SystemOperationException,
     SystemDependencyException
 )
-
+from app.utils.pagination import PaginationParams, PaginationResult, Paginator
+from app.utils.filtering import FilterCondition, QueryFilter
+from fastapi import Depends
 logger = logging.getLogger(__name__)
 
 
 class SystemService:
     """Service for system operations with business logic."""
     
-    def __init__(
-        self, 
-        repository: SystemRepository,
-        project_repository: ProjectRepository
-    ):
+    def __init__(self, db: Session = Depends(get_db)):
         """Initialize the service with repositories.
         
         Args:
             repository: The system repository.
             project_repository: The project repository for validation.
         """
-        self.repository = repository
+        self.db = db
+        self.repository = system_repository
         self.project_repository = project_repository
     
     def create_system(self, db: Session, system_data: SystemCreate) -> SystemResponse:
@@ -296,54 +296,69 @@ class SystemService:
             logger.error(f"Error deleting system {system_id}: {e}")
             raise DatabaseException(f"Error deleting system: {str(e)}", original_exception=e)
     
-    def list_systems(
+    def get_systems_for_project(
         self, 
-        db: Session, 
         project_id: str, 
-        filters: Optional[SystemSearchFilters] = None,
-        skip: int = 0, 
-        limit: int = 100
-    ) -> List[SystemResponse]:
+        pagination: PaginationParams,
+        filters: Optional[List[FilterCondition]] = None,
+        search: Optional[str] = None
+    ) -> PaginationResult[SystemResponse]:
         """List systems for a project with optional filtering.
         
         Args:
-            db: Database session.
-            project_id: The project ID.
-            filters: Optional search filters.
-            skip: Number of records to skip for pagination.
-            limit: Maximum number of records to return.
+            project_id: The ID of the project.
+            pagination: Pagination parameters.
+            filters: List of filter conditions.
+            search: Search term.
             
         Returns:
-            List of system responses.
+            Paginated result of system responses.
             
         Raises:
             NotFoundException: If the project doesn't exist.
             DatabaseException: If there's a database error.
         """
-        try:
-            # Validate that the project exists
-            project = self.project_repository.get(db, project_id)
-            if not project:
-                raise NotFoundException(
-                    f"Project with id {project_id} not found",
-                    resource_type="Project",
-                    resource_id=project_id
-                )
-            
-            # Get systems based on filters
-            if filters:
-                systems = self.repository.search_systems(db, project_id, filters, skip, limit)
-            else:
-                systems = self.repository.get_by_project(db, project_id, skip, limit)
-            
-            return [self._to_response(system) for system in systems]
-            
-        except NotFoundException:
-            raise
-        except Exception as e:
-            logger.error(f"Error listing systems for project {project_id}: {e}")
-            raise DatabaseException(f"Error listing systems: {str(e)}", original_exception=e)
-    
+
+        # Check if project exists
+        project = self.project_repository.get_or_404(self.db, project_id)
+
+        # Build base query
+        query = self.db.query(System).filter(System.project_id == project_id)    
+
+        # Apply filters
+        if filters:
+            allowed_fields = ["name",  "created_at", "updated_at"]
+            query = QueryFilter.apply_filters(query, filters, System, allowed_fields)
+        
+        # Apply search
+        if search:
+            search_fields = ["name"]
+            query = QueryFilter.apply_search(query, search, search_fields, System)
+        
+        # Apply pagination
+        allowed_sort_fields = ["name",  "created_at", "updated_at"]
+        result = Paginator.paginate_query(
+            query,
+            pagination.page,
+            pagination.per_page,
+            pagination.sort_by,
+            pagination.sort_order,
+            allowed_sort_fields
+        )
+
+        # Convert SQLAlchemy models to Pydantic models
+        system_responses = to_response(SystemResponse, result.items)
+        
+        return PaginationResult(
+            items=system_responses,
+            total=result.total,
+            page=result.page,
+            per_page=result.per_page,
+            pages=result.pages,
+            has_next=result.has_next,
+            has_prev=result.has_prev
+        )
+
     def validate_system_dependencies(
         self, 
         db: Session, 
@@ -530,3 +545,6 @@ class SystemService:
             created_at=system.created_at,
             updated_at=system.updated_at
         )
+
+def to_response(model_cls, items):
+    return [model_cls.model_validate(i, from_attributes=True) for i in items]        
