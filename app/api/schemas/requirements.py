@@ -170,7 +170,7 @@ class RequirementItemUpdate(BaseModel):
 
 class RequirementItemUpsert(BaseModel):
     """Requirement item upsert schema for create or update operations."""
-    project_id: str = Field(..., description="ID of the project this requirement belongs to")
+    id: Optional[int] = None
     title: str = Field(..., min_length=1, max_length=500, description="Title of the requirement item")
     description: str = Field(..., min_length=1, description="Detailed description of the requirement")
     priority: RequirementItemPriority = Field(

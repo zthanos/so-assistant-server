@@ -21,8 +21,11 @@ class ADRCreate(ADRBase):
 
 class ADRUpdate(BaseModel):
     """ADR update schema."""
+    id: int
     title: Optional[str] = None
     content: Optional[str] = None
+    status: Optional[str] = None
+    context: Optional[str] = None    
     decision: Optional[str] = None
     consequences: Optional[str] = None
     alternatives: Optional[str] = None
@@ -49,7 +52,7 @@ class ADRUpsert(BaseModel):
     alternatives: Optional[str] = None
     author: Optional[str] = None
     tags: Optional[List[str]] = None   
-    adr_id: Optional[int] = None  # If provided, update existing ADR; if None, create new
+    id: Optional[int] = None  # If provided, update existing ADR; if None, create new
 
 class ADRResponse(ADRBase):
     """ADR response schema."""

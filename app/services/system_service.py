@@ -142,7 +142,7 @@ class SystemService:
                 status_code=500
             )
     
-    def upsert_system(self, db: Session, system_data: SystemUpsert) -> SystemResponse:
+    def upsert_system(self, db: Session, project_id: str,  system_data: SystemUpsert) -> SystemResponse:
         """Create or update a system using project_id + name as natural key.
         
         Args:
@@ -157,14 +157,14 @@ class SystemService:
             BadRequestException: If the system data is invalid.
             DatabaseException: If there's a database error.
         """
-        logger.info(f"Upserting system for project {system_data.project_id}: {system_data.name}")
+        logger.info(f"Upserting system for project {project_id}: {system_data.name}")
         
         try:
             # Validate that the project exists
-            project = self.project_repository.get(db, system_data.project_id)
+            project = self.project_repository.get(db, project_id)
             if not project:
                 raise NotFoundException(
-                    f"Project with id {system_data.project_id} not found",
+                    f"Project with id {project_id} not found",
                     resource_type="Project",
                     resource_id=system_data.project_id
                 )
@@ -172,7 +172,7 @@ class SystemService:
             # Validate dependencies if provided
             if system_data.dependencies:
                 validation_result = self.repository.validate_dependencies(
-                    db, system_data.project_id, system_data.dependencies
+                    db, project_id, system_data.dependencies
                 )
                 if not validation_result["valid"]:
                     error_msg = f"Invalid dependencies: {', '.join(validation_result['invalid_dependencies'])}"
@@ -189,7 +189,7 @@ class SystemService:
             # Perform upsert
             system_dict = system_data.dict(exclude={'project_id'})
             system = self.repository.upsert_system(
-                db, system_data.project_id, system_data.name, system_dict
+                db, project_id, system_data.name, system_dict
             )
             
             logger.info(f"Successfully upserted system {system.name} with ID {system.id}")

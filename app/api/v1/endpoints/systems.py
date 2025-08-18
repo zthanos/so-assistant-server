@@ -74,8 +74,8 @@ def upsert_system(
     """
     try:
         # Override project_id from path parameter
-        system_data.project_id = project_id
-        return service.upsert_system(db, system_data)
+        # system_data.project_id = project_id
+        return service.upsert_system(db, project_id, system_data)
     except (NotFoundException, SystemNotFoundException) as e:
         raise HTTPException(status_code=404, detail=str(e))
     except (DuplicateSystemException, InvalidDependencyException, CircularDependencyException, SystemValidationException) as e:

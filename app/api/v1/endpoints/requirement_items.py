@@ -11,8 +11,8 @@ from app.repositories.requirement_item_repository import RequirementItemReposito
 from app.repositories.project_repository import ProjectRepository
 from app.repositories.requirement_document_repository import RequirementDocumentRepository
 from app.api.schemas.requirements import (
-    RequirementItemCreate,
-    RequirementItemUpdate,
+    # RequirementItemCreate,
+    # RequirementItemUpdate,
     RequirementItemUpsert,
     RequirementItemBatchUpsert,
     RequirementItemBatchUpsertResponse,
@@ -25,7 +25,7 @@ from app.core.exceptions import NotFoundException, BadRequestException
 from app.api.dependencies import get_sse_manager, get_llm_streaming_service
 
 
-router = APIRouter(prefix="/requirement-items", tags=["Requirement Items"])
+router = APIRouter(tags=["Requirement Items"])
 
 
 def get_requirement_item_repository() -> RequirementItemRepository:
@@ -43,49 +43,47 @@ def get_requirement_document_repository(db: Session = Depends(get_db)) -> Requir
     return RequirementDocumentRepository()
 
 
-def get_requirement_item_service(
-    requirement_repository: RequirementItemRepository = Depends(get_requirement_item_repository),
-    project_repository: ProjectRepository = Depends(get_project_repository)
+def get_requirement_item_service(db: Session = Depends(get_db)
 ) -> RequirementItemService:
     """Get requirement item service dependency."""
-    return RequirementItemService(requirement_repository, project_repository)
+    return RequirementItemService(db)
 
 
-@router.post(
-    "",
-    response_model=RequirementItemResponse,
-    status_code=status.HTTP_201_CREATED,
-    summary="Create a new requirement item",
-    description="Create a new requirement item with the provided data."
-)
-def create_requirement_item(
-    item_data: RequirementItemCreate = Body(..., description="The requirement item data"),
-    service: RequirementItemService = Depends(get_requirement_item_service)
-):
-    """Create a new requirement item.
+# @router.post(
+#     "",
+#     response_model=RequirementItemResponse,
+#     status_code=status.HTTP_201_CREATED,
+#     summary="Create a new requirement item",
+#     description="Create a new requirement item with the provided data."
+# )
+# def create_requirement_item(
+#     item_data: RequirementItemCreate = Body(..., description="The requirement item data"),
+#     service: RequirementItemService = Depends(get_requirement_item_service)
+# ):
+#     """Create a new requirement item.
     
-    Args:
-        item_data: The requirement item data.
-        service: The requirement item service.
+#     Args:
+#         item_data: The requirement item data.
+#         service: The requirement item service.
         
-    Returns:
-        The created requirement item.
+#     Returns:
+#         The created requirement item.
         
-    Raises:
-        HTTPException: If the project doesn't exist or data is invalid.
-    """
-    try:
-        return service.create_requirement_item(item_data)
-    except NotFoundException as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except BadRequestException as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+#     Raises:
+#         HTTPException: If the project doesn't exist or data is invalid.
+#     """
+#     try:
+#         return service.create_requirement_item(item_data)
+#     except NotFoundException as e:
+#         raise HTTPException(status_code=404, detail=str(e))
+#     except BadRequestException as e:
+#         raise HTTPException(status_code=400, detail=str(e))
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
 @router.get(
-    "",
+    "/requirement-items",
     response_model=List[RequirementItemResponse],
     status_code=status.HTTP_200_OK,
     summary="List requirement items",
@@ -134,7 +132,7 @@ def list_requirement_items(
 
 
 @router.get(
-    "/{item_id}",
+    "/requirement-items/{item_id}",
     response_model=RequirementItemResponse,
     status_code=status.HTTP_200_OK,
     summary="Get a requirement item by ID",
@@ -164,44 +162,82 @@ def get_requirement_item(
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
+
 @router.post(
-    "/upsert",
+    "/projects/{project_id}/requirement-items",
     response_model=RequirementItemResponse,
     status_code=status.HTTP_200_OK,
     summary="Create or update a requirement item",
     description="Create a new requirement item or update an existing one (upsert operation)."
 )
-def upsert_requirement_item(
-    item_data: RequirementItemUpsert = Body(..., description="The requirement item data"),
-    item_id: Optional[int] = Query(None, description="The ID of the requirement item to update (omit for create)"),
+def upsert_adr(
+    project_id: str = Path(..., description="The ID of the project"),
+    item_data: RequirementItemUpsert = ...,
     service: RequirementItemService = Depends(get_requirement_item_service)
 ):
     """Create or update a requirement item (upsert operation).
     
     Args:
-        item_data: The requirement item data.
-        item_id: Optional ID of the requirement item to update (omit for create).
+        project_id: The ID of the project.
+        adr_data: The requirement item  data containing title, description, priority and optional id.
         service: The requirement item service.
         
     Returns:
         The created or updated requirement item.
         
     Raises:
-        HTTPException: If the project doesn't exist, data is invalid, or other errors occur.
+        NotFoundException: If the project or requirement item (for update) is not found.
+
     """
     try:
-        result = service.upsert_requirement_item(item_id, item_data)
-        return result
+        return service.upsert_requirement_item(project_id, item_data)
     except NotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
     except BadRequestException as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")        
+
+
+# @router.post(
+#     "/projects/{project_id}/requirement-items",
+#     response_model=RequirementItemResponse,
+#     status_code=status.HTTP_200_OK,
+#     summary="Create or update a requirement item",
+#     description="Create a new requirement item or update an existing one (upsert operation)."
+# )
+# def upsert_requirement_item(
+#     project_id: str = Path(..., description="The ID of the project"),
+#     item_data: RequirementItemUpsert = Body(..., description="The requirement item data"),
+#     item_id: Optional[int] = Query(None, description="The ID of the requirement item to update (omit for create)"),
+#     service: RequirementItemService = Depends(get_requirement_item_service)
+# ):
+#     """Create or update a requirement item (upsert operation).
+    
+#     Args:
+#         item_data: The requirement item data.
+#         item_id: Optional ID of the requirement item to update (omit for create).
+#         service: The requirement item service.
+        
+#     Returns:
+#         The created or updated requirement item.
+        
+#     Raises:
+#         HTTPException: If the project doesn't exist, data is invalid, or other errors occur.
+#     """
+#     try:
+#         result = service.upsert_requirement_item(item_id, item_data)
+#         return result
+#     except NotFoundException as e:
+#         raise HTTPException(status_code=404, detail=str(e))
+#     except BadRequestException as e:
+#         raise HTTPException(status_code=400, detail=str(e))
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
 @router.post(
-    "/upsert/{item_id}",
+    "/requirement-items/upsert/{item_id}",
     response_model=RequirementItemResponse,
     status_code=status.HTTP_200_OK,
     summary="Update a specific requirement item",
@@ -236,7 +272,7 @@ def upsert_requirement_item_by_id(
 
 
 @router.post(
-    "/batch-upsert",
+    "/requirement-items/batch-upsert",
     response_model=RequirementItemBatchUpsertResponse,
     status_code=status.HTTP_200_OK,
     summary="Batch upsert requirement items",
@@ -269,7 +305,7 @@ def batch_upsert_requirement_items(
 
 
 @router.delete(
-    "/{item_id}",
+    "/requirement-items/{item_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete a requirement item",
     description="Delete an existing requirement item."
@@ -296,7 +332,7 @@ def delete_requirement_item(
 
 
 @router.patch(
-    "/{item_id}/status",
+    "/requirement-items/{item_id}/status",
     response_model=RequirementItemResponse,
     status_code=status.HTTP_200_OK,
     summary="Update requirement item status",
@@ -331,7 +367,7 @@ def update_requirement_item_status(
 
 
 @router.get(
-    "/projects/{project_id}/summary",
+    "/projects/{project_id}/requirement-items/summary",
     response_model=dict,
     status_code=status.HTTP_200_OK,
     summary="Get project requirement items status summary",
@@ -362,7 +398,7 @@ def get_project_status_summary(
 
 
 @router.get(
-    "/projects/{project_id}/search",
+    "/projects/{project_id}/requirement-items/search",
     response_model=List[RequirementItemResponse],
     status_code=status.HTTP_200_OK,
     summary="Search requirement items by title",
@@ -401,7 +437,7 @@ def search_requirement_items(
 
 
 @router.patch(
-    "/bulk/status",
+    "/requirement-items/bulk/status",
     response_model=List[RequirementItemResponse],
     status_code=status.HTTP_200_OK,
     summary="Bulk update requirement item status",
@@ -436,7 +472,7 @@ def bulk_update_requirement_item_status(
 
 
 @router.get(
-    "/projects/{project_id}/by-status",
+    "/projects/{project_id}/requirement-items/by-status",
     response_model=List[RequirementItemResponse],
     status_code=status.HTTP_200_OK,
     summary="Get requirement items by multiple statuses",
@@ -476,7 +512,7 @@ def get_requirement_items_by_status(
 
 # Additional utility endpoints for better API usability
 @router.get(
-    "/projects/{project_id}",
+    "/projects/{project_id}/requirement-items",
     response_model=List[RequirementItemResponse],
     status_code=status.HTTP_200_OK,
     summary="Get all requirement items for a project",
@@ -524,7 +560,7 @@ def get_project_requirement_items(
 
 # AI-Powered Requirement Suggestions Endpoint
 @router.get(
-    "/projects/{project_id}/suggestions",
+    "/projects/{project_id}/requirement-items/suggestions",
     summary="Stream AI-powered requirement suggestions",
     description="Generate and stream AI-powered requirement item suggestions based on existing requirements document."
 )
@@ -621,7 +657,7 @@ async def stream_requirement_suggestions(
 
 # Health and Performance Monitoring Endpoints
 @router.get(
-    "/health",
+    "/requirement-items/health",
     response_model=dict,
     status_code=status.HTTP_200_OK,
     summary="Get requirement items system health",
@@ -661,7 +697,7 @@ def get_requirement_items_health(
 
 
 @router.post(
-    "/performance/optimize",
+    "/requirement-items/performance/optimize",
     response_model=dict,
     status_code=status.HTTP_200_OK,
     summary="Optimize requirement items performance",
@@ -708,7 +744,7 @@ def optimize_requirement_items_performance(
 
 
 @router.get(
-    "/performance/analysis/{project_id}",
+    "/requirement-items/performance/analysis/{project_id}",
     response_model=dict,
     status_code=status.HTTP_200_OK,
     summary="Get project-specific performance analysis",

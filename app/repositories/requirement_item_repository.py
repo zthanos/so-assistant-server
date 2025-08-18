@@ -385,3 +385,6 @@ class RequirementItemRepository(CRUDRepository[RequirementItem, RequirementItemC
                 f"Error deleting requirement items for project {project_id}: {str(e)}", 
                 original_exception=e
             )
+
+# Create a singleton instance
+requirement_item_repository = RequirementItemRepository()

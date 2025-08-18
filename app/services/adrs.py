@@ -314,9 +314,9 @@ class ADRService:
         # Check if project exists
         project = self.project_repository.get_or_404(self.db, project_id)
         
-        if upsert_data.adr_id is not None:
+        if upsert_data.id is not None:
             # Update existing ADR
-            adr = self.adr_repository.get_or_404(self.db, upsert_data.adr_id)
+            adr = self.adr_repository.get_or_404(self.db, upsert_data.id)
             
             # Verify the ADR belongs to the specified project
             if adr.project_id != project_id:
@@ -329,7 +329,7 @@ class ADRService:
             existing_adr = self.adr_repository.get_by_title(
                 self.db, project_id=project_id, title=upsert_data.title
             )
-            if existing_adr and existing_adr.id != upsert_data.adr_id:
+            if existing_adr and existing_adr.id != upsert_data.id:
                 raise ConflictException(
                     f"ADR with title '{upsert_data.title}' already exists for project {project_id}",
                     resource_type="ADR",
@@ -339,10 +339,18 @@ class ADRService:
             # Update the ADR
             update_data = ADRUpdate(
                 title=upsert_data.title,
-                content=upsert_data.content
+                status=upsert_data.status,
+                content=upsert_data.content,
+                context=upsert_data.context,
+                consequences=upsert_data.consequences,
+                tags=upsert_data.tags,
+                author=upsert_data.author,
+                alternatives=upsert_data.alternatives,
+                decision=upsert_data.decision, 
+                id=upsert_data.id
             )
             updated_adr = self.adr_repository.update(self.db, db_obj=adr, obj_in=update_data)
-            return to_response(ADRResponse, updated_adr)
+            return updated_adr
         
         else:
             # Create new ADR

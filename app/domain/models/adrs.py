@@ -19,13 +19,13 @@ class ADR(Base):
     
     # New fields (will be added after migration)
     # These are commented out until migration is applied
-    # status = Column(String(50), nullable=True, default="proposed")
-    # context = Column(Text, nullable=True)
-    # decision = Column(Text, nullable=True)
-    # consequences = Column(Text, nullable=True)
-    # alternatives = Column(Text, nullable=True)
-    # author = Column(String(255), nullable=True)
-    # tags = Column(JSON, nullable=True, default=list)
+    status = Column(String(50), nullable=True, default="proposed")
+    context = Column(Text, nullable=True)
+    decision = Column(Text, nullable=True)
+    consequences = Column(Text, nullable=True)
+    alternatives = Column(Text, nullable=True)
+    author = Column(String(255), nullable=True)
+    tags = Column(JSON, nullable=True, default=list)
 
     # Relationships
     project = relationship("Project", back_populates="adrs")

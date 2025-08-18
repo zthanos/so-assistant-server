@@ -85,7 +85,12 @@ class SystemUpdate(BaseModel):
 
 class SystemUpsert(SystemBase):
     """System upsert schema for create or update operations."""
-    project_id: str = Field(..., description="ID of the project this system belongs to")
+    id: Optional[int] = None 
+    name: Optional[str] = None
+    description: Optional[str] = None
+    type: Optional[SystemType] = None
+    dependencies: Optional[List[str]] = None 
+
 
 
 class SystemResponse(SystemBase):

@@ -1,5 +1,7 @@
 """Project API schemas."""
 
+from app.api.schemas import notes
+from app.api.schemas.adrs import ADRResponse
 import app.api.v1.endpoints
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -87,7 +89,8 @@ class ProjectOutlineResponse(ProjectResponse):
     teams: List["TeamResponse"] = Field(default_factory=list, description="Project teams")
     diagrams: List["DiagramResponse"] = Field(default_factory=list, description="Project diagrams")
     tasks: List["TaskResponse"] = Field(default_factory=list, description="Project tasks")
-    
+    adrs: List["ADRResponse"] = Field(default_factory=list, description="Project  ADRs")
+    notes: List["NoteResponse"] = Field(default_factory=list, description="Project  Notes")
     class Config:
         from_attributes = True
 
@@ -117,7 +120,9 @@ class ProjectOutlineResponse(ProjectResponse):
             systems=project.systems,
             teams=project.teams,
             diagrams=project.diagrams,
-            tasks=project.tasks
+            tasks=project.tasks, 
+            adrs=project.adrs,
+            notes=project.notes
         )
 # Forward references will be resolved after importing other schemas
 try:
@@ -127,6 +132,8 @@ try:
     from app.api.schemas.teams import TeamResponse
     from app.api.schemas.systems import SystemResponse
     from app.api.schemas.tasks import TaskResponse
+    from app.api.schemas.adrs import ADRResponse
+    from app.api.schemas.notes import NoteResponse
     ProjectOutlineResponse.model_rebuild()
     RequirementsOutlineResponse.model_rebuild()
 except ImportError:
