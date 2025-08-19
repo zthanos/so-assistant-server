@@ -313,6 +313,7 @@ class NoteService:
             existing_note = self.note_repository.get_by_title(
                 self.db, project_id=project_id, title=upsert_data.title
             )
+             
             if existing_note and existing_note.id != upsert_data.note_id:
                 raise ConflictException(
                     f"Note with title '{upsert_data.title}' already exists for project {project_id}",
@@ -336,7 +337,7 @@ class NoteService:
             existing_note = self.note_repository.get_by_title(
                 self.db, project_id=project_id, title=upsert_data.title
             )
-            if existing_note:
+            if  existing_note:
                 raise ConflictException(
                     f"Note with title '{upsert_data.title}' already exists for project {project_id}",
                     resource_type="Note",

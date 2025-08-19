@@ -188,7 +188,7 @@ class SystemService:
             
             # Perform upsert
             system_dict = system_data.dict(exclude={'project_id'})
-            system = self.repository.upsert_system(
+            system = self.repository.upsert_system( 
                 db, project_id, system_data.name, system_dict
             )
             
