@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-Database migration runner for requirements versioning system.
+Database migration runner (SQLite).
+- Reads migrations from a directory, expecting filenames: NNN_description.sql
+- Applies pending migrations in numeric order
+- Logs to schema_migrations & migration_log (created automatically if missing)
 """
 
 import sys
@@ -12,396 +15,317 @@ from pathlib import Path
 from typing import List, Dict, Optional, Tuple
 import logging
 
-# Add the app directory to the Python path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '.'))
-
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('migration.log'),
-        logging.StreamHandler()
-    ]
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.FileHandler("migration.log"), logging.StreamHandler()],
 )
 logger = logging.getLogger(__name__)
 
 
+def _sqlite_path_from_url(db_url: str) -> str:
+    """Convert sqlite URL to filesystem path (sqlite:///file.db -> file.db)."""
+    if db_url.startswith("sqlite:///"):
+        return db_url.replace("sqlite:///", "", 1)
+    if db_url.startswith("sqlite://"):
+        return db_url.replace("sqlite://", "", 1)
+    return db_url
+
+
 class DatabaseMigrator:
     """Database migration manager."""
-    
-    def __init__(self, database_path: str, migrations_dir: str = "migrations"):
-        self.database_path = database_path
+
+    def __init__(self, database_path: str, migrations_dir: str | Path = "migrations"):
+        self.database_path = str(database_path)
         self.migrations_dir = Path(migrations_dir)
         self.connection: Optional[sqlite3.Connection] = None
-        
+
     def connect(self) -> sqlite3.Connection:
-        """Connect to the database."""
+        """Connect to the database and enable foreign keys."""
         if not self.connection:
             self.connection = sqlite3.connect(self.database_path)
             self.connection.row_factory = sqlite3.Row
-            # Enable foreign key constraints
             self.connection.execute("PRAGMA foreign_keys = ON")
         return self.connection
-    
+
     def disconnect(self):
         """Disconnect from the database."""
         if self.connection:
             self.connection.close()
             self.connection = None
-    
-    def get_migration_files(self) -> List[Tuple[str, Path]]:
-        """Get all migration files sorted by version."""
+
+    # ---------- MIGRATIONS DISCOVERY ----------
+
+    def get_migration_files(self) -> List[Tuple[int, Path]]:
+        """
+        Return [(version_int, file_path), ...] sorted by version.
+        Expects filenames like: 000_create_tables.sql, 001_add_notes.sql, ...
+        """
         if not self.migrations_dir.exists():
-            logger.warning(f"Migrations directory {self.migrations_dir} does not exist")
+            logger.warning("Migrations directory %s does not exist", self.migrations_dir)
             return []
-        
-        migrations = []
+
+        migrations: List[Tuple[int, Path]] = []
         for file_path in self.migrations_dir.glob("*.sql"):
-            # Extract version from filename (assuming format: version_description.sql)
-            filename = file_path.stem
-            if filename.startswith("create_migration_tables"):
-                version = "000"
-            elif filename.startswith("create_requirement_documents"):
-                version = "001"
-            elif filename.startswith("migrate_existing"):
-                version = "002"
+            stem = file_path.stem  # "000_create_tables"
+            parts = stem.split("_", 1)
+            if parts and parts[0].isdigit():
+                version = int(parts[0])
+                migrations.append((version, file_path))
             else:
-                # Try to extract version from filename
-                parts = filename.split("_")
-                if parts[0].isdigit():
-                    version = parts[0].zfill(3)
-                else:
-                    version = "999"  # Unknown version, run last
-            
-            migrations.append((version, file_path))
-        
-        # Sort by version
+                logger.warning("Skipping file without numeric prefix: %s", file_path.name)
+
         migrations.sort(key=lambda x: x[0])
         return migrations
-    
-    def get_applied_migrations(self) -> List[str]:
-        """Get list of applied migration versions."""
+
+    # ---------- STATE ----------
+
+    def _ensure_migration_tables(self, conn: sqlite3.Connection) -> None:
+        """Create schema_migrations & migration_log if missing (idempotent)."""
+        conn.executescript(
+            """
+            CREATE TABLE IF NOT EXISTS schema_migrations (
+              version     TEXT PRIMARY KEY,
+              description TEXT,
+              applied_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+              checksum    TEXT
+            );
+            CREATE TABLE IF NOT EXISTS migration_log (
+              id                INTEGER PRIMARY KEY AUTOINCREMENT,
+              migration_version TEXT,
+              description       TEXT,
+              records_affected  INTEGER,
+              execution_time_ms INTEGER,
+              success           BOOLEAN,
+              error_message     TEXT,
+              applied_at        DATETIME DEFAULT CURRENT_TIMESTAMP
+            );
+            """
+        )
+
+    def get_applied_migrations(self) -> List[int]:
+        """Return applied versions as integers; empty if table missing."""
         conn = self.connect()
         try:
-            cursor = conn.execute(
-                "SELECT version FROM schema_migrations ORDER BY version"
-            )
-            return [row['version'] for row in cursor.fetchall()]
+            self._ensure_migration_tables(conn)
+            rows = conn.execute("SELECT version FROM schema_migrations ORDER BY version").fetchall()
+            out: List[int] = []
+            for r in rows:
+                v = str(r["version"]).strip()
+                if v.isdigit():
+                    out.append(int(v))
+            return out
         except sqlite3.OperationalError:
-            # schema_migrations table doesn't exist yet
+            # Shouldn't happen due to ensure above, but keep safe fallback
             return []
-    
-    def calculate_checksum(self, content: str) -> str:
-        """Calculate MD5 checksum of migration content."""
-        return hashlib.md5(content.encode('utf-8')).hexdigest()
-    
-    def execute_migration(self, version: str, file_path: Path) -> bool:
-        """Execute a single migration file."""
-        logger.info(f"Executing migration {version}: {file_path.name}")
-        
+
+    # ---------- EXECUTION ----------
+
+    @staticmethod
+    def _checksum(content: str) -> str:
+        return hashlib.md5(content.encode("utf-8")).hexdigest()
+
+    def execute_migration(self, version: int, file_path: Path) -> bool:
+        """Execute one migration inside a transaction and log result."""
+        logger.info("Executing migration %03d: %s", version, file_path.name)
+
         try:
-            # Read migration file
-            with open(file_path, 'r', encoding='utf-8') as f:
-                sql_content = f.read()
-            
-            # Calculate checksum
-            checksum = self.calculate_checksum(sql_content)
-            
-            conn = self.connect()
-            start_time = time.time()
-            
-            # Execute migration in a transaction
-            conn.execute("BEGIN TRANSACTION")
-            
-            try:
-                # Execute the entire SQL content as a script
-                records_affected = 0
-                try:
-                    conn.executescript(sql_content)
-                    records_affected = conn.total_changes
-                except sqlite3.OperationalError:
-                    # Fallback to individual statement execution
-                    statements = [stmt.strip() for stmt in sql_content.split(';') if stmt.strip()]
-                    for statement in statements:
-                        if statement and not statement.startswith('--'):
-                            cursor = conn.execute(statement)
-                            records_affected += cursor.rowcount
-                
-                # Record migration in schema_migrations table (if it exists)
-                try:
-                    conn.execute(
-                        """INSERT OR REPLACE INTO schema_migrations 
-                           (version, description, applied_at, checksum) 
-                           VALUES (?, ?, CURRENT_TIMESTAMP, ?)""",
-                        (version, f"Migration from {file_path.name}", checksum)
-                    )
-                except sqlite3.OperationalError:
-                    # schema_migrations table might not exist yet
-                    pass
-                
-                # Log migration details
-                execution_time = int((time.time() - start_time) * 1000)
-                try:
-                    conn.execute(
-                        """INSERT INTO migration_log 
-                           (migration_version, description, records_affected, 
-                            execution_time_ms, success, applied_at) 
-                           VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)""",
-                        (version, f"Migration from {file_path.name}", 
-                         records_affected, execution_time, True)
-                    )
-                except sqlite3.OperationalError:
-                    # migration_log table might not exist yet
-                    pass
-                
-                conn.commit()
-                logger.info(f"Migration {version} completed successfully "
-                           f"({records_affected} records affected, {execution_time}ms)")
-                return True
-                
-            except Exception as e:
-                conn.rollback()
-                logger.error(f"Migration {version} failed: {e}")
-                
-                # Log failure
-                try:
-                    conn.execute(
-                        """INSERT INTO migration_log 
-                           (migration_version, description, success, error_message, applied_at) 
-                           VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)""",
-                        (version, f"Migration from {file_path.name}", False, str(e))
-                    )
-                    conn.commit()
-                except sqlite3.OperationalError:
-                    pass
-                
-                return False
-                
+            sql_content = file_path.read_text(encoding="utf-8")
         except Exception as e:
-            logger.error(f"Failed to read or execute migration {version}: {e}")
+            logger.error("Failed to read migration %s: %s", file_path.name, e)
             return False
-    
-    def run_migrations(self, target_version: Optional[str] = None) -> bool:
-        """Run all pending migrations up to target version."""
+
+        conn = self.connect()
+        self._ensure_migration_tables(conn)
+
+        start_time = time.time()
+        checksum = self._checksum(sql_content)
+
+        try:
+            conn.execute("BEGIN IMMEDIATE")  # IMMEDIATE to avoid write conflicts
+            before_changes = conn.total_changes
+
+            try:
+                conn.executescript(sql_content)
+            except sqlite3.OperationalError as e:
+                # try per statement fallback
+                logger.warning("executescript failed, falling back to per-statement: %s", e)
+                statements = [s.strip() for s in sql_content.split(";") if s.strip()]
+                for stmt in statements:
+                    if stmt and not stmt.startswith("--"):
+                        conn.execute(stmt)
+
+            records_affected = conn.total_changes - before_changes
+            exec_ms = int((time.time() - start_time) * 1000)
+
+            # log success into schema_migrations + migration_log
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO schema_migrations (version, description, applied_at, checksum)
+                VALUES (?, ?, CURRENT_TIMESTAMP, ?)
+                """,
+                (f"{version:03d}", f"Migration from {file_path.name}", checksum),
+            )
+            conn.execute(
+                """
+                INSERT INTO migration_log (migration_version, description, records_affected,
+                                           execution_time_ms, success, applied_at)
+                VALUES (?, ?, ?, ?, 1, CURRENT_TIMESTAMP)
+                """,
+                (f"{version:03d}", f"Migration from {file_path.name}", records_affected, exec_ms),
+            )
+
+            conn.commit()
+            logger.info(
+                "Migration %03d completed (%d changes, %dms)",
+                version, records_affected, exec_ms
+            )
+            return True
+
+        except Exception as e:
+            conn.rollback()
+            logger.error("Migration %03d failed: %s", version, e)
+            try:
+                # best-effort failure log
+                conn.execute(
+                    """
+                    INSERT INTO migration_log (migration_version, description, success, error_message, applied_at)
+                    VALUES (?, ?, 0, ?, CURRENT_TIMESTAMP)
+                    """,
+                    (f"{version:03d}", f"Migration from {file_path.name}", str(e)),
+                )
+                conn.commit()
+            except Exception:
+                pass
+            return False
+
+    # ---------- PUBLIC API ----------
+
+    def run_migrations(self, target_version: Optional[int] = None) -> bool:
+        """Run all pending migrations up to target_version (inclusive)."""
         logger.info("Starting database migration")
-        
-        # Get all migration files
         migrations = self.get_migration_files()
         if not migrations:
             logger.info("No migration files found")
             return True
-        
-        # Get applied migrations
-        applied_migrations = self.get_applied_migrations()
-        logger.info(f"Applied migrations: {applied_migrations}")
-        
-        # Filter migrations to run
-        migrations_to_run = []
-        for version, file_path in migrations:
-            if version not in applied_migrations:
-                if target_version is None or version <= target_version:
-                    migrations_to_run.append((version, file_path))
-        
-        if not migrations_to_run:
+
+        applied = set(self.get_applied_migrations())
+        logger.info("Applied migrations: %s", sorted(applied))
+
+        to_run: List[Tuple[int, Path]] = []
+        for version, path in migrations:
+            if version not in applied and (target_version is None or version <= target_version):
+                to_run.append((version, path))
+
+        if not to_run:
             logger.info("All migrations are up to date")
             return True
-        
-        logger.info(f"Found {len(migrations_to_run)} migrations to run")
-        
-        # Execute migrations
-        success_count = 0
-        for version, file_path in migrations_to_run:
-            if self.execute_migration(version, file_path):
-                success_count += 1
-            else:
-                logger.error(f"Migration {version} failed, stopping")
-                break
-        
-        if success_count == len(migrations_to_run):
-            logger.info(f"All {success_count} migrations completed successfully")
-            return True
-        else:
-            logger.error(f"{success_count}/{len(migrations_to_run)} migrations completed")
-            return False
-    
+
+        logger.info("Found %d migrations to run", len(to_run))
+
+        for version, path in to_run:
+            if not self.execute_migration(version, path):
+                logger.error("Stopping on failure at %03d", version)
+                return False
+
+        logger.info("All migrations ran successfully")
+        return True
+
     def get_migration_status(self) -> Dict:
-        """Get current migration status."""
+        """Return current migration status summary."""
         migrations = self.get_migration_files()
-        applied_migrations = self.get_applied_migrations()
-        
-        status = {
+        applied = set(self.get_applied_migrations())
+
+        pending = [{"version": f"{v:03d}", "file": p.name}
+                   for v, p in migrations if v not in applied]
+
+        return {
             "total_migrations": len(migrations),
-            "applied_migrations": len(applied_migrations),
-            "pending_migrations": [],
-            "applied_list": applied_migrations
+            "applied_migrations": len(applied),
+            "pending_migrations": pending,
+            "applied_list": [f"{v:03d}" for v in sorted(applied)],
         }
-        
-        for version, file_path in migrations:
-            if version not in applied_migrations:
-                status["pending_migrations"].append({
-                    "version": version,
-                    "file": file_path.name
-                })
-        
-        return status
-    
+
     def verify_database_integrity(self) -> bool:
-        """Verify database integrity after migrations."""
+        """
+        Basic integrity check (customize as needed).
+        By default, verify requirement_documents exists if it's part of your baseline.
+        """
         logger.info("Verifying database integrity")
-        
         conn = self.connect()
         try:
-            # Check if requirement_documents table exists and has correct structure
-            cursor = conn.execute(
-                "SELECT sql FROM sqlite_master WHERE type='table' AND name='requirement_documents'"
-            )
-            table_info = cursor.fetchone()
-            
-            if not table_info:
+            row = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='requirement_documents'"
+            ).fetchone()
+            if not row:
                 logger.error("requirement_documents table not found")
                 return False
-            
             logger.info("requirement_documents table exists")
-            
-            # Check indexes
-            cursor = conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='index' AND tbl_name='requirement_documents'"
-            )
-            indexes = [row['name'] for row in cursor.fetchall()]
-            
-            expected_indexes = [
-                'idx_requirement_documents_project_version',
-                'idx_requirement_documents_project_created',
-                'idx_requirement_documents_status',
-                'idx_requirement_documents_source_type'
-            ]
-            
-            missing_indexes = [idx for idx in expected_indexes if idx not in indexes]
-            if missing_indexes:
-                logger.warning(f"Missing indexes: {missing_indexes}")
-            else:
-                logger.info("All expected indexes exist")
-            
-            # Check constraints by trying to insert invalid data
-            try:
-                conn.execute("BEGIN TRANSACTION")
-                
-                # Test version constraint (should fail)
-                try:
-                    conn.execute(
-                        "INSERT INTO requirement_documents (project_id, content, version) VALUES (?, ?, ?)",
-                        ("test", "content", 0)
-                    )
-                    conn.rollback()
-                    logger.warning("Version constraint not working")
-                except sqlite3.IntegrityError:
-                    logger.info("Version constraint working")
-                    conn.rollback()
-                
-                # Test unique constraint (project_id, version)
-                conn.execute("BEGIN TRANSACTION")
-                conn.execute(
-                    "INSERT INTO requirement_documents (project_id, content, version) VALUES (?, ?, ?)",
-                    ("test-constraint", "content", 1)
-                )
-                
-                try:
-                    conn.execute(
-                        "INSERT INTO requirement_documents (project_id, content, version) VALUES (?, ?, ?)",
-                        ("test-constraint", "content", 1)
-                    )
-                    conn.rollback()
-                    logger.warning("Unique constraint not working")
-                except sqlite3.IntegrityError:
-                    logger.info("Unique constraint working")
-                    conn.rollback()
-                
-            except Exception as e:
-                logger.error(f"Error testing constraints: {e}")
-                conn.rollback()
-                return False
-            
-            logger.info("Database integrity verification completed")
             return True
-            
         except Exception as e:
-            logger.error(f"Database integrity check failed: {e}")
+            logger.error("Integrity check failed: %s", e)
             return False
 
 
-def main():
-    """Main migration runner function."""
-    print("🗄️  Requirements Versioning Database Migration")
+def main() -> int:
+    print("🗄️  Database Migration")
     print("=" * 60)
-    
-    # Get database path from environment or use default
-    database_path = os.getenv("DATABASE_URL", "app.db")
-    if database_path.startswith("sqlite:///"):
-        database_path = database_path[10:]  # Remove sqlite:/// prefix
-    
+
+    # Resolve database path
+    db_url = os.getenv("DATABASE_URL", "sqlite:///./so_assistant.db")
+    database_path = _sqlite_path_from_url(db_url)
+
+    # Resolve migrations directory (default: ./migrations next to this file)
+    default_dir = (Path(__file__).resolve().parent / "migrations").resolve()
+    migrations_dir = Path(os.getenv("MIGRATIONS_DIR", str(default_dir)))
+
     print(f"Database: {database_path}")
-    print(f"Migrations directory: migrations/")
-    
-    # Create migrator
-    migrator = DatabaseMigrator(database_path)
-    
+    print(f"Migrations directory: {migrations_dir}")
+
+    migrator = DatabaseMigrator(database_path, migrations_dir)
+
     try:
-        # Show current status
+        status = migrator.get_migration_status()
         print("\n📊 Current Migration Status")
         print("-" * 40)
-        status = migrator.get_migration_status()
-        print(f"Total migrations: {status['total_migrations']}")
+        print(f"Total migrations:   {status['total_migrations']}")
         print(f"Applied migrations: {status['applied_migrations']}")
         print(f"Pending migrations: {len(status['pending_migrations'])}")
-        
-        if status['pending_migrations']:
+        if status["pending_migrations"]:
             print("\nPending migrations:")
-            for migration in status['pending_migrations']:
-                print(f"  • {migration['version']}: {migration['file']}")
-        
-        # Ask for confirmation
-        if status['pending_migrations']:
-            print(f"\n⚠️  This will apply {len(status['pending_migrations'])} migrations to the database.")
-            response = input("Continue? (y/N): ").strip().lower()
-            
-            if response != 'y':
+            for m in status["pending_migrations"]:
+                print(f"  • {m['version']}: {m['file']}")
+
+        # Prompt unless auto-approved
+        auto = os.getenv("MIGRATIONS_AUTO_APPROVE", "0") == "1"
+        if status["pending_migrations"] and not auto:
+            print(f"\n⚠️  This will apply {len(status['pending_migrations'])} migration(s).")
+            resp = input("Continue? (y/N): ").strip().lower()
+            if resp != "y":
                 print("Migration cancelled.")
                 return 0
-        
-        # Run migrations
+
         print("\n🚀 Running Migrations")
         print("-" * 40)
-        success = migrator.run_migrations()
-        
-        if success:
-            # Verify database integrity
-            print("\n🔍 Verifying Database")
-            print("-" * 40)
-            integrity_ok = migrator.verify_database_integrity()
-            
-            if integrity_ok:
-                print("\n🎉 Migration completed successfully!")
-                print("\n✨ Database is ready for requirements versioning:")
-                print("  • requirement_documents table created")
-                print("  • Indexes optimized for performance")
-                print("  • Constraints ensure data integrity")
-                print("  • Existing data migrated (if applicable)")
-                
-                # Show final status
-                final_status = migrator.get_migration_status()
-                print(f"\n📈 Final Status: {final_status['applied_migrations']}/{final_status['total_migrations']} migrations applied")
-                
-                return 0
-            else:
-                print("\n❌ Database integrity check failed")
-                return 1
-        else:
+        ok = migrator.run_migrations()
+        if not ok:
             print("\n❌ Migration failed")
             return 1
-            
+
+        print("\n🔍 Verifying Database")
+        print("-" * 40)
+        if migrator.verify_database_integrity():
+            print("\n🎉 Migration completed successfully!")
+            final = migrator.get_migration_status()
+            print(f"\n📈 Final Status: {final['applied_migrations']}/{final['total_migrations']} applied")
+            return 0
+        else:
+            print("\n❌ Database integrity check failed")
+            return 1
+
     except Exception as e:
-        logger.error(f"Migration error: {e}")
+        logger.exception("Migration error")
         print(f"\n❌ Migration failed: {e}")
         return 1
     finally:

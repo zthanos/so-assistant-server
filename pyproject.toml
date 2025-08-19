@@ -5,19 +5,46 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "fastapi[all]>=0.116.1",
-    "httpx>=0.28.1",
-    "langchain>=0.3.27",
-    "langchain-community>=0.3.27",
-    "pydantic>=2.11.7",
-    "pymupdf>=1.26.3",
-    "pypdf>=5.9.0",
-    "pytest>=8.4.1",
-    "sqlalchemy>=2.0.41",
-    "sse-starlette>=2.4.1",
-    "tiktoken>=0.9.0",
-    "uvicorn[standard]>=0.35.0",
+# Web/API
+  "fastapi[all]>=0.116.1",
+  "uvicorn[standard]>=0.35.0",
+  "sse-starlette>=2.4.1",
+  "httpx>=0.28.1",
+
+  # Data / ORM / validation
+  "sqlalchemy>=2.0.41",
+  "pydantic>=2.11.7",
+
+  # LLM stack
+  "langchain>=0.3.27",
+  "langchain-community>=0.3.27",
+  "tiktoken>=0.9.0",
+
+  # PDF / file processing
+  "pypdf>=5.9.0",
+  "pymupdf>=1.26.3",
+  "pdfplumber>=0.9.0",
+  "pillow>=9.0.0",
+  "unstructured[pdf]>=0.10.0",
+  "python-magic>=0.4.27; sys_platform != 'win32'",
+  "python-magic-bin>=0.4.14; sys_platform == 'win32'",
+  "aiofiles>=23.0.0",
+
+  # NLP (από requirements.txt)
+  "nltk>=3.8",
+  "spacy>=3.7.0",
+]
+
+
+
+[project.optional-dependencies]
+# Κράτα τα dev-only εδώ για να μην μπαίνουν σε production builds
+dev = [
+  "pytest>=8.4.1",
 ]
 
 [tool.setuptools]
 packages = ["app", "api"]
+
+
+
