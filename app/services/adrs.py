@@ -369,11 +369,18 @@ class ADRService:
             adr_data = ADRCreate(
                 project_id=project_id,
                 title=upsert_data.title,
-                content=upsert_data.content
+                status=upsert_data.status,
+                content=upsert_data.content,
+                context=upsert_data.context,
+                consequences=upsert_data.consequences,
+                tags=upsert_data.tags,
+                author=upsert_data.author,
+                alternatives=upsert_data.alternatives,
+                decision=upsert_data.decision, 
             )
             
             adr = self.adr_repository.create(self.db, obj_in=adr_data)
-            return to_response(ADRResponse, adr.items)
+            return adr.items
 
 
 # Create a singleton instance

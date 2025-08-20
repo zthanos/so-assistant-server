@@ -48,6 +48,7 @@ class ADRUpsert(BaseModel):
     content: Optional[str] = None
     context: Optional[str] = None
     decision: Optional[str] = None
+    status: Optional[str] = None
     consequences: Optional[str] = None
     alternatives: Optional[str] = None
     author: Optional[str] = None
@@ -67,14 +68,6 @@ class ADRResponse(ADRBase):
     def serialize_dt(self, value: datetime) -> str:
         return value.isoformat() if value else None
 
-# ---------- Upsert (clear, explicit) ----------
-class ADRUpsertCreate(ADRCreate):
-    kind: Literal["create"] = "create"
-
-class ADRUpsertUpdate(ADRUpdate):
-    kind: Literal["update"] = "update"
-
-ADRUpsert = Union[ADRUpsertCreate, ADRUpsertUpdate]
 
 # # Extended schemas for future use (after migration)
 # class ADRExtendedBase(BaseModel):
