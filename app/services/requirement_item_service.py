@@ -719,6 +719,7 @@ class RequirementItemService:
 
     def get_requirement_items_by_status(
         self,
+        db: Session,
         project_id: str,
         statuses: List[RequirementItemStatus],
         skip: int = 0,
@@ -750,7 +751,7 @@ class RequirementItemService:
                 raise BadRequestException("Limit parameter must be between 1 and 1000")
 
             # Validate that the project exists
-            project = self.project_repository.get(self.repository.db, project_id)
+            project = self.project_repository.get(db, project_id)
             if not project:
                 raise NotFoundException(
                     f"Project with id {project_id} not found",
@@ -759,7 +760,7 @@ class RequirementItemService:
                 )
 
             return self.repository.get_by_project_and_status(
-                project_id, statuses, skip, limit
+                db, project_id, statuses, skip, limit
             )
 
         except (NotFoundException, BadRequestException):
@@ -769,3 +770,6 @@ class RequirementItemService:
                 f"Error getting requirement items by status: {str(e)}",
                 original_exception=e,
             )
+
+# Create a singleton instance
+requirement_item_service = RequirementItemService()

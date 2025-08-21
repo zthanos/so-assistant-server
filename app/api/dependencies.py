@@ -9,10 +9,18 @@ from fastapi import Depends, Request, BackgroundTasks, Query
 from sqlalchemy.orm import Session
 from sse_starlette.sse import EventSourceResponse
 
+from app.api.v1.endpoints.diagrams import get_diagram_service
 from app.core.database import get_db
 from app.core.events import SSEManager
+from app.services.diagrams import DiagramService
 from app.utils.pagination import PaginationParams, get_pagination_params
 from app.utils.filtering import FilterCondition, parse_filter_params
+
+# import the concrete classes, όχι modules
+from app.services.solution_outlines import SolutionOutlineService
+from app.services.requirement_item_service import RequirementItemService
+from app.repositories.project_repository import ProjectRepository
+from app.services.llm.so_rag_service import SORAGService
 
 # Global SSE manager instance
 _sse_manager = SSEManager()
@@ -72,6 +80,11 @@ def get_llm_streaming_service(sse_manager: SSEManager = Depends(get_sse_manager)
     from app.services.llm import LLMStreamingService
     return LLMStreamingService(sse_manager)
 
+
+
+
+
+
 def get_ollama_client():
     """Get the Ollama client.
     
@@ -92,7 +105,7 @@ def get_project_repository(db: Session = Depends(get_db)):
         The project repository instance
     """
     from app.repositories.project_repository import ProjectRepository
-    return ProjectRepository(db)
+    return ProjectRepository()
 
 def get_solution_outline_repository(db: Session = Depends(get_db)):
     """Get the solution outline repository.
@@ -166,6 +179,20 @@ def get_solution_outline_service(db: Session = Depends(get_db)):
     from app.services.solution_outlines import SolutionOutlineService
     return SolutionOutlineService(db)
 
+
+
+def get_requirement_item_service(db: Session = Depends(get_db)):
+    """Get the solution outline service.
+    
+    Args:
+        db: The database session
+        
+    Returns:
+        The solution outline service instance
+    """
+    from app.services.requirement_item_service import RequirementItemService
+    return RequirementItemService(db)
+
 def get_solution_outline_review_service(
     db: Session = Depends(get_db),
     sse_manager: SSEManager = Depends(get_sse_manager)
@@ -181,6 +208,9 @@ def get_solution_outline_review_service(
     """
     from app.services.solution_outline_reviews import SolutionOutlineReviewService
     return SolutionOutlineReviewService(db, sse_manager)
+
+
+
 
 def get_adr_service(db: Session = Depends(get_db)):
     """Get the ADR service.
@@ -241,6 +271,16 @@ def get_task_service(db: Session = Depends(get_db)):
     """
     from app.services.tasks import TaskService
     return TaskService(db)
+
+
+def get_so_rag_service(
+    db: Session = Depends(get_db),
+    so_service: SolutionOutlineService = Depends(get_solution_outline_service),
+    req_service: RequirementItemService = Depends(get_requirement_item_service),
+    diag_service: DiagramService = Depends(get_diagram_service),
+    proj_repo: ProjectRepository = Depends(get_project_repository)
+) -> SORAGService:
+    return SORAGService(db, so_service, req_service, diag_service, proj_repo)    
 
 # Pagination and filtering dependencies
 def get_pagination_params_dependency(

@@ -7,11 +7,13 @@ CREATE TABLE IF NOT EXISTS requirement_items (
   status        VARCHAR(50)  DEFAULT 'pending',
   priority      VARCHAR(50),
   assignee      VARCHAR(255),
+  description   TEXT NOT NULL,
+  project_id    VARCHAR(255) NOT NULL,
   tags          TEXT         DEFAULT '[]', -- JSON array
   metadata      TEXT,                      -- JSON blob
   created_at    DATETIME     DEFAULT CURRENT_TIMESTAMP,
   updated_at    DATETIME     DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (document_id) REFERENCES requirement_documents(id)
+  FOREIGN KEY (project_id) REFERENCES projects(id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_reqitems_doc ON requirement_items(document_id);

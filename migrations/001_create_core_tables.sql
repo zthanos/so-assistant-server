@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS systems (
   project_id    VARCHAR(255) NOT NULL,
   name          VARCHAR(255) NOT NULL,
   description   TEXT,
-  system_type   VARCHAR(50)  CHECK (system_type IN ('internal','external','integration')) DEFAULT 'internal',
+  type          VARCHAR(50)  CHECK (system_type IN ('internal','external','integration')) DEFAULT 'internal',
   dependencies  TEXT         DEFAULT '[]', -- JSON array of names/ids
   created_at    DATETIME     DEFAULT CURRENT_TIMESTAMP,
   updated_at    DATETIME     DEFAULT CURRENT_TIMESTAMP,

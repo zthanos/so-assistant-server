@@ -36,3 +36,13 @@ class LLMErrorResponse(LLMResponseBase):
     """Model for LLM error responses."""
     error: str = Field(..., description="The error message")
     error_type: str = Field(..., description="The type of error")
+
+
+class LLMStreamSORequest(LLMRequest):
+    """Model for SO streaming LLM requests."""
+    history: str = Field(..., description="Chat history for context")
+    
+class LLMStreamSOResponse(LLMResponseBase):
+    """Model for streaming LLM responses."""
+    event_type: str = Field(..., description="The type of event")
+    data: Dict[str, Any] = Field(..., description="The event data")    
