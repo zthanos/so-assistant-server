@@ -3,3 +3,4 @@ timestamp,prompt_key,model,prompt_tokens,response_tokens,total_tokens,cost_estim
 2025-08-02T17:14:06.725676,unknown,gemma3,25,12,37,$0.0001
 2025-08-02T17:19:04.956175,unknown,gemma3,25,12,37,$0.0001
 2025-08-02T17:27:10.796061,unknown,gemma3,25,12,37,$0.0001
+2025-08-23T09:53:30.771041,unknown,pparikh2/phi3.5Q4_K_M,144,72,216,$0.0003

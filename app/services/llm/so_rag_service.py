@@ -24,7 +24,8 @@ from app.utils.pagination import PaginationParams, PaginationResult, Paginator
 from app.utils.filtering import FilterCondition, QueryFilter
 import logging
 import json
-
+import os
+from app.ollama_client import call_ollama
 
 logger = logging.getLogger(__name__)
 
@@ -80,15 +81,28 @@ class SORAGService:
             so_doc_md_subset = self._extract_so_content_subset(so_doc)
             requirements_bullets = self._format_requirements_bullets(requirements)
             mermaid_diagrams = self._extract_mermaid_diagrams(diagrams)
+
+
+            #agentic
+            system_prompt = get_prompt('intent_router_prompt_system.md')
+            user_prompt = get_prompt('intent_router_prompt_user.md')
+            user_prompt.format(user_message=user_query)
+            result = call_ollama(f'{system_prompt}\n{user_prompt}')
+            print(result)
             
+            # load the template
+
+            rephrase_prompt = get_prompt("rag_rephrase_prompt.md")            
+
             # Format the prompt
-            prompt = self.rephrase_prompt.format(
+            prompt = rephrase_prompt.format(
                 so_doc_md_subset=so_doc_md_subset,
                 requirements_bullets=requirements_bullets,
                 mermaid_diagrams=mermaid_diagrams,
                 chat_summary=session_history,
                 user_message=user_query
             )
+            logger.info(f'Refraphed Prompt: {prompt}')
             
             # In a real implementation, you would send this to an LLM API
             # For now, we'll return a placeholder response
@@ -131,33 +145,14 @@ class SORAGService:
         return '\n'.join(list_of_diagrams)
 
 
-    # The prompt template as a class attribute
-    rephrase_prompt = """
-Rephrase the latest user message as a standalone request to improve a Solution Outline.
 
-CONTEXT:
-SO_DOC_MD:
-{so_doc_md_subset}
-
-REQUIREMENTS_BULLETS:
-{requirements_bullets}
-
-MERMAID_DIAGRAMS:
-{mermaid_diagrams}
-
-CHAT_SUMMARY:
-{chat_summary}
-
-QUERY:
-{user_message}
-
-Rules:
-- Use ONLY the provided context; no outside knowledge.
-- Preserve intent, domain terms, and proper names; match QUERY language.
-- Respect STYLE_PROFILE (tone/voice/terminology).
-- Output only the rephrased text (no preface, no quotes, no JSON).
-- If insufficient information, output exactly: INSUFFICIENT.
-"""
 
 # STYLE_PROFILE:
 # {style_profile_json}
+
+
+def get_prompt(filename: str) -> str:
+    prompt_path = os.path.join("templates/", filename)
+    with open(prompt_path, "r", encoding="utf-8") as f:
+        document_code = f.read()
+    return document_code

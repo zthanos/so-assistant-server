@@ -32,10 +32,10 @@ def estimate_token_cost(text, model_name=DEFAULT_MODEL):
     cost_per_k = MODEL_COSTS.get(model_name, 0.002)
     cost_estimate = (prompt_token_count / 1000) * cost_per_k
 
-    # logger.info(f"🧮 Prompt tokens: {prompt_token_count}")
-    # logger.info(f"📤 Expected response tokens (~50% extra): {expected_response_tokens}")
-    # logger.info(f"📦 Total estimated tokens: {total_estimated_tokens}")
-    # logger.info(f"💲 Estimated input cost: ${cost_estimate:.4f} (response cost not included)")
+    logger.info(f"🧮 Prompt tokens: {prompt_token_count}")
+    logger.info(f"📤 Expected response tokens (~50% extra): {expected_response_tokens}")
+    logger.info(f"📦 Total estimated tokens: {total_estimated_tokens}")
+    logger.info(f"💲 Estimated input cost: ${cost_estimate:.4f} (response cost not included)")
 
     return {
         "prompt_tokens": prompt_token_count,
@@ -47,6 +47,7 @@ def estimate_token_cost(text, model_name=DEFAULT_MODEL):
 def check_prompt_fits(text, model_context_limit=MODEL_CONTEXT_LIMIT):
     stats = estimate_token_cost(text)
     margin = model_context_limit - stats["total_tokens"]
+    logger.info(f'Prompt:{text}')
     if stats["total_tokens"] > model_context_limit:
         logger.warning(f"⚠️ WARNING: Total tokens exceed context window by {abs(margin)} tokens!")
     else:

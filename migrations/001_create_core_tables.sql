@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS projects (
   id         VARCHAR(255) PRIMARY KEY,
   name       VARCHAR(255) NOT NULL,
   code       VARCHAR(255),
+  description TEXT,
   state      VARCHAR(50)  DEFAULT 'active',
   created_at DATETIME      DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME      DEFAULT CURRENT_TIMESTAMP

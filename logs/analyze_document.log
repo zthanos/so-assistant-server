@@ -6145,3 +6145,1354 @@ Rel(SystemC, customerA, \"Sends e-mails to\")",
 2025-08-21 10:07:51 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 158256 tokens)
 2025-08-21 10:11:49 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 158263 tokens)
 2025-08-21 10:12:48 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 158259 tokens)
+2025-08-22 22:14:22 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156621 tokens)
+2025-08-22 22:16:53 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156616 tokens)
+2025-08-22 22:49:37 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156504 tokens)
+2025-08-22 22:52:02 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156499 tokens)
+2025-08-22 22:58:53 [INFO] analyze_document - Prompt:Act as a Senior Software Architect analyzing the current solution outline. Provide specific, actionable recommendations to improve the architecture based on the available context.
+
+ARCHITECTURE CONTEXT:
+SOLUTION OUTLINE EXCERPTS:
+Introduction
+============
+
+Overview and context
+--------------------
+
+Στόχος είναι η αυτοματοποίηση της δημιουργίας επιστολών αναγνώρισης χρέους, μειώνοντας χειροκίνητο έργο και χρόνους κύκλου.\
+**Ροή σε υψηλό επίπεδο:** Το Data Integrator εξάγει πελατειακά δεδομένα, εφαρμόζει ταξινόμηση (classification) και παράγει XML ανά κατηγορία. Για κάθε XML εκκινεί Logic App που δημιουργεί τις επιστολές (PDF/metadata) και τις αποθηκεύει σε Blob Storage. Με την ολοκλήρωση, εκδίδεται event στο Event Grid ώστε το Data Integrator να μεταφέρει τα αρχεία στο σύστημα προβολής/ανάκτησης και, στη συνέχεια, να αποστείλει ειδοποιήσεις (e-sign/email/SMS) στους πελάτες.
+
+**KPIs (ενδεικτικά):** χρόνος κύκλου ανά παρτίδα, ποσοστό επιτυχιών, εξοικονόμηση ανθρωποωρών, κόστος/έγγραφο.
+
+Assumptions and conditions
+--------------------------
+
+-   Τα template γραμμάτων υπάρχουν και είναι versioned (templateId, locale, legal text).
+
+-   PII δεδομένα: εφαρμόζονται GDPR/retention πολιτικές.
+
+-   Χρήση APIM για μεσολάβησ...
+
+BUSINESS REQUIREMENTS:
+- title...
+
+SYSTEM DIAGRAMS:
+Diagram 1
+graph TD
+  A --> B
+  B --> C
+Diagram 2
+    C4Context
+      title System Context diagram for Internet Banking System
+      Enterprise_Boundary(b0, "BankBoundary0") {
+        Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
+        Person(customerB, "Banking Customer B")
+        Person_Ext(customerC, "Banking Customer C", "desc")
+
+        Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+
+        System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+
+        Enterprise_Boundary(b1, "BankBoundary") {
+
+          SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+          System_Boundary(b2, "BankBoundary2") {
+            System(SystemA, "Banking System A")
+            System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts. next line.")
+          }
+
+          System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+          SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
+
+          Boundary(b3, "BankBoundary3", "boundary") {
+            SystemQueue(SystemF, "Banking System F Queue", "A system of the bank.")
+            SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
+          }
+        }
+      }
+
+      BiRel(customerA, SystemAA, "Uses")
+      BiRel(SystemAA, SystemE, "Uses")
+      Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
+      Rel(SystemC, customerA, "Sends e-mails to")
+
+      UpdateElementStyle(customerA, $fontColor="red", $bgColor="grey", $borderColor="red")
+      UpdateRelStyle(customerA, SystemAA, $textColor="blue", $lineColor="blue", $offsetX="5")
+      UpdateRelStyle(SystemAA, SystemE, $textColor="blue", $lineColor="blue", $offsetY="-10")
+      UpdateRelStyle(SystemAA, SystemC, $textColor="blue", $lineColor="blue", $offsetY="-40", $offsetX="-50")
+      UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+
+Diagram 1
+sequenceDiagram
+    participant web as Web Browser
+    participant blog as Blog Service
+    participant account as Account Service
+    participant mail as Mail Service
+    participant db as Storage
+
+    Note over web,db: The user must be logged in to submit blog posts
+    web->>+account: Logs in using credentials
+    account->>db: Query stored accounts
+    db->>account: Respond with query result
+
+    alt Credentials not found
+        account->>web: Invalid credentials
+    else Credentials found
+        account->>-web: Successfully logged in
+
+        Note over web,db: When the user is authenticated, they can now submit new posts
+        web->>+blog: Submit new post
+        blog->>db: Store post data
+
+        par Notifications
+            blog--)mail: Send mail to blog subscribers
+            blog--)db: Store in-site notifications
+        and Response
+            blog-->>-web: Successfully posted
+        end
+    end
+
+
+C4 Context
+diagram
+testing_diagram
+graph TD
+  A --> B
+  B --> C
+testing_diagram
+graph TD
+  A --> B
+  B --> D
+aaAA
+graph TD
+  A --> B
+  B --> C
+  C --> D
+Diagram 1
+%% C4 Context
+C4Context
+    title Debt Letters - Context
+    Person(Customer, "Customer")
+    System_Boundary(Bank,"Bank Systems"){
+      System(DI,"Data Integrator","Extracts/groups data, triggers generation")
+      System(LA,"Logic App","Generates letters")
+      System(APIM,"APIM","API mediation/policies")
+      System(EG,"Event Grid","Event-driven notifications")
+      System(ST,"Blob Storage","Stores letters & metadata")
+      System(RS,"Retrieval System","Serves documents to channels")
+      System(NS,"Notification Service","e-sign/email/SMS")
+    }
+    Rel(Customer, RS, "Retrieves/signed letters")
+    Rel(DI, APIM, "Start generation (per XML)")
+    Rel(APIM, LA, "Invoke workflow")
+    Rel(LA, ST, "Store PDFs/metadata")
+    Rel(LA, EG, "Publish LettersGenerated")
+    Rel(EG, DI, "Event delivery")
+    Rel(DI, RS, "Publish/move artifacts")
+    Rel(DI, NS, "Send notifications")
+
+Diagram 2
+%% C4 Container (high level)
+C4Container
+    title Debt Letters - Containers
+    Person_Ext(Customer,"Customer")
+    System_Boundary(Bank,"Bank"){
+      Container(DI,"Data Integrator","ETL/Rules","Batching, XML per classification")
+      Container(APIM,"API Management","Gateway","Auth, quotas, logging")
+      Container(LA,"Logic App","Workflow","Letter composition")
+      Container(ST,"Blob Storage","Storage","PDFs, metadata")
+      Container(EG,"Event Grid","Eventing","LettersGenerated")
+      Container(RS,"Retrieval System","App","Document ingest & access")
+      Container(NS,"Notification Service","Service","e-sign/email/SMS")
+    }
+    Rel(DI, APIM, "POST generate (per XML)")
+    Rel(APIM, LA, "Trigger")
+    Rel(LA, ST, "Write PDFs/metadata")
+    Rel(LA, EG, "Publish event")
+    Rel(EG, DI, "Deliver event")
+    Rel(DI, RS, "Ingest artifacts")
+    Rel(DI, NS, "Notify")
+
+C4 Context
+sequenceDiagram
+  autonumber
+  participant DI as Data Integrator
+  participant APIM as APIM
+  participant LA as Logic App (Letter Gen)
+  participant ST as Blob Storage
+  participant EG as Event Grid
+  participant RS as Retrieval System
+  participant NS as Notification Service
+
+  DI->>APIM: Start letter generation (per-classification XML)
+  APIM->>LA: Invoke workflow
+  LA->>ST: Store PDFs & metadata
+  LA-->>EG: Publish LettersGenerated {batchId, status, locations}
+  EG-->>DI: Deliver event
+  DI->>RS: Ingest/move artifacts for retrieval
+  DI->>NS: Send signature notifications
+
+
+CONVERSATION HISTORY:
+
+
+USER REQUEST:
+can you apply an imporved solution overview paragraph?
+
+ARCHITECT GUIDANCE RULES:
+- Analyze ONLY the provided context; no external knowledge or assumptions
+- Preserve the original intent, technical terms, and domain-specific language from the user request
+- Focus on architectural improvements: scalability, performance, security, maintainability, and design patterns
+- Provide concrete, implementable recommendations rather than general advice
+- Maintain a professional, expert tone appropriate for a senior architect
+- If the context lacks sufficient information to provide meaningful architectural guidance, respond with exactly: INSUFFICIENT
+- Output only your architectural recommendations (no introductory phrases, no markdown formatting, no quotes)
+- Keep the response concise and directly actionable
+2025-08-22 22:58:53 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156499 tokens)
+2025-08-22 23:03:00 [INFO] analyze_document - Prompt:Act as a Senior Software Architect analyzing the current solution outline. Provide specific, actionable recommendations to improve the architecture based on the available context.
+
+ARCHITECTURE CONTEXT:
+SOLUTION OUTLINE EXCERPTS:
+Introduction
+============
+
+Overview and context
+--------------------
+
+Στόχος είναι η αυτοματοποίηση της δημιουργίας επιστολών αναγνώρισης χρέους, μειώνοντας χειροκίνητο έργο και χρόνους κύκλου.\
+**Ροή σε υψηλό επίπεδο:** Το Data Integrator εξάγει πελατειακά δεδομένα, εφαρμόζει ταξινόμηση (classification) και παράγει XML ανά κατηγορία. Για κάθε XML εκκινεί Logic App που δημιουργεί τις επιστολές (PDF/metadata) και τις αποθηκεύει σε Blob Storage. Με την ολοκλήρωση, εκδίδεται event στο Event Grid ώστε το Data Integrator να μεταφέρει τα αρχεία στο σύστημα προβολής/ανάκτησης και, στη συνέχεια, να αποστείλει ειδοποιήσεις (e-sign/email/SMS) στους πελάτες.
+
+**KPIs (ενδεικτικά):** χρόνος κύκλου ανά παρτίδα, ποσοστό επιτυχιών, εξοικονόμηση ανθρωποωρών, κόστος/έγγραφο.
+
+Assumptions and conditions
+--------------------------
+
+-   Τα template γραμμάτων υπάρχουν και είναι versioned (templateId, locale, legal text).
+
+-   PII δεδομένα: εφαρμόζονται GDPR/retention πολιτικές.
+
+-   Χρήση APIM για μεσολάβησ...
+
+BUSINESS REQUIREMENTS:
+- title...
+
+SYSTEM DIAGRAMS:
+Diagram 1
+graph TD
+  A --> B
+  B --> C
+Diagram 2
+    C4Context
+      title System Context diagram for Internet Banking System
+      Enterprise_Boundary(b0, "BankBoundary0") {
+        Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
+        Person(customerB, "Banking Customer B")
+        Person_Ext(customerC, "Banking Customer C", "desc")
+
+        Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+
+        System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+
+        Enterprise_Boundary(b1, "BankBoundary") {
+
+          SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+          System_Boundary(b2, "BankBoundary2") {
+            System(SystemA, "Banking System A")
+            System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts. next line.")
+          }
+
+          System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+          SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
+
+          Boundary(b3, "BankBoundary3", "boundary") {
+            SystemQueue(SystemF, "Banking System F Queue", "A system of the bank.")
+            SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
+          }
+        }
+      }
+
+      BiRel(customerA, SystemAA, "Uses")
+      BiRel(SystemAA, SystemE, "Uses")
+      Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
+      Rel(SystemC, customerA, "Sends e-mails to")
+
+      UpdateElementStyle(customerA, $fontColor="red", $bgColor="grey", $borderColor="red")
+      UpdateRelStyle(customerA, SystemAA, $textColor="blue", $lineColor="blue", $offsetX="5")
+      UpdateRelStyle(SystemAA, SystemE, $textColor="blue", $lineColor="blue", $offsetY="-10")
+      UpdateRelStyle(SystemAA, SystemC, $textColor="blue", $lineColor="blue", $offsetY="-40", $offsetX="-50")
+      UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+
+Diagram 1
+sequenceDiagram
+    participant web as Web Browser
+    participant blog as Blog Service
+    participant account as Account Service
+    participant mail as Mail Service
+    participant db as Storage
+
+    Note over web,db: The user must be logged in to submit blog posts
+    web->>+account: Logs in using credentials
+    account->>db: Query stored accounts
+    db->>account: Respond with query result
+
+    alt Credentials not found
+        account->>web: Invalid credentials
+    else Credentials found
+        account->>-web: Successfully logged in
+
+        Note over web,db: When the user is authenticated, they can now submit new posts
+        web->>+blog: Submit new post
+        blog->>db: Store post data
+
+        par Notifications
+            blog--)mail: Send mail to blog subscribers
+            blog--)db: Store in-site notifications
+        and Response
+            blog-->>-web: Successfully posted
+        end
+    end
+
+
+C4 Context
+diagram
+testing_diagram
+graph TD
+  A --> B
+  B --> C
+testing_diagram
+graph TD
+  A --> B
+  B --> D
+aaAA
+graph TD
+  A --> B
+  B --> C
+  C --> D
+Diagram 1
+%% C4 Context
+C4Context
+    title Debt Letters - Context
+    Person(Customer, "Customer")
+    System_Boundary(Bank,"Bank Systems"){
+      System(DI,"Data Integrator","Extracts/groups data, triggers generation")
+      System(LA,"Logic App","Generates letters")
+      System(APIM,"APIM","API mediation/policies")
+      System(EG,"Event Grid","Event-driven notifications")
+      System(ST,"Blob Storage","Stores letters & metadata")
+      System(RS,"Retrieval System","Serves documents to channels")
+      System(NS,"Notification Service","e-sign/email/SMS")
+    }
+    Rel(Customer, RS, "Retrieves/signed letters")
+    Rel(DI, APIM, "Start generation (per XML)")
+    Rel(APIM, LA, "Invoke workflow")
+    Rel(LA, ST, "Store PDFs/metadata")
+    Rel(LA, EG, "Publish LettersGenerated")
+    Rel(EG, DI, "Event delivery")
+    Rel(DI, RS, "Publish/move artifacts")
+    Rel(DI, NS, "Send notifications")
+
+Diagram 2
+%% C4 Container (high level)
+C4Container
+    title Debt Letters - Containers
+    Person_Ext(Customer,"Customer")
+    System_Boundary(Bank,"Bank"){
+      Container(DI,"Data Integrator","ETL/Rules","Batching, XML per classification")
+      Container(APIM,"API Management","Gateway","Auth, quotas, logging")
+      Container(LA,"Logic App","Workflow","Letter composition")
+      Container(ST,"Blob Storage","Storage","PDFs, metadata")
+      Container(EG,"Event Grid","Eventing","LettersGenerated")
+      Container(RS,"Retrieval System","App","Document ingest & access")
+      Container(NS,"Notification Service","Service","e-sign/email/SMS")
+    }
+    Rel(DI, APIM, "POST generate (per XML)")
+    Rel(APIM, LA, "Trigger")
+    Rel(LA, ST, "Write PDFs/metadata")
+    Rel(LA, EG, "Publish event")
+    Rel(EG, DI, "Deliver event")
+    Rel(DI, RS, "Ingest artifacts")
+    Rel(DI, NS, "Notify")
+
+C4 Context
+sequenceDiagram
+  autonumber
+  participant DI as Data Integrator
+  participant APIM as APIM
+  participant LA as Logic App (Letter Gen)
+  participant ST as Blob Storage
+  participant EG as Event Grid
+  participant RS as Retrieval System
+  participant NS as Notification Service
+
+  DI->>APIM: Start letter generation (per-classification XML)
+  APIM->>LA: Invoke workflow
+  LA->>ST: Store PDFs & metadata
+  LA-->>EG: Publish LettersGenerated {batchId, status, locations}
+  EG-->>DI: Deliver event
+  DI->>RS: Ingest/move artifacts for retrieval
+  DI->>NS: Send signature notifications
+
+
+CONVERSATION HISTORY:
+
+
+USER REQUEST:
+Suggest security enhancements for PII data handling
+
+ARCHITECT GUIDANCE RULES:
+- Analyze ONLY the provided context; no external knowledge or assumptions
+- Preserve the original intent, technical terms, and domain-specific language from the user request
+- Focus on architectural improvements: scalability, performance, security, maintainability, and design patterns
+- Provide concrete, implementable recommendations rather than general advice
+- Maintain a professional, expert tone appropriate for a senior architect
+- If the context lacks sufficient information to provide meaningful architectural guidance, respond with exactly: INSUFFICIENT
+- Output only your architectural recommendations (no introductory phrases, no markdown formatting, no quotes)
+- Keep the response concise and directly actionable
+2025-08-22 23:03:00 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156501 tokens)
+2025-08-22 23:04:53 [INFO] analyze_document - Prompt:Act as a Senior Software Architect analyzing the current solution outline. Provide specific, actionable recommendations to improve the architecture based on the available context.
+
+ARCHITECTURE CONTEXT:
+SOLUTION OUTLINE EXCERPTS:
+Introduction
+============
+
+Overview and context
+--------------------
+
+Στόχος είναι η αυτοματοποίηση της δημιουργίας επιστολών αναγνώρισης χρέους, μειώνοντας χειροκίνητο έργο και χρόνους κύκλου.\
+**Ροή σε υψηλό επίπεδο:** Το Data Integrator εξάγει πελατειακά δεδομένα, εφαρμόζει ταξινόμηση (classification) και παράγει XML ανά κατηγορία. Για κάθε XML εκκινεί Logic App που δημιουργεί τις επιστολές (PDF/metadata) και τις αποθηκεύει σε Blob Storage. Με την ολοκλήρωση, εκδίδεται event στο Event Grid ώστε το Data Integrator να μεταφέρει τα αρχεία στο σύστημα προβολής/ανάκτησης και, στη συνέχεια, να αποστείλει ειδοποιήσεις (e-sign/email/SMS) στους πελάτες.
+
+**KPIs (ενδεικτικά):** χρόνος κύκλου ανά παρτίδα, ποσοστό επιτυχιών, εξοικονόμηση ανθρωποωρών, κόστος/έγγραφο.
+
+Assumptions and conditions
+--------------------------
+
+-   Τα template γραμμάτων υπάρχουν και είναι versioned (templateId, locale, legal text).
+
+-   PII δεδομένα: εφαρμόζονται GDPR/retention πολιτικές.
+
+-   Χρήση APIM για μεσολάβησ...
+
+BUSINESS REQUIREMENTS:
+- title...
+
+SYSTEM DIAGRAMS:
+Diagram 1
+graph TD
+  A --> B
+  B --> C
+Diagram 2
+    C4Context
+      title System Context diagram for Internet Banking System
+      Enterprise_Boundary(b0, "BankBoundary0") {
+        Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
+        Person(customerB, "Banking Customer B")
+        Person_Ext(customerC, "Banking Customer C", "desc")
+
+        Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+
+        System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+
+        Enterprise_Boundary(b1, "BankBoundary") {
+
+          SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+          System_Boundary(b2, "BankBoundary2") {
+            System(SystemA, "Banking System A")
+            System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts. next line.")
+          }
+
+          System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+          SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
+
+          Boundary(b3, "BankBoundary3", "boundary") {
+            SystemQueue(SystemF, "Banking System F Queue", "A system of the bank.")
+            SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
+          }
+        }
+      }
+
+      BiRel(customerA, SystemAA, "Uses")
+      BiRel(SystemAA, SystemE, "Uses")
+      Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
+      Rel(SystemC, customerA, "Sends e-mails to")
+
+      UpdateElementStyle(customerA, $fontColor="red", $bgColor="grey", $borderColor="red")
+      UpdateRelStyle(customerA, SystemAA, $textColor="blue", $lineColor="blue", $offsetX="5")
+      UpdateRelStyle(SystemAA, SystemE, $textColor="blue", $lineColor="blue", $offsetY="-10")
+      UpdateRelStyle(SystemAA, SystemC, $textColor="blue", $lineColor="blue", $offsetY="-40", $offsetX="-50")
+      UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+
+Diagram 1
+sequenceDiagram
+    participant web as Web Browser
+    participant blog as Blog Service
+    participant account as Account Service
+    participant mail as Mail Service
+    participant db as Storage
+
+    Note over web,db: The user must be logged in to submit blog posts
+    web->>+account: Logs in using credentials
+    account->>db: Query stored accounts
+    db->>account: Respond with query result
+
+    alt Credentials not found
+        account->>web: Invalid credentials
+    else Credentials found
+        account->>-web: Successfully logged in
+
+        Note over web,db: When the user is authenticated, they can now submit new posts
+        web->>+blog: Submit new post
+        blog->>db: Store post data
+
+        par Notifications
+            blog--)mail: Send mail to blog subscribers
+            blog--)db: Store in-site notifications
+        and Response
+            blog-->>-web: Successfully posted
+        end
+    end
+
+
+C4 Context
+diagram
+testing_diagram
+graph TD
+  A --> B
+  B --> C
+testing_diagram
+graph TD
+  A --> B
+  B --> D
+aaAA
+graph TD
+  A --> B
+  B --> C
+  C --> D
+Diagram 1
+%% C4 Context
+C4Context
+    title Debt Letters - Context
+    Person(Customer, "Customer")
+    System_Boundary(Bank,"Bank Systems"){
+      System(DI,"Data Integrator","Extracts/groups data, triggers generation")
+      System(LA,"Logic App","Generates letters")
+      System(APIM,"APIM","API mediation/policies")
+      System(EG,"Event Grid","Event-driven notifications")
+      System(ST,"Blob Storage","Stores letters & metadata")
+      System(RS,"Retrieval System","Serves documents to channels")
+      System(NS,"Notification Service","e-sign/email/SMS")
+    }
+    Rel(Customer, RS, "Retrieves/signed letters")
+    Rel(DI, APIM, "Start generation (per XML)")
+    Rel(APIM, LA, "Invoke workflow")
+    Rel(LA, ST, "Store PDFs/metadata")
+    Rel(LA, EG, "Publish LettersGenerated")
+    Rel(EG, DI, "Event delivery")
+    Rel(DI, RS, "Publish/move artifacts")
+    Rel(DI, NS, "Send notifications")
+
+Diagram 2
+%% C4 Container (high level)
+C4Container
+    title Debt Letters - Containers
+    Person_Ext(Customer,"Customer")
+    System_Boundary(Bank,"Bank"){
+      Container(DI,"Data Integrator","ETL/Rules","Batching, XML per classification")
+      Container(APIM,"API Management","Gateway","Auth, quotas, logging")
+      Container(LA,"Logic App","Workflow","Letter composition")
+      Container(ST,"Blob Storage","Storage","PDFs, metadata")
+      Container(EG,"Event Grid","Eventing","LettersGenerated")
+      Container(RS,"Retrieval System","App","Document ingest & access")
+      Container(NS,"Notification Service","Service","e-sign/email/SMS")
+    }
+    Rel(DI, APIM, "POST generate (per XML)")
+    Rel(APIM, LA, "Trigger")
+    Rel(LA, ST, "Write PDFs/metadata")
+    Rel(LA, EG, "Publish event")
+    Rel(EG, DI, "Deliver event")
+    Rel(DI, RS, "Ingest artifacts")
+    Rel(DI, NS, "Notify")
+
+C4 Context
+sequenceDiagram
+  autonumber
+  participant DI as Data Integrator
+  participant APIM as APIM
+  participant LA as Logic App (Letter Gen)
+  participant ST as Blob Storage
+  participant EG as Event Grid
+  participant RS as Retrieval System
+  participant NS as Notification Service
+
+  DI->>APIM: Start letter generation (per-classification XML)
+  APIM->>LA: Invoke workflow
+  LA->>ST: Store PDFs & metadata
+  LA-->>EG: Publish LettersGenerated {batchId, status, locations}
+  EG-->>DI: Deliver event
+  DI->>RS: Ingest/move artifacts for retrieval
+  DI->>NS: Send signature notifications
+
+
+CONVERSATION HISTORY:
+
+
+USER REQUEST:
+Optimize the event-driven architecture between component
+
+ARCHITECT GUIDANCE RULES:
+- Analyze ONLY the provided context; no external knowledge or assumptions
+- Preserve the original intent, technical terms, and domain-specific language from the user request
+- Focus on architectural improvements: scalability, performance, security, maintainability, and design patterns
+- Provide concrete, implementable recommendations rather than general advice
+- Maintain a professional, expert tone appropriate for a senior architect
+- If the context lacks sufficient information to provide meaningful architectural guidance, respond with exactly: INSUFFICIENT
+- Output only your architectural recommendations (no introductory phrases, no markdown formatting, no quotes)
+- Keep the response concise and directly actionable
+2025-08-22 23:04:53 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156502 tokens)
+2025-08-22 23:11:35 [INFO] analyze_document - 🧮 Prompt tokens: 2429
+2025-08-22 23:11:35 [INFO] analyze_document - 📤 Expected response tokens (~50% extra): 1214
+2025-08-22 23:11:35 [INFO] analyze_document - 📦 Total estimated tokens: 3643
+2025-08-22 23:11:35 [INFO] analyze_document - 💲 Estimated input cost: $0.0049 (response cost not included)
+2025-08-22 23:11:35 [INFO] analyze_document - Prompt:Act as a Senior Software Architect providing STRICT context-based recommendations.
+
+CONTEXT-BOUND ANALYSIS RULES:
+1. USE ONLY THESE COMPONENTS FROM CONTEXT: Data Integrator, Logic Apps, Blob Storage, Event Grid, APIM, Retrieval System, Notification Service
+2. USE ONLY THESE TECHNOLOGIES FROM CONTEXT: XML, PDF, APIs, events, templates
+3. ABSOLUTELY NO EXTERNAL TECHNOLOGIES: Do not suggest Azure Service Bus, RabbitMQ, Redis, Azure Functions, or any technology not explicitly mentioned in context
+4. PRESERVE EXISTING ARCHITECTURE: Work within the current component structure and relationships shown in diagrams
+5. CONTEXT-BOUND IMPROVEMENTS ONLY: Suggest optimizations that use existing components more effectively
+
+ARCHITECTURE CONTEXT:
+SOLUTION OUTLINE EXCERPTS:
+Introduction
+============
+
+Overview and context
+--------------------
+
+Στόχος είναι η αυτοματοποίηση της δημιουργίας επιστολών αναγνώρισης χρέους, μειώνοντας χειροκίνητο έργο και χρόνους κύκλου.\
+**Ροή σε υψηλό επίπεδο:** Το Data Integrator εξάγει πελατειακά δεδομένα, εφαρμόζει ταξινόμηση (classification) και παράγει XML ανά κατηγορία. Για κάθε XML εκκινεί Logic App που δημιουργεί τις επιστολές (PDF/metadata) και τις αποθηκεύει σε Blob Storage. Με την ολοκλήρωση, εκδίδεται event στο Event Grid ώστε το Data Integrator να μεταφέρει τα αρχεία στο σύστημα προβολής/ανάκτησης και, στη συνέχεια, να αποστείλει ειδοποιήσεις (e-sign/email/SMS) στους πελάτες.
+
+**KPIs (ενδεικτικά):** χρόνος κύκλου ανά παρτίδα, ποσοστό επιτυχιών, εξοικονόμηση ανθρωποωρών, κόστος/έγγραφο.
+
+Assumptions and conditions
+--------------------------
+
+-   Τα template γραμμάτων υπάρχουν και είναι versioned (templateId, locale, legal text).
+
+-   PII δεδομένα: εφαρμόζονται GDPR/retention πολιτικές.
+
+-   Χρήση APIM για μεσολάβησ...
+
+SYSTEM DIAGRAMS:
+Diagram 1
+graph TD
+  A --> B
+  B --> C
+Diagram 2
+    C4Context
+      title System Context diagram for Internet Banking System
+      Enterprise_Boundary(b0, "BankBoundary0") {
+        Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
+        Person(customerB, "Banking Customer B")
+        Person_Ext(customerC, "Banking Customer C", "desc")
+
+        Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+
+        System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+
+        Enterprise_Boundary(b1, "BankBoundary") {
+
+          SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+          System_Boundary(b2, "BankBoundary2") {
+            System(SystemA, "Banking System A")
+            System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts. next line.")
+          }
+
+          System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+          SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
+
+          Boundary(b3, "BankBoundary3", "boundary") {
+            SystemQueue(SystemF, "Banking System F Queue", "A system of the bank.")
+            SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
+          }
+        }
+      }
+
+      BiRel(customerA, SystemAA, "Uses")
+      BiRel(SystemAA, SystemE, "Uses")
+      Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
+      Rel(SystemC, customerA, "Sends e-mails to")
+
+      UpdateElementStyle(customerA, $fontColor="red", $bgColor="grey", $borderColor="red")
+      UpdateRelStyle(customerA, SystemAA, $textColor="blue", $lineColor="blue", $offsetX="5")
+      UpdateRelStyle(SystemAA, SystemE, $textColor="blue", $lineColor="blue", $offsetY="-10")
+      UpdateRelStyle(SystemAA, SystemC, $textColor="blue", $lineColor="blue", $offsetY="-40", $offsetX="-50")
+      UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+
+Diagram 1
+sequenceDiagram
+    participant web as Web Browser
+    participant blog as Blog Service
+    participant account as Account Service
+    participant mail as Mail Service
+    participant db as Storage
+
+    Note over web,db: The user must be logged in to submit blog posts
+    web->>+account: Logs in using credentials
+    account->>db: Query stored accounts
+    db->>account: Respond with query result
+
+    alt Credentials not found
+        account->>web: Invalid credentials
+    else Credentials found
+        account->>-web: Successfully logged in
+
+        Note over web,db: When the user is authenticated, they can now submit new posts
+        web->>+blog: Submit new post
+        blog->>db: Store post data
+
+        par Notifications
+            blog--)mail: Send mail to blog subscribers
+            blog--)db: Store in-site notifications
+        and Response
+            blog-->>-web: Successfully posted
+        end
+    end
+
+
+C4 Context
+diagram
+testing_diagram
+graph TD
+  A --> B
+  B --> C
+testing_diagram
+graph TD
+  A --> B
+  B --> D
+aaAA
+graph TD
+  A --> B
+  B --> C
+  C --> D
+Diagram 1
+%% C4 Context
+C4Context
+    title Debt Letters - Context
+    Person(Customer, "Customer")
+    System_Boundary(Bank,"Bank Systems"){
+      System(DI,"Data Integrator","Extracts/groups data, triggers generation")
+      System(LA,"Logic App","Generates letters")
+      System(APIM,"APIM","API mediation/policies")
+      System(EG,"Event Grid","Event-driven notifications")
+      System(ST,"Blob Storage","Stores letters & metadata")
+      System(RS,"Retrieval System","Serves documents to channels")
+      System(NS,"Notification Service","e-sign/email/SMS")
+    }
+    Rel(Customer, RS, "Retrieves/signed letters")
+    Rel(DI, APIM, "Start generation (per XML)")
+    Rel(APIM, LA, "Invoke workflow")
+    Rel(LA, ST, "Store PDFs/metadata")
+    Rel(LA, EG, "Publish LettersGenerated")
+    Rel(EG, DI, "Event delivery")
+    Rel(DI, RS, "Publish/move artifacts")
+    Rel(DI, NS, "Send notifications")
+
+Diagram 2
+%% C4 Container (high level)
+C4Container
+    title Debt Letters - Containers
+    Person_Ext(Customer,"Customer")
+    System_Boundary(Bank,"Bank"){
+      Container(DI,"Data Integrator","ETL/Rules","Batching, XML per classification")
+      Container(APIM,"API Management","Gateway","Auth, quotas, logging")
+      Container(LA,"Logic App","Workflow","Letter composition")
+      Container(ST,"Blob Storage","Storage","PDFs, metadata")
+      Container(EG,"Event Grid","Eventing","LettersGenerated")
+      Container(RS,"Retrieval System","App","Document ingest & access")
+      Container(NS,"Notification Service","Service","e-sign/email/SMS")
+    }
+    Rel(DI, APIM, "POST generate (per XML)")
+    Rel(APIM, LA, "Trigger")
+    Rel(LA, ST, "Write PDFs/metadata")
+    Rel(LA, EG, "Publish event")
+    Rel(EG, DI, "Deliver event")
+    Rel(DI, RS, "Ingest artifacts")
+    Rel(DI, NS, "Notify")
+
+C4 Context
+sequenceDiagram
+  autonumber
+  participant DI as Data Integrator
+  participant APIM as APIM
+  participant LA as Logic App (Letter Gen)
+  participant ST as Blob Storage
+  participant EG as Event Grid
+  participant RS as Retrieval System
+  participant NS as Notification Service
+
+  DI->>APIM: Start letter generation (per-classification XML)
+  APIM->>LA: Invoke workflow
+  LA->>ST: Store PDFs & metadata
+  LA-->>EG: Publish LettersGenerated {batchId, status, locations}
+  EG-->>DI: Deliver event
+  DI->>RS: Ingest/move artifacts for retrieval
+  DI->>NS: Send signature notifications
+
+
+BUSINESS REQUIREMENTS:
+- title...
+
+CONVERSATION HISTORY:
+
+
+USER REQUEST:
+improve scalability
+
+STRICT OUTPUT RULES:
+- If the request requires technologies/components not in context: "CONTEXT LIMITATION: Cannot suggest external technologies"
+- If the request is too vague: "REQUEST UNCLEAR: Please specify which aspect needs improvement"
+- If context insufficient: "INSUFFICIENT CONTEXT"
+- Recommendations must use ONLY existing components and technologies from context
+- Focus on optimizing current architecture, not replacing it
+- Be specific about which exact component from the diagrams you're improving
+- Output only concrete, context-bound recommendations
+2025-08-22 23:11:35 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156357 tokens)
+2025-08-22 23:21:54 [INFO] analyze_document - 🧮 Prompt tokens: 2499
+2025-08-22 23:21:54 [INFO] analyze_document - 📤 Expected response tokens (~50% extra): 1249
+2025-08-22 23:21:54 [INFO] analyze_document - 📦 Total estimated tokens: 3748
+2025-08-22 23:21:54 [INFO] analyze_document - 💲 Estimated input cost: $0.0050 (response cost not included)
+2025-08-22 23:21:54 [INFO] analyze_document - Prompt:Act as a Solution Outline Quality Assistant. Your role is to REVIEW, IMPROVE, and VALIDATE existing solution outline content.
+
+**STRICT MANDATE:**
+- ONLY work with the provided solution outline text, diagrams, and requirements
+- DO NOT invent new solutions or architectural components
+- FOCUS on textual improvements, consistency checks, and validation
+
+**REVIEW TASKS:**
+
+1. **TEXT QUALITY IMPROVEMENT:**
+   - Fix grammatical errors, spelling mistakes, unclear phrasing
+   - Improve technical writing clarity and professionalism
+   - Suggest better formatting and structure for readability
+   - Identify incomplete sentences or thoughts
+
+2. **CONSISTENCY VALIDATION:**
+   - Cross-check between solution outline text and diagrams
+   - Verify that requirements are properly addressed in the solution
+   - Identify contradictions between different sections
+   - Ensure terminology consistency throughout the document
+
+3. **COMPLETENESS CHECK:**
+   - Identify missing information or incomplete sections
+   - Highlight areas that need more detail or clarification
+   - Check if all mentioned components are properly described
+
+4. **FEASIBILITY ASSESSMENT:**
+   - Validate that proposed solutions align with existing architecture
+   - Flag unrealistic assumptions or dependencies
+   - Identify potential implementation challenges
+
+**INPUT CONTEXT:**
+SOLUTION OUTLINE TEXT:
+Introduction
+============
+
+Overview and context
+--------------------
+
+Στόχος είναι η αυτοματοποίηση της δημιουργίας επιστολών αναγνώρισης χρέους, μειώνοντας χειροκίνητο έργο και χρόνους κύκλου.\
+**Ροή σε υψηλό επίπεδο:** Το Data Integrator εξάγει πελατειακά δεδομένα, εφαρμόζει ταξινόμηση (classification) και παράγει XML ανά κατηγορία. Για κάθε XML εκκινεί Logic App που δημιουργεί τις επιστολές (PDF/metadata) και τις αποθηκεύει σε Blob Storage. Με την ολοκλήρωση, εκδίδεται event στο Event Grid ώστε το Data Integrator να μεταφέρει τα αρχεία στο σύστημα προβολής/ανάκτησης και, στη συνέχεια, να αποστείλει ειδοποιήσεις (e-sign/email/SMS) στους πελάτες.
+
+**KPIs (ενδεικτικά):** χρόνος κύκλου ανά παρτίδα, ποσοστό επιτυχιών, εξοικονόμηση ανθρωποωρών, κόστος/έγγραφο.
+
+Assumptions and conditions
+--------------------------
+
+-   Τα template γραμμάτων υπάρχουν και είναι versioned (templateId, locale, legal text).
+
+-   PII δεδομένα: εφαρμόζονται GDPR/retention πολιτικές.
+
+-   Χρήση APIM για μεσολάβησ...
+
+DIAGRAMS:
+Diagram 1
+graph TD
+  A --> B
+  B --> C
+Diagram 2
+    C4Context
+      title System Context diagram for Internet Banking System
+      Enterprise_Boundary(b0, "BankBoundary0") {
+        Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
+        Person(customerB, "Banking Customer B")
+        Person_Ext(customerC, "Banking Customer C", "desc")
+
+        Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+
+        System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+
+        Enterprise_Boundary(b1, "BankBoundary") {
+
+          SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+          System_Boundary(b2, "BankBoundary2") {
+            System(SystemA, "Banking System A")
+            System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts. next line.")
+          }
+
+          System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+          SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
+
+          Boundary(b3, "BankBoundary3", "boundary") {
+            SystemQueue(SystemF, "Banking System F Queue", "A system of the bank.")
+            SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
+          }
+        }
+      }
+
+      BiRel(customerA, SystemAA, "Uses")
+      BiRel(SystemAA, SystemE, "Uses")
+      Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
+      Rel(SystemC, customerA, "Sends e-mails to")
+
+      UpdateElementStyle(customerA, $fontColor="red", $bgColor="grey", $borderColor="red")
+      UpdateRelStyle(customerA, SystemAA, $textColor="blue", $lineColor="blue", $offsetX="5")
+      UpdateRelStyle(SystemAA, SystemE, $textColor="blue", $lineColor="blue", $offsetY="-10")
+      UpdateRelStyle(SystemAA, SystemC, $textColor="blue", $lineColor="blue", $offsetY="-40", $offsetX="-50")
+      UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+
+Diagram 1
+sequenceDiagram
+    participant web as Web Browser
+    participant blog as Blog Service
+    participant account as Account Service
+    participant mail as Mail Service
+    participant db as Storage
+
+    Note over web,db: The user must be logged in to submit blog posts
+    web->>+account: Logs in using credentials
+    account->>db: Query stored accounts
+    db->>account: Respond with query result
+
+    alt Credentials not found
+        account->>web: Invalid credentials
+    else Credentials found
+        account->>-web: Successfully logged in
+
+        Note over web,db: When the user is authenticated, they can now submit new posts
+        web->>+blog: Submit new post
+        blog->>db: Store post data
+
+        par Notifications
+            blog--)mail: Send mail to blog subscribers
+            blog--)db: Store in-site notifications
+        and Response
+            blog-->>-web: Successfully posted
+        end
+    end
+
+
+C4 Context
+diagram
+testing_diagram
+graph TD
+  A --> B
+  B --> C
+testing_diagram
+graph TD
+  A --> B
+  B --> D
+aaAA
+graph TD
+  A --> B
+  B --> C
+  C --> D
+Diagram 1
+%% C4 Context
+C4Context
+    title Debt Letters - Context
+    Person(Customer, "Customer")
+    System_Boundary(Bank,"Bank Systems"){
+      System(DI,"Data Integrator","Extracts/groups data, triggers generation")
+      System(LA,"Logic App","Generates letters")
+      System(APIM,"APIM","API mediation/policies")
+      System(EG,"Event Grid","Event-driven notifications")
+      System(ST,"Blob Storage","Stores letters & metadata")
+      System(RS,"Retrieval System","Serves documents to channels")
+      System(NS,"Notification Service","e-sign/email/SMS")
+    }
+    Rel(Customer, RS, "Retrieves/signed letters")
+    Rel(DI, APIM, "Start generation (per XML)")
+    Rel(APIM, LA, "Invoke workflow")
+    Rel(LA, ST, "Store PDFs/metadata")
+    Rel(LA, EG, "Publish LettersGenerated")
+    Rel(EG, DI, "Event delivery")
+    Rel(DI, RS, "Publish/move artifacts")
+    Rel(DI, NS, "Send notifications")
+
+Diagram 2
+%% C4 Container (high level)
+C4Container
+    title Debt Letters - Containers
+    Person_Ext(Customer,"Customer")
+    System_Boundary(Bank,"Bank"){
+      Container(DI,"Data Integrator","ETL/Rules","Batching, XML per classification")
+      Container(APIM,"API Management","Gateway","Auth, quotas, logging")
+      Container(LA,"Logic App","Workflow","Letter composition")
+      Container(ST,"Blob Storage","Storage","PDFs, metadata")
+      Container(EG,"Event Grid","Eventing","LettersGenerated")
+      Container(RS,"Retrieval System","App","Document ingest & access")
+      Container(NS,"Notification Service","Service","e-sign/email/SMS")
+    }
+    Rel(DI, APIM, "POST generate (per XML)")
+    Rel(APIM, LA, "Trigger")
+    Rel(LA, ST, "Write PDFs/metadata")
+    Rel(LA, EG, "Publish event")
+    Rel(EG, DI, "Deliver event")
+    Rel(DI, RS, "Ingest artifacts")
+    Rel(DI, NS, "Notify")
+
+C4 Context
+sequenceDiagram
+  autonumber
+  participant DI as Data Integrator
+  participant APIM as APIM
+  participant LA as Logic App (Letter Gen)
+  participant ST as Blob Storage
+  participant EG as Event Grid
+  participant RS as Retrieval System
+  participant NS as Notification Service
+
+  DI->>APIM: Start letter generation (per-classification XML)
+  APIM->>LA: Invoke workflow
+  LA->>ST: Store PDFs & metadata
+  LA-->>EG: Publish LettersGenerated {batchId, status, locations}
+  EG-->>DI: Deliver event
+  DI->>RS: Ingest/move artifacts for retrieval
+  DI->>NS: Send signature notifications
+
+
+REQUIREMENTS:
+- title...
+
+CONVERSATION HISTORY:
+
+
+USER REQUEST:
+can you suggest improvements for the overview and context paragraph?
+
+**OUTPUT RULES:**
+- Provide SPECIFIC line-by-line suggestions for improvement
+- Quote the original text and suggest the improved version
+- Use markdown formatting for clear section organization
+- If no issues found, confirm document quality
+- NEVER suggest new technologies or architectural components
+- Focus ONLY on making the existing content better
+2025-08-22 23:21:54 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156252 tokens)
+2025-08-23 09:53:18 [INFO] analyze_document - 🧮 Prompt tokens: 144
+2025-08-23 09:53:18 [INFO] analyze_document - 📤 Expected response tokens (~50% extra): 72
+2025-08-23 09:53:18 [INFO] analyze_document - 📦 Total estimated tokens: 216
+2025-08-23 09:53:18 [INFO] analyze_document - 💲 Estimated input cost: $0.0003 (response cost not included)
+2025-08-23 09:53:18 [INFO] analyze_document - Prompt:You are an intent classifier for an Architecture Review assistant.
+Return ONLY valid JSON.
+
+TAGS:
+- integration_check: verify Solution Outline integration vs diagrams
+- requirements_coverage: map requirements to SO text/diagrams
+- improve_paragraph: rewrite a specific paragraph/section
+- qna: general question about the architecture using only provided context
+
+CONTEXT_AVAILABILITY:
+- so_sections: {{ids:[...]}}
+- requirements: {{ids:[...]}}
+- diagrams: {{ids:[...]}}
+
+USER_MESSAGE:
+{user_message}
+
+Return:
+{{
+    "intent":"<tag>",
+    "targets":
+    {{
+        "so_ids":[],
+        "requirement_ids":[],"diagram_ids":[]
+    }}
+}}
+
+2025-08-23 09:53:18 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 159784 tokens)
+2025-08-23 09:53:30 [DEBUG] analyze_document - Prompt to LLM: You are an intent classifier for an Architecture Review assistant.
+Return ONLY valid JSON.
+
+TAGS:
+- integration_check: verify Solution Outline integration vs diagrams
+- requirements_coverage: map requirements to SO text/diagrams
+- improve_paragraph: rewrite a specific paragraph/section
+- qna: general question about the architecture using only provided context
+
+CONTEXT_AVAILABILITY:
+- so_sections: {{ids:[...]}}
+- requirements: {{ids:[...]}}
+- diagrams: {{ids:[...]}}
+
+USER_MESSAGE:
+{user_message}
+
+Return:
+{{
+    "intent":"<tag>",
+    "targets":
+    {{
+        "so_ids":[],
+        "requirement_ids":[],"diagram_ids":[]
+    }}
+}}
+
+2025-08-23 09:53:30 [INFO] analyze_document - 🧮 Prompt tokens: 144
+2025-08-23 09:53:30 [INFO] analyze_document - 📤 Expected response tokens (~50% extra): 72
+2025-08-23 09:53:30 [INFO] analyze_document - 📦 Total estimated tokens: 216
+2025-08-23 09:53:30 [INFO] analyze_document - 💲 Estimated input cost: $0.0003 (response cost not included)
+2025-08-23 09:53:30 [INFO] analyze_document - 📊 Prompt analytics logged to output/prompt_analytics_log.csv
+2025-08-23 09:53:30 [DEBUG] analyze_document - LLM Response: {
+    "intent": "integration_check",
+    "targets": {
+        "so_ids": ["12345"],
+        "requirement_ids": [],
+        "diagram_ids": ["67890"]
+    }
+}
+2025-08-23 09:57:00 [INFO] analyze_document - 🧮 Prompt tokens: 2407
+2025-08-23 09:57:00 [INFO] analyze_document - 📤 Expected response tokens (~50% extra): 1203
+2025-08-23 09:57:00 [INFO] analyze_document - 📦 Total estimated tokens: 3610
+2025-08-23 09:57:00 [INFO] analyze_document - 💲 Estimated input cost: $0.0048 (response cost not included)
+2025-08-23 09:57:00 [INFO] analyze_document - Prompt:Act as a Senior Software Architect analyzing the current solution outline. Provide specific, actionable recommendations to improve the architecture based on the available context.
+
+ARCHITECTURE CONTEXT:
+SOLUTION OUTLINE EXCERPTS:
+Introduction
+============
+
+Overview and context
+--------------------
+
+Στόχος είναι η αυτοματοποίηση της δημιουργίας επιστολών αναγνώρισης χρέους, μειώνοντας χειροκίνητο έργο και χρόνους κύκλου.\
+**Ροή σε υψηλό επίπεδο:** Το Data Integrator εξάγει πελατειακά δεδομένα, εφαρμόζει ταξινόμηση (classification) και παράγει XML ανά κατηγορία. Για κάθε XML εκκινεί Logic App που δημιουργεί τις επιστολές (PDF/metadata) και τις αποθηκεύει σε Blob Storage. Με την ολοκλήρωση, εκδίδεται event στο Event Grid ώστε το Data Integrator να μεταφέρει τα αρχεία στο σύστημα προβολής/ανάκτησης και, στη συνέχεια, να αποστείλει ειδοποιήσεις (e-sign/email/SMS) στους πελάτες.
+
+**KPIs (ενδεικτικά):** χρόνος κύκλου ανά παρτίδα, ποσοστό επιτυχιών, εξοικονόμηση ανθρωποωρών, κόστος/έγγραφο.
+
+Assumptions and conditions
+--------------------------
+
+-   Τα template γραμμάτων υπάρχουν και είναι versioned (templateId, locale, legal text).
+
+-   PII δεδομένα: εφαρμόζονται GDPR/retention πολιτικές.
+
+-   Χρήση APIM για μεσολάβησ...
+
+BUSINESS REQUIREMENTS:
+- title...
+
+SYSTEM DIAGRAMS:
+Diagram 1
+graph TD
+  A --> B
+  B --> C
+Diagram 2
+    C4Context
+      title System Context diagram for Internet Banking System
+      Enterprise_Boundary(b0, "BankBoundary0") {
+        Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
+        Person(customerB, "Banking Customer B")
+        Person_Ext(customerC, "Banking Customer C", "desc")
+
+        Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+
+        System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+
+        Enterprise_Boundary(b1, "BankBoundary") {
+
+          SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+
+          System_Boundary(b2, "BankBoundary2") {
+            System(SystemA, "Banking System A")
+            System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts. next line.")
+          }
+
+          System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
+          SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
+
+          Boundary(b3, "BankBoundary3", "boundary") {
+            SystemQueue(SystemF, "Banking System F Queue", "A system of the bank.")
+            SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
+          }
+        }
+      }
+
+      BiRel(customerA, SystemAA, "Uses")
+      BiRel(SystemAA, SystemE, "Uses")
+      Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
+      Rel(SystemC, customerA, "Sends e-mails to")
+
+      UpdateElementStyle(customerA, $fontColor="red", $bgColor="grey", $borderColor="red")
+      UpdateRelStyle(customerA, SystemAA, $textColor="blue", $lineColor="blue", $offsetX="5")
+      UpdateRelStyle(SystemAA, SystemE, $textColor="blue", $lineColor="blue", $offsetY="-10")
+      UpdateRelStyle(SystemAA, SystemC, $textColor="blue", $lineColor="blue", $offsetY="-40", $offsetX="-50")
+      UpdateRelStyle(SystemC, customerA, $textColor="red", $lineColor="red", $offsetX="-50", $offsetY="20")
+
+      UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
+
+
+Diagram 1
+sequenceDiagram
+    participant web as Web Browser
+    participant blog as Blog Service
+    participant account as Account Service
+    participant mail as Mail Service
+    participant db as Storage
+
+    Note over web,db: The user must be logged in to submit blog posts
+    web->>+account: Logs in using credentials
+    account->>db: Query stored accounts
+    db->>account: Respond with query result
+
+    alt Credentials not found
+        account->>web: Invalid credentials
+    else Credentials found
+        account->>-web: Successfully logged in
+
+        Note over web,db: When the user is authenticated, they can now submit new posts
+        web->>+blog: Submit new post
+        blog->>db: Store post data
+
+        par Notifications
+            blog--)mail: Send mail to blog subscribers
+            blog--)db: Store in-site notifications
+        and Response
+            blog-->>-web: Successfully posted
+        end
+    end
+
+
+C4 Context
+diagram
+testing_diagram
+graph TD
+  A --> B
+  B --> C
+testing_diagram
+graph TD
+  A --> B
+  B --> D
+aaAA
+graph TD
+  A --> B
+  B --> C
+  C --> D
+Diagram 1
+%% C4 Context
+C4Context
+    title Debt Letters - Context
+    Person(Customer, "Customer")
+    System_Boundary(Bank,"Bank Systems"){
+      System(DI,"Data Integrator","Extracts/groups data, triggers generation")
+      System(LA,"Logic App","Generates letters")
+      System(APIM,"APIM","API mediation/policies")
+      System(EG,"Event Grid","Event-driven notifications")
+      System(ST,"Blob Storage","Stores letters & metadata")
+      System(RS,"Retrieval System","Serves documents to channels")
+      System(NS,"Notification Service","e-sign/email/SMS")
+    }
+    Rel(Customer, RS, "Retrieves/signed letters")
+    Rel(DI, APIM, "Start generation (per XML)")
+    Rel(APIM, LA, "Invoke workflow")
+    Rel(LA, ST, "Store PDFs/metadata")
+    Rel(LA, EG, "Publish LettersGenerated")
+    Rel(EG, DI, "Event delivery")
+    Rel(DI, RS, "Publish/move artifacts")
+    Rel(DI, NS, "Send notifications")
+
+Diagram 2
+%% C4 Container (high level)
+C4Container
+    title Debt Letters - Containers
+    Person_Ext(Customer,"Customer")
+    System_Boundary(Bank,"Bank"){
+      Container(DI,"Data Integrator","ETL/Rules","Batching, XML per classification")
+      Container(APIM,"API Management","Gateway","Auth, quotas, logging")
+      Container(LA,"Logic App","Workflow","Letter composition")
+      Container(ST,"Blob Storage","Storage","PDFs, metadata")
+      Container(EG,"Event Grid","Eventing","LettersGenerated")
+      Container(RS,"Retrieval System","App","Document ingest & access")
+      Container(NS,"Notification Service","Service","e-sign/email/SMS")
+    }
+    Rel(DI, APIM, "POST generate (per XML)")
+    Rel(APIM, LA, "Trigger")
+    Rel(LA, ST, "Write PDFs/metadata")
+    Rel(LA, EG, "Publish event")
+    Rel(EG, DI, "Deliver event")
+    Rel(DI, RS, "Ingest artifacts")
+    Rel(DI, NS, "Notify")
+
+C4 Context
+sequenceDiagram
+  autonumber
+  participant DI as Data Integrator
+  participant APIM as APIM
+  participant LA as Logic App (Letter Gen)
+  participant ST as Blob Storage
+  participant EG as Event Grid
+  participant RS as Retrieval System
+  participant NS as Notification Service
+
+  DI->>APIM: Start letter generation (per-classification XML)
+  APIM->>LA: Invoke workflow
+  LA->>ST: Store PDFs & metadata
+  LA-->>EG: Publish LettersGenerated {batchId, status, locations}
+  EG-->>DI: Deliver event
+  DI->>RS: Ingest/move artifacts for retrieval
+  DI->>NS: Send signature notifications
+
+
+CONVERSATION HISTORY:
+
+
+USER REQUEST:
+«Το integration των Notifications που περιγράφω στην ενότητα 4.2 ταιριάζει με το SEQ-01; Αν όχι, πού ακριβώς διαφωνούμε;
+
+ARCHITECT GUIDANCE RULES:
+- Analyze ONLY the provided context; no external knowledge or assumptions
+- Preserve the original intent, technical terms, and domain-specific language from the user request
+- Focus on architectural improvements: scalability, performance, security, maintainability, and design patterns
+- Provide concrete, implementable recommendations rather than general advice
+- Maintain a professional, expert tone appropriate for a senior architect
+- If the context lacks sufficient information to provide meaningful architectural guidance, respond with exactly: INSUFFICIENT
+- Output only your architectural recommendations (no introductory phrases, no markdown formatting, no quotes)
+- Keep the response concise and directly actionable
+2025-08-23 09:57:00 [INFO] analyze_document - ✅ OK: Fits within context window (margin: 156390 tokens)
