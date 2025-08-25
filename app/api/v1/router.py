@@ -20,6 +20,6 @@ router.include_router(requirement_items.router, tags=["Requirement Items"])
 router.include_router(systems.router, tags=["Systems"])
 router.include_router(monitoring.router, prefix="/monitoring", tags=["Monitoring"])
 
-# These will be uncommented as they are implemented
-# from app.api.v1.endpoints import assistant
-# router.include_router(assistant.router)
+# Assistant endpoints
+from app.api.v1.endpoints import assistant
+router.include_router(assistant.router, tags=["Assistant"])
